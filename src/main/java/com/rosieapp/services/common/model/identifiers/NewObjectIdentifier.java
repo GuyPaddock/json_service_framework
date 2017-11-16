@@ -1,4 +1,4 @@
-package com.rosieapp.services.loyalty.identifiers;
+package com.rosieapp.services.common.model.identifiers;
 
 public final class NewObjectIdentifier
 extends AbstractObjectIdentifier {

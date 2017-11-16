@@ -1,4 +1,4 @@
-package com.rosieapp.services.loyalty.identifiers;
+package com.rosieapp.services.common.model.identifiers;
 
 import java.util.Optional;
 import org.apache.commons.lang.math.NumberUtils;

@@ -1,10 +1,10 @@
-package com.rosieapp.services.loyalty;
+package com.rosieapp.services.common.model;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.jasminb.jsonapi.annotations.Id;
-import com.rosieapp.services.loyalty.identifiers.JsonObjectIdHandler;
-import com.rosieapp.services.loyalty.identifiers.ObjectIdentifier;
+import com.rosieapp.services.common.model.identifiers.JsonObjectIdHandler;
+import com.rosieapp.services.common.model.identifiers.ObjectIdentifier;
 
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public abstract class AbstractModel

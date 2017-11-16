@@ -1,4 +1,4 @@
-package com.rosieapp.services.loyalty.identifiers;
+package com.rosieapp.services.common.model.identifiers;
 
 public abstract class AbstractObjectIdentifier
 implements ObjectIdentifier {

@@ -1,4 +1,4 @@
-package com.rosieapp.services.loyalty.identifiers;
+package com.rosieapp.services.common.model.identifiers;
 
 import com.github.jasminb.jsonapi.ResourceIdHandler;
 import java.util.Optional;

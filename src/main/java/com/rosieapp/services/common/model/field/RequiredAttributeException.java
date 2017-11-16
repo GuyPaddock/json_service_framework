@@ -1,4 +1,4 @@
-package com.rosieapp.services.loyalty;
+package com.rosieapp.services.common.model.field;
 
 public class RequiredAttributeException
 extends IllegalArgumentException {
