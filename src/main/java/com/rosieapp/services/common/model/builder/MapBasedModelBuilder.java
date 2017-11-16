@@ -1,8 +1,10 @@
 package com.rosieapp.services.common.model.builder;
 
+import com.rosieapp.common.collections.Maps;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.field.FieldHandler;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -23,7 +25,7 @@ extends AbstractModelBuilder<T, B> {
   protected MapBasedModelBuilder(final FieldHandler fieldHandler) {
     super(fieldHandler);
 
-    this.fieldValues = new TreeMap<>();
+    this.fieldValues = new HashMap<>();
   }
 
   protected void putFieldValue(String fieldName, Object value) {
@@ -48,20 +50,15 @@ extends AbstractModelBuilder<T, B> {
   }
 
   private String getFieldValuesAsString() {
-    final String valueStr =
-      Stream
-        .concat(
+    final String string;
+
+    string =
+      Maps.toString(
+        Stream.concat(
           Stream.of(new SimpleEntry<>("id", this.buildId())),
           this.getFieldValues().entrySet().stream()
-        )
-        .map(
-          (entry) ->
-            String.format(
-              "\"%s\": \"%s\"",
-              entry.getKey(),
-              entry.getValue()))
-        .collect(Collectors.joining(", "));
+        ));
 
-    return valueStr;
+    return string;
   }
 }
