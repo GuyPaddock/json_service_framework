@@ -9,7 +9,7 @@ import com.rosieapp.services.common.model.identifiers.ModelIdentifier;
 
 /**
  * Optional, abstract parent class provided for use by all models in the system.
- *
+ * <p>
  * This implementation provides built-in handling for the identifier fields, which require special
  * handling for JSON API serialization and de-serialization.
  */
@@ -18,7 +18,7 @@ public abstract class AbstractModel
 implements Model {
   /**
    * The identifier for this model.
-   *
+   * <p>
    * This exists as a standalone field within the builder, rather than being stored in some other
    * structure (e.g. a map), to allow it to be annotated for JSON API Converter. This ensures that
    * identifiers for model sub-classes are already configured for JSON API serialization and
@@ -39,7 +39,7 @@ implements Model {
 
   /**
    * Sets the identifier for this model.
-   *
+   * <p>
    * The model must not already have an existing object identifier set, with the exception that the
    * model may have a {@link NewModelIdentifier}
    * set.

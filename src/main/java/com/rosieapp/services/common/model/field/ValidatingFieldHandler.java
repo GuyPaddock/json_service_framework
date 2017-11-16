@@ -10,7 +10,7 @@ public class ValidatingFieldHandler
 extends AbstractFieldHandler {
   /**
    * Validates and returns the value to use when populating the specified required field.
-   *
+   * <p>
    * If the field value is {@code null}, the field handler will communicate this by raising a
    * {@link RequiredFieldMissingException}.
    *

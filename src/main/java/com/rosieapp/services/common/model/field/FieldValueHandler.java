@@ -3,11 +3,11 @@ package com.rosieapp.services.common.model.field;
 /**
  * Common interface for objects that provide the values that builders use to populate the fields of
  * the Rosie JSON API service models they are constructing.
- *
+ * <p>
  * Field value handlers typically fall into two categories:
  *  - Strict value handlers raise errors when a required field lacks a value.
  *  - Lax value handlers substitute a value when a required field lacks a value.
- *
+ * <p>
  * However, this interface imposes no requirements on how a Field Value Handler actually interprets
  * requests for field values, nor on how it retrieves or validates the field values it returns.
  */
@@ -15,7 +15,7 @@ public interface FieldValueHandler {
   /**
    * Optionally validates and then returns the value to use when populating the specified required
    * field.
-   *
+   * <p>
    * Depending upon implementation, if the field value is {@code null}, the field handler may choose
    * to communicate this by raising an {@link IllegalStateException}, or it may simply supply
    * {@code null} (or a different value of its own choosing) in place of the missing value.
@@ -41,7 +41,7 @@ public interface FieldValueHandler {
 
   /**
    * Returns the value to use when populating the specified optional field.
-   *
+   * <p>
    * Depending upon implementation, if the field value is {@code null}, then in place of the missing
    * value, the field handler may choose to return the {@code defaultValue} that has been provided,
    * or any other value of the handler's choosing.

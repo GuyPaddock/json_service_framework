@@ -15,7 +15,7 @@ public final class LongIdentifier extends PersistedModelIdentifier {
 
   /**
    * Attempts to parse the provided string as a long integer model identifier.
-   *
+   * <p>
    * If the string cannot be parsed, an empty {@link Optional} is returned.
    *
    * @param   value

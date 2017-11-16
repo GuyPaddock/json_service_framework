@@ -6,7 +6,7 @@ import java.util.UUID;
 /**
  * A model identifier that uses a Universally Unique Identifier to unique identify a persisted
  * model.
- *
+ * <p>
  * A UUID is typically represented in string format like:
  * {@code 82159191-e513-459d-8a2c-c4a5cf45c7a2}
  */
@@ -18,7 +18,7 @@ public final class UUIDIdentifier extends PersistedModelIdentifier {
 
   /**
    * Attempts to parse the provided string as a UUID.
-   *
+   * <p>
    * If the string cannot be parsed, an empty {@link Optional} is returned.
    *
    * @param   value
@@ -44,7 +44,7 @@ public final class UUIDIdentifier extends PersistedModelIdentifier {
 
   /**
    * Constructor for {@link UUIDIdentifier} that generates a random, new identifier.
-   *
+   * <p>
    * The generated identifier should be safe to use to identify a new object in any system.
    */
   public UUIDIdentifier() {

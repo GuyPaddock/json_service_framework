@@ -19,7 +19,7 @@ extends AbstractModelBuilder<T, B> {
   /**
    * The map of values that will be used to construct the new model, keyed by the field name.
    */
-  private final Map<String, Object> fieldValues;
+  private final Map<String, Object> fieldValueMap;
 
   /**
    * Returns a string representation of this builder, including the values that have been stashed
@@ -46,12 +46,12 @@ extends AbstractModelBuilder<T, B> {
   protected MapBasedModelBuilder(final FieldValueHandler valueHandler) {
     super(valueHandler);
 
-    this.fieldValues = new HashMap<>();
+    this.fieldValueMap = new HashMap<>();
   }
 
   /**
    * Stashes the value to use for the specified field when the model is constructed.
-   *
+   * <p>
    * Sub-classes must ensure that the type of the object is correct for the type of field being
    * stashed, since all field values are stored in the same map.
    *
@@ -64,7 +64,7 @@ extends AbstractModelBuilder<T, B> {
    *          The type of the field value.
    */
   protected <F> void putFieldValue(String fieldName, F value) {
-    this.getFieldValues().put(fieldName, value);
+    this.getFieldValueMap().put(fieldName, value);
   }
 
   /**
@@ -81,13 +81,13 @@ extends AbstractModelBuilder<T, B> {
    */
   @SuppressWarnings("unchecked")
   protected <F> F getFieldValue(String fieldName) {
-    return (F)this.getFieldValues().get(fieldName);
+    return (F)this.getFieldValueMap().get(fieldName);
   }
 
   /**
    * Requests, optionally validates, and then returns the value to use when populating the specified
    * required field for a model being constructed by this builder.
-   *
+   * <p>
    * The value of the field (if any value has been stashed) is automatically retrieved from the map
    * of stashed field values, and then the request is delegated to
    * {@link #getRequiredField(Object, String)}.
@@ -118,7 +118,7 @@ extends AbstractModelBuilder<T, B> {
   /**
    * Returns the value to use when populating the specified optional field for a model being
    * constructed by this builder.
-   *
+   * <p>
    * The value of the field (if any value has been stashed) is automatically retrieved from the map
    * of stashed field values, and then the request is delegated to
    * {@link #getOptionalField(Object, Object)}.
@@ -148,13 +148,13 @@ extends AbstractModelBuilder<T, B> {
    *
    * @return  The map of field values.
    */
-  private Map<String, Object> getFieldValues() {
-    return this.fieldValues;
+  protected Map<String, Object> getFieldValueMap() {
+    return this.fieldValueMap;
   }
 
   /**
    * Gets a string representation of all of the values in this builder.
-   *
+   * <p>
    * The {@code id} that will be used for the new model is automatically pre-pended to the
    * output, to simplify debugging.
    *
@@ -168,7 +168,7 @@ extends AbstractModelBuilder<T, B> {
       Maps.toString(
         Stream.concat(
           Stream.of(new SimpleEntry<>("id", this.buildId())),
-          this.getFieldValues().entrySet().stream()
+          this.getFieldValueMap().entrySet().stream()
         ));
 
     return string;

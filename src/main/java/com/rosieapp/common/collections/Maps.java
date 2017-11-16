@@ -17,9 +17,9 @@ public class Maps {
 
   /**
    * Converts all of the entries of a map to a string.
-   *
-   * The output is formatted more nicely than the default {@link Map#toString()} implementation in
-   * the JDK. Keys and values are wrapped in quotes, and the values are presented in alphabetic
+   * <p>
+   * The output is formatted more nicely than the default {@link Map#toString()} implementation
+   * in the JDK. Keys and values are wrapped in quotes, and the values are presented in alphabetic
    * order by key.
    *
    * @param   map
@@ -37,10 +37,10 @@ public class Maps {
 
   /**
    * Converts a stream of map entries to a string.
-   *
+   * <p>
    * This overload is provided for cases in which information from multiple maps is being combined
    * into the same output.
-   *
+   * <p>
    * Keys and values are wrapped in quotes in the resulting string, and the values are presented in
    * alphabetic order by key.
    *

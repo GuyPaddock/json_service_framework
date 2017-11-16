@@ -12,7 +12,7 @@ import com.rosieapp.services.common.model.identifiers.ModelIdentifier;
 
 /**
  * Optional, abstract parent class provided for use by all model builders in the system.
- *
+ * <p>
  * This implementation provides built-in handling for the identifier fields, which require special
  * handling for JSON API serialization and de-serialization.
  *
@@ -42,22 +42,24 @@ implements ModelBuilder<T> {
 
   /**
    * Builder method for constructing a model with an identifier derived by parsing a String value.
-   *
+   * <p>
    * The String must represent either a UUID or a long integer value.
    *
-   * @param   id
+   * @param   identifier
    *          The string from an identifier will be parsed.
+   *          This must not be {@code null} and must represent a valid identifier.
    *
    * @return  This object, for chaining builder calls.
+   *
+   * @throws  IllegalArgumentException
+   *          If {@code identifier} is {@code null} or does not represent a valid identifier.
    */
-  public B withId(final String id) {
-    return this.withId(ModelIdentifierFactory.getInstance().createIdFrom(id));
+  public B withId(final String identifier) {
+    return this.withId(ModelIdentifierFactory.getInstance().createIdFrom(identifier));
   }
 
   /**
    * Builder method for constructing a model with the specified identifier.
-   *
-   * The String must represent either a UUID or a long integer value.
    *
    * @param   id
    *          The string from an identifier will be parsed.
@@ -66,14 +68,33 @@ implements ModelBuilder<T> {
    */
   @SuppressWarnings("unchecked")
   public B withId(final ModelIdentifier id) {
-    this.id = id;
+    this.setId(id);
 
     return (B)this;
   }
 
   /**
-   * Builds a null-safe identifier for the model.
+   * Sets the identifier that will be used for new models being built.
    *
+   * @param id
+   *        The identifier to use for new models.
+   */
+  protected final void setId(final ModelIdentifier id) {
+    this.id = id;
+  }
+
+  /**
+   * Gets the identifier that is currently being used for new models being built.
+   *
+   * @return  The identifier being used for new models.
+   */
+  protected final ModelIdentifier getId() {
+    return this.id;
+  }
+
+  /**
+   * Builds a null-safe identifier for the model.
+   * <p>
    * If an identifier was not provided via {@link #withId(ModelIdentifier)} or its permutations,
    * this method will automatically produce a {@link NewModelIdentifier} instead, to ensure that
    * locally-produced objects never have a {@code null} identifier.
@@ -81,13 +102,13 @@ implements ModelBuilder<T> {
    * @return  An identifier to use for the new model instance.
    */
   protected ModelIdentifier buildId() {
-    return Optional.ofNullable(this.id).orElse(NewModelIdentifier.getInstance());
+    return Optional.ofNullable(this.getId()).orElse(NewModelIdentifier.getInstance());
   }
 
   /**
    * Requests, optionally validates, and then returns the value to use when populating the specified
    * required field for a model being constructed by this builder.
-   *
+   * <p>
    * The request is delegated to the field value handler. If this builder has not been provided with
    * a value for the field (i.e. {@code fieldValue} is {@code null}), the field handler may choose
    * to communicate this by raising an {@link IllegalStateException}, or it may simply supply
@@ -120,7 +141,7 @@ implements ModelBuilder<T> {
   /**
    * Returns the value to use when populating the specified optional field for a model being
    * constructed by this builder.
-   *
+   * <p>
    * The request is delegated to the field value handler. If this builder has not been provided with
    * a value for the field (i.e. {@code fieldValue} is {@code null}), then in place of the missing
    * value, the field handler may choose to return the {@code defaultValue} that the builder has

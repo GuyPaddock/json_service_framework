@@ -9,7 +9,7 @@ import java.util.function.Function;
 /**
  * A convenient factory for transforming values that represent model identifier values into their
  * corresponding {@link ModelIdentifier} instances.
- *
+ * <p>
  * This factory is a singleton. Use {@link #getInstance()} to get a reference to the factory
  * instance.
  */

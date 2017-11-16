@@ -8,7 +8,7 @@ public class LaxFieldHandler
 extends AbstractFieldHandler {
   /**
    * Returns the value to use when populating the specified required field.
-   *
+   * <p>
    * If the field value is {@code null}, this handler simply supplies {@code null} in place of the
    * missing value.
    *
