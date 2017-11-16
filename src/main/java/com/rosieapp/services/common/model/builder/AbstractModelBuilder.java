@@ -1,48 +1,156 @@
 package com.rosieapp.services.common.model.builder;
 
+import com.rosieapp.services.common.model.identifiers.ModelIdentifierFactory;
+import java.util.Optional;
+
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.rosieapp.services.common.model.Model;
-import com.rosieapp.services.common.model.field.FieldHandler;
-import com.rosieapp.services.common.model.identifiers.NewObjectIdentifier;
-import com.rosieapp.services.common.model.identifiers.ObjectIdentifier;
-import com.rosieapp.services.common.model.identifiers.ObjectIdentifierFactory;
-import java.util.Optional;
+import com.rosieapp.services.common.model.field.FieldValueHandler;
+import com.rosieapp.services.common.model.identifiers.NewModelIdentifier;
+import com.rosieapp.services.common.model.identifiers.ModelIdentifier;
 
+/**
+ * Optional, abstract parent class provided for use by all model builders in the system.
+ *
+ * This implementation provides built-in handling for the identifier fields, which require special
+ * handling for JSON API serialization and de-serialization.
+ *
+ * @param <T>
+ *        The type of model that the builder builds.
+ * @param <B>
+ *        The builder class itself. (This must be the same type as the class being defined, to avoid
+ *        a {@code ClassCastException}).
+ */
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public abstract class AbstractModelBuilder<T extends Model, B extends ModelBuilder<T>>
+public abstract class AbstractModelBuilder<T extends Model, B extends AbstractModelBuilder<T, B>>
 implements ModelBuilder<T> {
-  private final FieldHandler fieldHandler;
+  private final FieldValueHandler valueHandler;
 
-  private ObjectIdentifier id;
+  private ModelIdentifier id;
 
-  protected AbstractModelBuilder(final FieldHandler fieldHandler) {
-    this.fieldHandler = fieldHandler;
+  /**
+   * Constructor for {@link AbstractModelBuilder}.
+   *
+   * @param valueHandler
+   *        A handler for controlling how optional and required fields are handled during object
+   *        construction.
+   */
+  protected AbstractModelBuilder(final FieldValueHandler valueHandler) {
+    this.valueHandler = valueHandler;
   }
 
+  /**
+   * Builder method for constructing a model with an identifier derived by parsing a String value.
+   *
+   * The String must represent either a UUID or a long integer value.
+   *
+   * @param   id
+   *          The string from an identifier will be parsed.
+   *
+   * @return  This object, for chaining builder calls.
+   */
   public B withId(final String id) {
-    return this.withId(ObjectIdentifierFactory.getInstance().createIdFrom(id));
+    return this.withId(ModelIdentifierFactory.getInstance().createIdFrom(id));
   }
 
-  public B withId(final ObjectIdentifier id) {
+  /**
+   * Builder method for constructing a model with the specified identifier.
+   *
+   * The String must represent either a UUID or a long integer value.
+   *
+   * @param   id
+   *          The string from an identifier will be parsed.
+   *
+   * @return  This object, for chaining builder calls.
+   */
+  @SuppressWarnings("unchecked")
+  public B withId(final ModelIdentifier id) {
     this.id = id;
 
     return (B)this;
   }
 
-  protected ObjectIdentifier buildId() {
-    return Optional.ofNullable(this.id).orElse(new NewObjectIdentifier());
+  /**
+   * Builds a null-safe identifier for the model.
+   *
+   * If an identifier was not provided via {@link #withId(ModelIdentifier)} or its permutations,
+   * this method will automatically produce a {@link NewModelIdentifier} instead, to ensure that
+   * locally-produced objects never have a {@code null} identifier.
+   *
+   * @return  An identifier to use for the new model instance.
+   */
+  protected ModelIdentifier buildId() {
+    return Optional.ofNullable(this.id).orElse(NewModelIdentifier.getInstance());
   }
 
-  protected <T> T requireField(final T fieldValue, final String fieldName) {
-    return this.getFieldHandler().requireField(fieldValue, fieldName);
+  /**
+   * Requests, optionally validates, and then returns the value to use when populating the specified
+   * required field for a model being constructed by this builder.
+   *
+   * The request is delegated to the field value handler. If this builder has not been provided with
+   * a value for the field (i.e. {@code fieldValue} is {@code null}), the field handler may choose
+   * to communicate this by raising an {@link IllegalStateException}, or it may simply supply
+   * {@code null} (or a different value of its own choosing) in place of the missing value.
+   *
+   * @see     FieldValueHandler
+   *
+   * @param   fieldValue
+   *          The current value this builder has for the field.
+   * @param   fieldName
+   *          The name of the field. This may be used by the field value handler to construct an
+   *          exception message if the field has no value.
+   *
+   * @param   <F>
+   *          The type of value expected for the field.
+   *
+   * @return  Depending on the field value handler, this will typically be a non-null value to use
+   *          for the field, but may be {@code null} if the value handler is lax on validating
+   *          that all required fields are populated.
+   *
+   * @throws  IllegalStateException
+   *          If the required field value is {@code null} or invalid, and the field value handler
+   *          considers this to be an error.
+   */
+  protected <F> F getRequiredField(final F fieldValue, final String fieldName)
+  throws IllegalStateException {
+    return this.getValueHandler().getRequiredField(fieldValue, fieldName);
   }
 
-  protected <T> T getFieldOrDefault(final T fieldValue, final T defaultValue) {
-    return this.getFieldHandler().getFieldOrDefault(fieldValue, defaultValue);
+  /**
+   * Returns the value to use when populating the specified optional field for a model being
+   * constructed by this builder.
+   *
+   * The request is delegated to the field value handler. If this builder has not been provided with
+   * a value for the field (i.e. {@code fieldValue} is {@code null}), then in place of the missing
+   * value, the field handler may choose to return the {@code defaultValue} that the builder has
+   * requested, or any other value of the handler's choosing.
+   *
+   * @see     FieldValueHandler
+   *
+   * @param   fieldValue
+   *          The current value this builder has for the field.
+   * @param   defaultValue
+   *          The default value that the builder would prefer to receive if the {@code fieldValue}
+   *          is {@code null}.
+   *
+   * @param   <F>
+   *          The type of value expected for the field.
+   *
+   * @return  Depending on the field value handler, this will typically be either the value of
+   *          the requested field, or the default value if the field did not have a value.
+   */
+  protected <F> F getOptionalField(final F fieldValue, final F defaultValue) {
+    return this.getValueHandler().getOptionalField(fieldValue, defaultValue);
   }
 
-  protected FieldHandler getFieldHandler() {
-    return this.fieldHandler;
+  /**
+   * Gets the handler (i.e. strategy) that dictates how the values of fields are retrieved and
+   * validated.
+   *
+   * @return  The field value handler currently in use by this builder.
+   */
+  private FieldValueHandler getValueHandler() {
+    return this.valueHandler;
   }
 }

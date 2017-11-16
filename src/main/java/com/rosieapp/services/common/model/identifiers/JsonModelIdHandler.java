@@ -3,7 +3,11 @@ package com.rosieapp.services.common.model.identifiers;
 import com.github.jasminb.jsonapi.ResourceIdHandler;
 import java.util.Optional;
 
-public class JsonObjectIdHandler
+/**
+ * A {@link ResourceIdHandler} that is used to marshall model identifiers into and out of JSON
+ * documents.
+ */
+public class JsonModelIdHandler
 implements ResourceIdHandler {
   @Override
   public String asString(Object identifier) {
@@ -12,6 +16,6 @@ implements ResourceIdHandler {
 
   @Override
   public Object fromString(String identifier) {
-    return ObjectIdentifierFactory.getInstance().createIdFrom(identifier);
+    return ModelIdentifierFactory.getInstance().createIdFrom(identifier);
   }
 }
