@@ -148,7 +148,7 @@ extends AbstractModelBuilder<T, B> {
    *
    * @return  The map of field values.
    */
-  protected Map<String, Object> getFieldValueMap() {
+  private Map<String, Object> getFieldValueMap() {
     return this.fieldValueMap;
   }
 
