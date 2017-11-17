@@ -41,7 +41,7 @@ extends MapBasedModelBuilder<T, B> {
   protected AnnotationBasedModelBuilder(final FieldValueHandler valueHandler) {
     super(valueHandler);
 
-    this.targetFields = this.getTargetFields();
+    this.populateTargetFields();
   }
 
   @Override
@@ -138,22 +138,24 @@ extends MapBasedModelBuilder<T, B> {
    * @return  The list of target fields.
    */
   private Map<String, Field> getTargetFields() {
-    Map<String, Field>  targetFields = this.targetFields;
+    return this.targetFields;
+  }
 
-    if (targetFields == null) {
-      final Class<? extends T>  modelClass    = this.getModelClass();
-      final Field[]             allFields     = modelClass.getDeclaredFields();
+  /**
+   * Populates the map of field names to field objects.
+   */
+  private void populateTargetFields() {
+    Map<String, Field>       targetFields;
+    final Class<? extends T> modelClass = this.getModelClass();
+    final Field[]            allFields  = modelClass.getDeclaredFields();
 
-      targetFields =
-        Arrays
-          .stream(allFields)
-          .filter((field) -> field.isAnnotationPresent(BuilderPopulatedField.class))
-          .collect(Collectors.toMap(Field::getName, Function.identity()));
+    targetFields =
+      Arrays
+        .stream(allFields)
+        .filter((field) -> field.isAnnotationPresent(BuilderPopulatedField.class))
+        .collect(Collectors.toMap(Field::getName, Function.identity()));
 
-      this.targetFields = targetFields;
-    }
-
-    return targetFields;
+    this.targetFields = targetFields;
   }
 
   /**
