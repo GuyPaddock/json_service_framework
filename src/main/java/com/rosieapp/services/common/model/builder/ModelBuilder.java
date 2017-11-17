@@ -11,6 +11,9 @@ package com.rosieapp.services.common.model.builder;
  * Builders may also perform validation of field values at time of construction, to provide a
  * general assurance that model instances are only constructed if they have valid data. The actual
  * validation performed by the builder is dependent upon its implementation.
+ *
+ * @param <T>
+ *        The type of model that the builder builds.
  */
 public interface ModelBuilder<T> {
   /**

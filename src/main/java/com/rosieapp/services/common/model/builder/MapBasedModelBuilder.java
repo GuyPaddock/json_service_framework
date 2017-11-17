@@ -12,7 +12,8 @@ import java.util.stream.Stream;
  * An optional base class for model builders that wish to stash the field values that will be used
  * to construct the model in a map, to avoid having to duplicate each field value definition.
  *
- * {@inheritDoc}
+ * @param <T> {@inheritDoc}
+ * @param <B> {@inheritDoc}
  */
 public abstract class MapBasedModelBuilder<T extends Model, B extends MapBasedModelBuilder<T, B>>
 extends AbstractModelBuilder<T, B> {

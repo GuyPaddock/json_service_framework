@@ -1,5 +1,6 @@
 package com.rosieapp.common.collections;
 
+import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -18,9 +19,9 @@ public class Maps {
   /**
    * Converts all of the entries of a map to a string.
    * <p>
-   * The output is formatted more nicely than the default {@link Map#toString()} implementation
-   * in the JDK. Keys and values are wrapped in quotes, and the values are presented in alphabetic
-   * order by key.
+   * The output is formatted more nicely than the default {@link AbstractMap#toString()}
+   * implementation in the JDK. Keys and values are wrapped in quotes, and the values are presented
+   * in alphabetic order by key.
    *
    * @param   map
    *          The map to convert to a string.

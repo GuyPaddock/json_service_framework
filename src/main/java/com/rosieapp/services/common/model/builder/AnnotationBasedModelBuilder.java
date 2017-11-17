@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
  * <p>
  * The builder must be declared as a static inner class within the model that it builds.
  *
- * {@inheritDoc}
+ * @param <T> {@inheritDoc}
+ * @param <B> {@inheritDoc}
  */
 public abstract class AnnotationBasedModelBuilder<T extends Model,
                                                   B extends AnnotationBasedModelBuilder<T, B>>

@@ -16,8 +16,7 @@ import com.rosieapp.services.common.model.identifiers.ModelIdentifier;
  * This implementation provides built-in handling for the identifier fields, which require special
  * handling for JSON API serialization and de-serialization.
  *
- * @param <T>
- *        The type of model that the builder builds.
+ * @param <T> {@inheritDoc}
  * @param <B>
  *        The builder class itself. (This must be the same type as the class being defined, to avoid
  *        a {@code ClassCastException}).
