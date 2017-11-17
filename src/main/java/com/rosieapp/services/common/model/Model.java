@@ -2,11 +2,31 @@ package com.rosieapp.services.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rosieapp.services.common.model.identifiers.ModelIdentifier;
+import com.rosieapp.services.common.model.identifiers.NewModelIdentifier;
 
 /**
  * Common interface for Rosie JSON API service models.
  */
 public interface Model {
+  /**
+   * Assigns this model an identifier.
+   * <p>
+   * A given instance of a model may only be assigned an identifier once. The model must not already
+   * have an existing object identifier set, with the exception that the model may have an
+   * identifier of type {@link NewModelIdentifier}.
+   * <p>
+   * This method is typically invoked only by the model's builder and by methods that handle
+   * persistence of a model for the first time.
+   *
+   * @param   id
+   *          The new ID for this object.
+   *
+   * @throws  IllegalArgumentException
+   *          If this model already has an identifier set, and the identifier does not represent
+   *          a new object identifier.
+   */
+  void assignId(ModelIdentifier id);
+
   /**
    * Gets an immutable identifier for this object.
    *

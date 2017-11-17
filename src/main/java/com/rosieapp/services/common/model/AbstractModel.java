@@ -28,6 +28,21 @@ implements Model {
   private ModelIdentifier id;
 
   @Override
+  public synchronized void assignId(final ModelIdentifier newId)
+  throws IllegalArgumentException {
+    final ModelIdentifier existingId = this.getId();
+
+    if ((existingId != null) && !existingId.isObjectNew()) {
+      throw new IllegalStateException(
+        String.format(
+          "This model already has an existing identifier set. An attempt was made to change the " +
+          "identifier from `%s` to `%s`", existingId, newId));
+    }
+
+    this.id = newId;
+  }
+
+  @Override
   public ModelIdentifier getId() {
     return id;
   }
@@ -35,30 +50,5 @@ implements Model {
   @Override
   public boolean isNew() {
     return (this.getId().isObjectNew());
-  }
-
-  /**
-   * Sets the identifier for this model.
-   * <p>
-   * The model must not already have an existing object identifier set, with the exception that the
-   * model may have a {@link NewModelIdentifier}
-   * set.
-   *
-   * @param   id
-   *          The new ID for this object.
-   *
-   * @throws  IllegalArgumentException
-   *          If this model already has an identifier set, and the identifier does not represent
-   *          a new object identifier.
-   */
-  protected void setId(final ModelIdentifier id)
-  throws IllegalArgumentException {
-    final ModelIdentifier existingId = this.getId();
-
-    if ((existingId != null) && !existingId.isObjectNew()) {
-      throw new IllegalStateException("This model already has an existing identifier set.");
-    }
-
-    this.id = id;
   }
 }
