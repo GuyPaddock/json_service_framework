@@ -46,7 +46,7 @@ extends MapBasedModelBuilder<M, B> {
 
   @Override
   public M build() throws IllegalStateException {
-    final M model = instantiateModel();
+    final M model = this.instantiateModelWithId();
 
     for (final Entry<String, Field> fieldEntry : this.getTargetFields().entrySet()) {
       final String  fieldName     = fieldEntry.getKey();
@@ -66,6 +66,17 @@ extends MapBasedModelBuilder<M, B> {
     }
 
     return model;
+  }
+
+  @Override
+  public M buildShallow() throws IllegalStateException {
+    final M model;
+
+    if (this.getId() == null) {
+      throw new IllegalStateException("`id` must be set prior to calling this method");
+    }
+
+    return this.instantiateModelWithId();
   }
 
   /**
@@ -119,6 +130,19 @@ extends MapBasedModelBuilder<M, B> {
    */
   private Map<String, Field> getTargetFields() {
     return this.targetFields;
+  }
+
+  /**
+   * Builds a new, shallow instance of the model, and then assigns it an ID.
+   *
+   * @return  The shallow model instances.
+   */
+  private M instantiateModelWithId() {
+    final M model = this.instantiateModel();
+
+    model.assignId(this.buildId());
+
+    return model;
   }
 
   /**

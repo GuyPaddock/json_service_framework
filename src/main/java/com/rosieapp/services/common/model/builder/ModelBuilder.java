@@ -29,4 +29,24 @@ public interface ModelBuilder<M> {
    *          method is insufficient or invalid for constructing the model.
    */
   M build() throws IllegalStateException;
+
+  /**
+   * Builds a shallowly-populated model that consists only of its ID.
+   * <p>
+   * This is only to be used for cases in which the model represents data that has already been
+   * persisted in a remote system. Consequently, the builder must be provided with the ID to use for
+   * the new model instance prior to this call.
+   * <p>
+   * Not all models / builders are required to support this operation. Builders that do not support
+   * building a shallow model will throw an {@link UnsupportedOperationException}.
+   *
+   * @return  The newly-constructed model instance.
+   *
+   * @throws  IllegalStateException
+   *          If the builder was not provided with the ID prior to the call.
+   *
+   * @throws  UnsupportedOperationException
+   *          If the builder or model does not support being constructed in a shallow manner.
+   */
+  M buildShallow() throws IllegalStateException, UnsupportedOperationException;
 }
