@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
  * <p>
  * The builder must be declared as a static inner class within the model that it builds.
  *
- * @param <T> {@inheritDoc}
+ * @param <M> {@inheritDoc}
  * @param <B> {@inheritDoc}
  */
-public abstract class AnnotationBasedModelBuilder<T extends Model,
-                                                  B extends AnnotationBasedModelBuilder<T, B>>
-extends MapBasedModelBuilder<T, B> {
+public abstract class AnnotationBasedModelBuilder<M extends Model,
+                                                  B extends AnnotationBasedModelBuilder<M, B>>
+extends MapBasedModelBuilder<M, B> {
   /**
    * This map of fields that this builder will populate on the model.
    */
@@ -45,10 +45,8 @@ extends MapBasedModelBuilder<T, B> {
   }
 
   @Override
-  public T build() throws IllegalStateException {
-    final T model = instantiateModel();
-
-    model.assignId(this.buildId());
+  public M build() throws IllegalStateException {
+    final M model = instantiateModel();
 
     for (final Entry<String, Field> fieldEntry : this.getTargetFields().entrySet()) {
       final String  fieldName     = fieldEntry.getKey();
@@ -65,24 +63,6 @@ extends MapBasedModelBuilder<T, B> {
             ex.getMessage()),
           ex);
       }
-    }
-
-    return model;
-  }
-
-  private T instantiateModel() {
-    final T                  model;
-    final Class<? extends T> modelClass = this.getModelClass();
-
-    try {
-      final Constructor<? extends T> constructor = modelClass.getDeclaredConstructor();
-
-      constructor.setAccessible(true);
-
-      model = constructor.newInstance();
-    } catch (ReflectiveOperationException ex) {
-      throw new IllegalStateException(
-        "Could not instantiate an instance of the model: " + ex.getMessage(), ex);
     }
 
     return model;
@@ -142,11 +122,34 @@ extends MapBasedModelBuilder<T, B> {
   }
 
   /**
+   * Invokes the private constructor for the model via reflection.
+   *
+   * @return  A new instance of the model this builder creates.
+   */
+  private M instantiateModel() {
+    final M                  model;
+    final Class<? extends M> modelClass = this.getModelClass();
+
+    try {
+      final Constructor<? extends M> constructor = modelClass.getDeclaredConstructor();
+
+      constructor.setAccessible(true);
+
+      model = constructor.newInstance();
+    } catch (ReflectiveOperationException ex) {
+      throw new IllegalStateException(
+        "Could not instantiate an instance of the model: " + ex.getMessage(), ex);
+    }
+
+    return model;
+  }
+
+  /**
    * Populates the map of field names to field objects.
    */
   private void populateTargetFields() {
     Map<String, Field>       targetFields;
-    final Class<? extends T> modelClass = this.getModelClass();
+    final Class<? extends M> modelClass = this.getModelClass();
     final Field[]            allFields  = modelClass.getDeclaredFields();
 
     targetFields =
@@ -175,7 +178,7 @@ extends MapBasedModelBuilder<T, B> {
    *          If this builder does not have the required level of access to the model in order to
    *          populate the field.
    */
-  private void populateField(T model, String fieldName, Field field)
+  private void populateField(M model, String fieldName, Field field)
   throws IllegalAccessException {
     final boolean fieldRequired = field.getAnnotation(BuilderPopulatedField.class).required();
     final Object  fieldValue;
@@ -224,10 +227,10 @@ extends MapBasedModelBuilder<T, B> {
    *          If this builder is not declared as a static inner class with two type parameters.
    */
   @SuppressWarnings("unchecked")
-  private Class<? extends T> getModelClass()
+  private Class<? extends M> getModelClass()
   throws IllegalStateException {
-    final Class<? extends T>  modelType;
-    final Type                currentClassType = this.getClass().getGenericSuperclass();
+    final Class<? extends M> modelType;
+    final Type               currentClassType = this.getClass().getGenericSuperclass();
 
     if (!(currentClassType instanceof ParameterizedType)) {
       throw new IllegalStateException(
@@ -244,7 +247,7 @@ extends MapBasedModelBuilder<T, B> {
         throw new IllegalStateException("The builder is expected to have two generic parameters.");
       }
 
-      modelType = (Class<? extends T>)typeParams[0];
+      modelType = (Class<? extends M>)typeParams[0];
     }
 
     return modelType;

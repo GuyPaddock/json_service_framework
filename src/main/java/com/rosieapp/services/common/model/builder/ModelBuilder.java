@@ -12,10 +12,10 @@ package com.rosieapp.services.common.model.builder;
  * general assurance that model instances are only constructed if they have valid data. The actual
  * validation performed by the builder is dependent upon its implementation.
  *
- * @param <T>
+ * @param <M>
  *        The type of model that the builder builds.
  */
-public interface ModelBuilder<T> {
+public interface ModelBuilder<M> {
   /**
    * Builds a model instance using information that has been built up through this interface.
    * <p>
@@ -28,5 +28,5 @@ public interface ModelBuilder<T> {
    *          If any of the information that has been provided to the builder prior to calling this
    *          method is insufficient or invalid for constructing the model.
    */
-  T build() throws IllegalStateException;
+  M build() throws IllegalStateException;
 }

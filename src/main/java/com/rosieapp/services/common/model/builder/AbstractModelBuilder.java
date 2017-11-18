@@ -16,14 +16,14 @@ import com.rosieapp.services.common.model.identifiers.ModelIdentifier;
  * This implementation provides built-in handling for the identifier fields, which require special
  * handling for JSON API serialization and de-serialization.
  *
- * @param <T> {@inheritDoc}
+ * @param <M> {@inheritDoc}
  * @param <B>
  *        The builder class itself. (This must be the same type as the class being defined, to avoid
  *        a {@code ClassCastException}).
  */
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-public abstract class AbstractModelBuilder<T extends Model, B extends AbstractModelBuilder<T, B>>
-implements ModelBuilder<T> {
+public abstract class AbstractModelBuilder<M extends Model, B extends AbstractModelBuilder<M, B>>
+implements ModelBuilder<M> {
   private final FieldValueHandler valueHandler;
 
   private ModelIdentifier id;
