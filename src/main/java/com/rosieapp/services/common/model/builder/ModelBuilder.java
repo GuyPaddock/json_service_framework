@@ -1,5 +1,7 @@
 package com.rosieapp.services.common.model.builder;
 
+import com.rosieapp.services.common.model.filters.ModelFilter;
+
 /**
  * Common interface for objects that construct instances of Rosie JSON API service models.
  * <p>
@@ -49,4 +51,32 @@ public interface ModelBuilder<M> {
    *          If the builder or model does not support being constructed in a shallow manner.
    */
   M buildShallow() throws IllegalStateException, UnsupportedOperationException;
+
+  /**
+   * Instead of building the model itself, build a model <em>filter</em>.
+   * <p>
+   * A {@link ModelFilter} can be used to identify existing instances of a model that have values
+   * matching what has been set on this builder. For example:
+   * <pre>{@code
+   *   ModelFilter<Person> = Person.getBuilder().withName("Bob").withAge(24).buildFilter();
+   * }</pre>
+   * <p>
+   * Would build a model filter that can be used to find all people named "Bob" who are age 24.
+   * <p>
+   * Unlike the {@link #build()} method, the filter has no required fields. Only fields that have
+   * been given a value through the builder interface will be included in the resulting filter.
+   * For instance, in contrast to the earlier example, consider the following:
+   * <pre>{@code
+   *   ModelFilter<Person> = Person.getBuilder().withName("Bob").buildFilter();
+   * }</pre>
+   * <p>
+   * This would build a filter that can be used to find all people named "Bob" -- of any age.
+   *
+   * @return  A filter that is initialized to find models whose values match what has been built up
+   *          through this interface.
+   *
+   * @throws  UnsupportedOperationException
+   *          If the builder or model does not support filtering.
+   */
+  ModelFilter<M> buildFilter() throws UnsupportedOperationException;
 }

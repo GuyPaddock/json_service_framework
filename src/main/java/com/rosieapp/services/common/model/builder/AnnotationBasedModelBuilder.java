@@ -4,6 +4,8 @@ import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
 import com.rosieapp.services.common.model.field.FieldValueHandler;
 import com.rosieapp.services.common.model.field.ValidatingFieldHandler;
+import com.rosieapp.services.common.model.filters.ModelFilter;
+import com.rosieapp.services.common.model.filters.ReflectionBasedModelFilter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -86,6 +88,24 @@ extends MapBasedModelBuilder<M, B> {
     }
 
     return this.instantiateModelWithId();
+  }
+
+  @Override
+  public ModelFilter<M> buildFilter() {
+    final ReflectionBasedModelFilter<M> filter        = new ReflectionBasedModelFilter<>();
+    final Map<String, Field>            targetFields  = this.getTargetFields();
+
+    for (final Entry<String, Field> fieldEntry : targetFields.entrySet()) {
+      final String fieldName  = fieldEntry.getKey();
+      final Field  field      = fieldEntry.getValue();
+      final Object fieldValue = this.getFieldValue(fieldName);
+
+      if (fieldValue != null) {
+        filter.addCriterion(field, fieldValue);
+      }
+    }
+
+    return filter;
   }
 
   /**
