@@ -9,4 +9,10 @@ public abstract class AbstractModelIdentifier
 implements ModelIdentifier {
   @Override
   public abstract String toString();
+
+  @Override
+  public abstract boolean equals(Object o);
+
+  @Override
+  public abstract int hashCode();
 }

@@ -50,4 +50,15 @@ extends AbstractModelIdentifier {
   public String toString() {
     return null;
   }
+
+  @Override
+  @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+  public boolean equals(Object other) {
+    return (this == other);
+  }
+
+  @Override
+  public int hashCode() {
+    return System.identityHashCode(this);
+  }
 }

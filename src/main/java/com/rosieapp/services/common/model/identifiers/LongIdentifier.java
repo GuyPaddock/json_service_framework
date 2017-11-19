@@ -69,6 +69,30 @@ public final class LongIdentifier extends PersistedModelIdentifier {
     return Long.toString(this.getValue());
   }
 
+  @Override
+  public boolean equals(Object other) {
+    final boolean result;
+
+    if (this == other) {
+      result = true;
+    }
+    else if ((other == null) || (this.getClass() != other.getClass())) {
+      result = false;
+    }
+    else {
+      LongIdentifier otherId = (LongIdentifier)other;
+
+      result = (this.getValue() == otherId.getValue());
+    }
+
+    return result;
+  }
+
+  @Override
+  public int hashCode() {
+    return Long.hashCode(this.getValue());
+  }
+
   /**
    * Sets the value inside this identifier.
    *

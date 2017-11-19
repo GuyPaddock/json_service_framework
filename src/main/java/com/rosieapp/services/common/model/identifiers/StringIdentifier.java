@@ -1,5 +1,6 @@
 package com.rosieapp.services.common.model.identifiers;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -64,6 +65,30 @@ public final class StringIdentifier extends PersistedModelIdentifier {
   @Override
   public String toString() {
     return this.getValue();
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    final boolean result;
+
+    if (this == other) {
+      result = true;
+    }
+    else if ((other == null) || (this.getClass() != other.getClass())) {
+      result = false;
+    }
+    else {
+      StringIdentifier otherId = (StringIdentifier)other;
+
+      result = Objects.equals(this.getValue(), otherId.getValue());
+    }
+
+    return result;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(this.getValue());
   }
 
   /**
