@@ -56,11 +56,12 @@ extends MapBasedModelBuilder<M, B> {
 
   @Override
   public M build() throws IllegalStateException {
-    final M model = this.instantiateModelWithId();
+    final M                   model         = this.instantiateModelWithId();
+    final Map<String, Field>  targetFields  = this.getTargetFields();
 
-    for (final Entry<String, Field> fieldEntry : this.getTargetFields().entrySet()) {
-      final String  fieldName     = fieldEntry.getKey();
-      final Field   field         = fieldEntry.getValue();
+    for (final Entry<String, Field> fieldEntry : targetFields.entrySet()) {
+      final String  fieldName = fieldEntry.getKey();
+      final Field   field     = fieldEntry.getValue();
 
       try {
         this.populateField(model, fieldName, field);
@@ -80,8 +81,6 @@ extends MapBasedModelBuilder<M, B> {
 
   @Override
   public M buildShallow() throws IllegalStateException {
-    final M model;
-
     if (this.getId() == null) {
       throw new IllegalStateException("`id` must be set prior to calling this method");
     }

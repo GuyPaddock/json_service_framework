@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.jasminb.jsonapi.annotations.Id;
 import com.rosieapp.services.common.model.identifiers.JsonModelIdHandler;
-import com.rosieapp.services.common.model.identifiers.NewModelIdentifier;
 import com.rosieapp.services.common.model.identifiers.ModelIdentifier;
 
 /**
