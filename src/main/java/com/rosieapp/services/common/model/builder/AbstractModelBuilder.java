@@ -1,14 +1,14 @@
 package com.rosieapp.services.common.model.builder;
 
-import com.rosieapp.services.common.model.identifiers.ModelIdentifierFactory;
-import java.util.Optional;
-
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.field.FieldValueHandler;
-import com.rosieapp.services.common.model.identifiers.NewModelIdentifier;
+import com.rosieapp.services.common.model.field.ValidatingFieldHandler;
 import com.rosieapp.services.common.model.identifiers.ModelIdentifier;
+import com.rosieapp.services.common.model.identifiers.ModelIdentifierFactory;
+import com.rosieapp.services.common.model.identifiers.NewModelIdentifier;
+import java.util.Optional;
 
 /**
  * Optional, abstract parent class provided for use by all model builders in the system.
@@ -27,6 +27,15 @@ implements ModelBuilder<M> {
   private final FieldValueHandler valueHandler;
 
   private ModelIdentifier id;
+
+  /**
+   * Default constructor for {@link AbstractModelBuilder}.
+   *
+   * Initializes the model builder to strictly validate required fields.
+   */
+  protected AbstractModelBuilder() {
+    this(new ValidatingFieldHandler());
+  }
 
   /**
    * Constructor for {@link AbstractModelBuilder}.

@@ -3,6 +3,7 @@ package com.rosieapp.services.common.model.builder;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
 import com.rosieapp.services.common.model.field.FieldValueHandler;
+import com.rosieapp.services.common.model.field.ValidatingFieldHandler;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -30,6 +31,15 @@ extends MapBasedModelBuilder<M, B> {
    * This map of fields that this builder will populate on the model.
    */
   private Map<String, Field> targetFields;
+
+  /**
+   * Default constructor for {@link AnnotationBasedModelBuilder}.
+   *
+   * Initializes the model builder to strictly validate required fields.
+   */
+  protected AnnotationBasedModelBuilder() {
+    this(new ValidatingFieldHandler());
+  }
 
   /**
    * Constructor for {@link AnnotationBasedModelBuilder}.

@@ -3,6 +3,7 @@ package com.rosieapp.services.common.model.builder;
 import com.rosieapp.common.collections.Maps;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.field.FieldValueHandler;
+import com.rosieapp.services.common.model.field.ValidatingFieldHandler;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +36,15 @@ extends AbstractModelBuilder<M, B> {
                  valueStr  = this.getFieldValuesAsString();
 
     return String.format("%s{%s}", className, valueStr);
+  }
+
+  /**
+   * Default constructor for {@link MapBasedModelBuilder}.
+   *
+   * Initializes the model builder to strictly validate required fields.
+   */
+  protected MapBasedModelBuilder() {
+    this(new ValidatingFieldHandler());
   }
 
   /**
