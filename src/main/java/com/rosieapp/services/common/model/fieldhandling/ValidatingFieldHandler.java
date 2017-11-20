@@ -1,4 +1,4 @@
-package com.rosieapp.services.common.model.field;
+package com.rosieapp.services.common.model.fieldhandling;
 
 import java.util.Optional;
 

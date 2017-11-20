@@ -1,4 +1,4 @@
-package com.rosieapp.services.common.model.identifiers;
+package com.rosieapp.services.common.model.identification;
 
 /**
  * Common interface for objects that identify both persisted and un-persisted Rosie JSON API service

@@ -1,4 +1,4 @@
-package com.rosieapp.services.common.model.field;
+package com.rosieapp.services.common.model.fieldhandling;
 
 /**
  * Common interface for objects that provide the values that builders use to populate the fields of

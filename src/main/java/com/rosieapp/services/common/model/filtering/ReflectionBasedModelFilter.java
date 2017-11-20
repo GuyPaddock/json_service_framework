@@ -1,4 +1,4 @@
-package com.rosieapp.services.common.model.filters;
+package com.rosieapp.services.common.model.filtering;
 
 import com.rosieapp.services.common.model.Model;
 import java.lang.reflect.Field;

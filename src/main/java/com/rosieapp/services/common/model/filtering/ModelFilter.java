@@ -1,6 +1,6 @@
-package com.rosieapp.services.common.model.filters;
+package com.rosieapp.services.common.model.filtering;
 
-import com.rosieapp.services.common.model.builder.ModelBuilder;
+import com.rosieapp.services.common.model.construction.ModelBuilder;
 
 /**
  * Provides an interface for identifying if a given model matches a previously-established set of

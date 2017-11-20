@@ -1,9 +1,9 @@
-package com.rosieapp.services.common.model.builder;
+package com.rosieapp.services.common.model.construction;
 
 import com.rosieapp.common.collections.Maps;
 import com.rosieapp.services.common.model.Model;
-import com.rosieapp.services.common.model.field.FieldValueHandler;
-import com.rosieapp.services.common.model.field.ValidatingFieldHandler;
+import com.rosieapp.services.common.model.fieldhandling.FieldValueHandler;
+import com.rosieapp.services.common.model.fieldhandling.ValidatingFieldHandler;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;

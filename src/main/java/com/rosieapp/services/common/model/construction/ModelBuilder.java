@@ -1,6 +1,6 @@
-package com.rosieapp.services.common.model.builder;
+package com.rosieapp.services.common.model.construction;
 
-import com.rosieapp.services.common.model.filters.ModelFilter;
+import com.rosieapp.services.common.model.filtering.ModelFilter;
 
 /**
  * Common interface for objects that construct instances of Rosie JSON API service models.

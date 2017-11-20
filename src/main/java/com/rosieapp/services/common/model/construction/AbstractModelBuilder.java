@@ -1,13 +1,13 @@
-package com.rosieapp.services.common.model.builder;
+package com.rosieapp.services.common.model.construction;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.rosieapp.services.common.model.Model;
-import com.rosieapp.services.common.model.field.FieldValueHandler;
-import com.rosieapp.services.common.model.field.ValidatingFieldHandler;
-import com.rosieapp.services.common.model.identifiers.ModelIdentifier;
-import com.rosieapp.services.common.model.identifiers.ModelIdentifierFactory;
-import com.rosieapp.services.common.model.identifiers.NewModelIdentifier;
+import com.rosieapp.services.common.model.fieldhandling.FieldValueHandler;
+import com.rosieapp.services.common.model.fieldhandling.ValidatingFieldHandler;
+import com.rosieapp.services.common.model.identification.ModelIdentifier;
+import com.rosieapp.services.common.model.identification.ModelIdentifierFactory;
+import com.rosieapp.services.common.model.identification.NewModelIdentifier;
 import java.util.Optional;
 
 /**

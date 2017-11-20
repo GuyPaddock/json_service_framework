@@ -3,8 +3,8 @@ package com.rosieapp.services.common.model;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.jasminb.jsonapi.annotations.Id;
-import com.rosieapp.services.common.model.identifiers.JsonModelIdHandler;
-import com.rosieapp.services.common.model.identifiers.ModelIdentifier;
+import com.rosieapp.services.common.model.identification.JsonModelIdHandler;
+import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import java.util.Objects;
 
 /**

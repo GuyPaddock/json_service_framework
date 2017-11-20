@@ -1,4 +1,4 @@
-package com.rosieapp.services.common.model.identifiers;
+package com.rosieapp.services.common.model.identification;
 
 import java.util.Optional;
 import org.apache.commons.lang.math.NumberUtils;

@@ -1,4 +1,4 @@
-package com.rosieapp.services.common.model.identifiers;
+package com.rosieapp.services.common.model.identification;
 
 /**
  * Optional, abstract parent class provided for use by identifiers of models that have been

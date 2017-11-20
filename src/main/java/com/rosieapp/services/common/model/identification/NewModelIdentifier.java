@@ -1,4 +1,4 @@
-package com.rosieapp.services.common.model.identifiers;
+package com.rosieapp.services.common.model.identification;
 
 /**
  * An identifier that is used for newly-created models that have not yet been persisted.

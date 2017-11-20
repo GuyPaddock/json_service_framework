@@ -1,4 +1,4 @@
-package com.rosieapp.services.common.model.field;
+package com.rosieapp.services.common.model.fieldhandling;
 
 /**
  * A field handler that handles missing required field values by merely returning {@code null},

@@ -1,4 +1,4 @@
-package com.rosieapp.services.common.model.field;
+package com.rosieapp.services.common.model.fieldhandling;
 
 /**
  * Exception thrown by a validating {@link FieldValueHandler} when a required field is missing a

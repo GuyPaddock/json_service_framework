@@ -1,12 +1,11 @@
 package com.rosieapp.services.common.model.annotation;
 
 import com.rosieapp.services.common.model.Model;
-import com.rosieapp.services.common.model.builder.AnnotationBasedModelBuilder;
+import com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilder;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.util.function.Supplier;
 
 /**
  * An annotation on {@link Model} fields that are to be populated via an

@@ -1,8 +1,8 @@
 package com.rosieapp.services.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.rosieapp.services.common.model.identifiers.ModelIdentifier;
-import com.rosieapp.services.common.model.identifiers.NewModelIdentifier;
+import com.rosieapp.services.common.model.identification.ModelIdentifier;
+import com.rosieapp.services.common.model.identification.NewModelIdentifier;
 
 /**
  * Common interface for Rosie JSON API service models.

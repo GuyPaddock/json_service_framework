@@ -1,11 +1,11 @@
-package com.rosieapp.services.common.model.builder;
+package com.rosieapp.services.common.model.construction;
 
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
-import com.rosieapp.services.common.model.field.FieldValueHandler;
-import com.rosieapp.services.common.model.field.ValidatingFieldHandler;
-import com.rosieapp.services.common.model.filters.ModelFilter;
-import com.rosieapp.services.common.model.filters.ReflectionBasedModelFilter;
+import com.rosieapp.services.common.model.fieldhandling.FieldValueHandler;
+import com.rosieapp.services.common.model.fieldhandling.ValidatingFieldHandler;
+import com.rosieapp.services.common.model.filtering.ModelFilter;
+import com.rosieapp.services.common.model.filtering.ReflectionBasedModelFilter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
