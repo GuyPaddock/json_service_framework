@@ -60,9 +60,12 @@ implements ModelBuilder<M> {
    * @return  This object, for chaining builder calls.
    *
    * @throws  IllegalArgumentException
-   *          If {@code identifier} is {@code null} or does not represent a valid identifier.
+   *          If {@code identifier} does not represent a valid identifier.
+   * @throws  NullPointerException
+   *          If {@code identifier} is {@code null}.
    */
-  public B withId(final String identifier) {
+  public B withId(final String identifier)
+  throws IllegalArgumentException, NullPointerException {
     return this.withId(ModelIdentifierFactory.getInstance().createIdFrom(identifier));
   }
 

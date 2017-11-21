@@ -45,11 +45,11 @@ public final class StringIdentifier extends PersistedModelIdentifier {
    *          The string to wrap in the new identifier object.
    *          This value must not be {@code null}.
    *
-   * @throws  IllegalArgumentException
+   * @throws  NullPointerException
    *          If {@code value} is {@code null}.
    */
   public StringIdentifier(final String value)
-  throws IllegalArgumentException {
+  throws NullPointerException {
     this.setValue(value);
   }
 
@@ -78,7 +78,7 @@ public final class StringIdentifier extends PersistedModelIdentifier {
       result = false;
     }
     else {
-      StringIdentifier otherId = (StringIdentifier)other;
+      final StringIdentifier otherId = (StringIdentifier)other;
 
       result = Objects.equals(this.getValue(), otherId.getValue());
     }
@@ -98,14 +98,12 @@ public final class StringIdentifier extends PersistedModelIdentifier {
    *          The string to set inside this object.
    *          This value must not be {@code null}.
    *
-   * @throws  IllegalArgumentException
+   * @throws  NullPointerException
    *          If {@code value} is {@code null}.
    */
   private void setValue(final String value)
-  throws IllegalArgumentException {
-    if (value == null) {
-      throw new IllegalArgumentException("value cannot be null");
-    }
+  throws NullPointerException {
+    Objects.requireNonNull(value, "value cannot be null");
 
     this.value = value;
   }

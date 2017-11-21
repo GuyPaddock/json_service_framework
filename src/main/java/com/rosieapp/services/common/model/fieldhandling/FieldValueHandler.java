@@ -33,11 +33,11 @@ public interface FieldValueHandler {
    *          use for the field, but may be {@code null} if the implementation is lax on validating
    *          that all required fields are populated.
    *
-   * @throws  IllegalStateException
+   * @throws  RequiredFieldMissingException
    *          If the required field value is {@code null} or invalid, and the current implementation
    *          considers this to be an error.
    */
-  <F> F getRequiredField(F fieldValue, String fieldName);
+  <F> F getRequiredField(F fieldValue, String fieldName) throws RequiredFieldMissingException;
 
   /**
    * Returns the value to use when populating the specified optional field.

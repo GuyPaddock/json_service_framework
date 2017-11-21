@@ -21,7 +21,7 @@ public interface Model {
    * @param   id
    *          The new ID for this object.
    *
-   * @throws  IllegalArgumentException
+   * @throws  IllegalStateException
    *          If this model already has an identifier set, and the identifier does not represent
    *          a new object identifier.
    */

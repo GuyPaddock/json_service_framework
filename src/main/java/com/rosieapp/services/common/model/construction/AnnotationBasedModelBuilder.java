@@ -13,6 +13,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -251,12 +252,18 @@ extends MapBasedModelBuilder<M, B> {
   /**
    * Ensures that the specified field is defined in the model and has the expected annotation.
    *
+   * @param   fieldName
    *          The name of the field to verify exists.
    *
+   * @throws  NullPointerException
+   *          If {@code fieldName} is {@code null}.
    * @throws  IllegalArgumentException
    *          If there was no field that was within the model class with the required annotation.
    */
-  private void validateFieldName(String fieldName) {
+  private void validateFieldName(String fieldName)
+  throws NullPointerException, IllegalArgumentException {
+    Objects.requireNonNull(fieldName, "fieldName must not be null");
+
     if (!this.getTargetFields().containsKey(fieldName)) {
       throw new IllegalArgumentException(
         String.format(

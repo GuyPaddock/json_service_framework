@@ -46,7 +46,6 @@ public interface ModelBuilder<M> {
    *
    * @throws  IllegalStateException
    *          If the builder was not provided with the ID prior to the call.
-   *
    * @throws  UnsupportedOperationException
    *          If the builder or model does not support being constructed in a shallow manner.
    */

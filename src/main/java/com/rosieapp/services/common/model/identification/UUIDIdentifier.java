@@ -63,12 +63,14 @@ public final class UUIDIdentifier extends PersistedModelIdentifier {
    *          object. This value must not be {@code null} and must be a valid string representation
    *          of a UUID.
    *
+   * @throws  NullPointerException
+   *          If {@code value} is {@code null}.
    * @throws  IllegalArgumentException
-   *          If {@code value} is {@code null} or is not a proper string representation of a
-   *          {@code UUID}.
+   *          If {@code value} is not a proper string representation of a {@code UUID}.
+   *
    */
   public UUIDIdentifier(final String value)
-  throws IllegalArgumentException {
+  throws NullPointerException, IllegalArgumentException {
     this.setValue(value);
   }
 
@@ -80,7 +82,7 @@ public final class UUIDIdentifier extends PersistedModelIdentifier {
    * @param   value
    *          This value must not be {@code null}.
    *
-   * @throws  IllegalArgumentException
+   * @throws  NullPointerException
    *          If {@code value} is {@code null}.
    */
   public UUIDIdentifier(final UUID value)
@@ -133,15 +135,14 @@ public final class UUIDIdentifier extends PersistedModelIdentifier {
    *          The string value to interpret as a UUID that will be set inside this object. This
    *          value must not be {@code null} and must be a valid string representation of a UUID.
    *
+   * @throws  NullPointerException
+   *          If {@code value} is {@code null}.
    * @throws  IllegalArgumentException
-   *          If {@code value} is {@code null} or is not a proper string representation of a
-   *          {@code UUID}.
+   *          If {@code value} is not a proper string representation of a {@code UUID}.
    */
   private void setValue(final String value)
-  throws IllegalArgumentException {
-    if (value == null) {
-      throw new IllegalArgumentException("value cannot be null");
-    }
+  throws NullPointerException, IllegalArgumentException {
+    Objects.requireNonNull(value, "value cannot be null");
 
     this.setValue(UUID.fromString(value));
   }
@@ -153,14 +154,12 @@ public final class UUIDIdentifier extends PersistedModelIdentifier {
    *          The UUID value to set inside this object.
    *          This value must not be {@code null}.
    *
-   * @throws  IllegalArgumentException
+   * @throws  NullPointerException
    *          If {@code value} is {@code null}.
    */
   private void setValue(final UUID value)
-  throws IllegalArgumentException {
-    if (value == null) {
-      throw new IllegalArgumentException("value cannot be null");
-    }
+  throws NullPointerException {
+    Objects.requireNonNull(value, "value cannot be null");
 
     this.value = value;
   }

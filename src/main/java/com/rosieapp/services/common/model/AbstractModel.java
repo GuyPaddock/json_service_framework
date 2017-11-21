@@ -29,10 +29,10 @@ implements Model {
 
   @Override
   public synchronized void assignId(final ModelIdentifier newId)
-  throws IllegalArgumentException {
+  throws IllegalStateException {
     final ModelIdentifier existingId = this.getId();
 
-    if ((existingId != null) && !existingId.isObjectNew()) {
+    if ((existingId != null) && !newId.equals(existingId) && !existingId.isObjectNew()) {
       throw new IllegalStateException(
         String.format(
           "This model already has an existing identifier set. An attempt was made to change the " +

@@ -2,6 +2,7 @@ package com.rosieapp.services.common.model.identification;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -46,15 +47,20 @@ public class ModelIdentifierFactory {
    *
    * @param   identifier
    *          The string to attempt to convert into a model identifier.
+   *          This value must not be {@code null}.
    *
    * @return  A model identifier that was created by parsing the given identifier string.
    *
+   * @throws  NullPointerException
+   *          If {@code identifier} is {@code null}.
    * @throws  IllegalArgumentException
    *          If none of the known identifier formats matched the format of the provided identifier
    *          string.
    */
   public ModelIdentifier createIdFrom(final String identifier)
-  throws IllegalArgumentException {
+  throws NullPointerException, IllegalArgumentException {
+    Objects.requireNonNull(identifier, "identifier cannot be null");
+
     return STRATEGIES.stream()
       .map((strategy) -> strategy.apply(identifier))
       .filter(Optional::isPresent)
@@ -69,14 +75,15 @@ public class ModelIdentifierFactory {
    *
    * @param   identifier
    *          The identifier to convert into a model identifier.
-   *          This value must not be {@code null}.
+   *          This value must be greater than {@code 0}.
    *
    * @return  A model identifier that wraps the provided long integer.
    *
    * @throws  IllegalArgumentException
-   *          If {@code identifier} is {@code null}.
+   *          If {@code value} is less than or equal to {@code 0}.
    */
-  public ModelIdentifier createIdFrom(final long identifier) {
+  public ModelIdentifier createIdFrom(final long identifier)
+  throws IllegalArgumentException {
     return new LongIdentifier(identifier);
   }
 
@@ -89,11 +96,11 @@ public class ModelIdentifierFactory {
    *
    * @return  A model identifier that wraps the provided UUID.
    *
-   * @throws  IllegalArgumentException
+   * @throws  NullPointerException
    *          If {@code identifier} is {@code null}.
    */
   public ModelIdentifier createIdFrom(final UUID identifier)
-  throws IllegalArgumentException {
+  throws NullPointerException {
     return new UUIDIdentifier(identifier);
   }
 }

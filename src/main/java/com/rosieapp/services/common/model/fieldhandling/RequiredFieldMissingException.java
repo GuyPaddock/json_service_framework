@@ -5,7 +5,7 @@ package com.rosieapp.services.common.model.fieldhandling;
  * value.
  */
 public class RequiredFieldMissingException
-extends IllegalStateException {
+extends RuntimeException {
   public RequiredFieldMissingException(String fieldName) {
     super(
       String.format(
