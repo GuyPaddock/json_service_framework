@@ -38,32 +38,22 @@ implements Iterable<M> {
    * Constructor for {@code PagedCollection}.
    * <p>
    * Initializes the new instance to use the specified request function to obtain each page of
-   * results, starting at page 1, and requesting as many pages as the remote resource will provide.
-   *
-   * @param requestFunction
-   *        The function to call with a page number in order to obtain each page of results.
-   */
-  public PagedCollection(
-    final Function<Integer, Call<JSONAPIDocument<List<M>>>> requestFunction) {
-    this(requestFunction, 1, PAGE_LIMIT_UNLIMITED);
-  }
-
-  /**
-   * Constructor for {@code PagedCollection}.
+   * results, starting at page number 1, and requesting up to the specified maximum number of pages.
    * <p>
-   * Initializes the new instance to use the specified request function to obtain each page of
-   * results, starting at the specified page number, and requesting as many pages as the remote
-   * resource will provide.
+   * With care, {@link #PAGE_LIMIT_UNLIMITED} can be passed-in to request as many pages as the
+   * remote resource will provide. This option should be used sparingly, as it can easily overwhelm
+   * the remote resource with requests, possibly resulting in downtime or rate limiting.
+   *
    *
    * @param requestFunction
    *        The function to call with a page number in order to obtain each page of results.
-   * @param startingPageNumber
-   *        The page number from which to start requesting data from the remote resource.
+   * @param pageLimit
+   *        The maximum number of pages (starting from the {@code startingPageNumber}) to process.
    */
   public PagedCollection(
     final Function<Integer, Call<JSONAPIDocument<List<M>>>> requestFunction,
-    final int startingPageNumber) {
-    this(requestFunction, startingPageNumber, PAGE_LIMIT_UNLIMITED);
+    final int pageLimit) {
+    this(requestFunction, 1, PAGE_LIMIT_UNLIMITED);
   }
 
   /**
