@@ -11,11 +11,14 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.identityconnectors.common.logging.Log;
 
 /**
  * An optional base class for model builders that wish to use annotations on fields to control
@@ -30,6 +33,8 @@ import java.util.stream.Collectors;
 public abstract class AnnotationBasedModelBuilder<M extends Model,
                                                   B extends AnnotationBasedModelBuilder<M, B>>
 extends MapBasedModelBuilder<M, B> {
+  private static final Log LOGGER = Log.getLog(AnnotationBasedModelBuilder.class);
+
   /**
    * This map of fields that this builder will populate on the model.
    */
@@ -202,17 +207,41 @@ extends MapBasedModelBuilder<M, B> {
    * Populates the map of field names to field objects.
    */
   private void populateTargetFields() {
-    Map<String, Field>       targetFields;
-    final Class<? extends M> modelClass = this.getModelClass();
-    final Field[]            allFields  = modelClass.getDeclaredFields();
+    Map<String, Field>  targetFields;
+    final List<Field>   allFields  = getAllTargetFields();
 
     targetFields =
-      Arrays
-        .stream(allFields)
+      allFields
+        .stream()
         .filter((field) -> field.isAnnotationPresent(BuilderPopulatedField.class))
         .collect(Collectors.toMap(Field::getName, Function.identity()));
 
     this.targetFields = targetFields;
+  }
+
+  /**
+   * Gets the builder-populated fields in the target class and all of its parent classes.
+   *
+   * @return  A list of all of the fields that the builder must populate.
+   */
+  private List<Field> getAllTargetFields() {
+    final List<Field> result        = new LinkedList<>();
+    Class<?>          currentClass  = this.getModelClass();
+
+    while (currentClass != null) {
+      final Class<?> superClass = currentClass.getSuperclass();
+
+      result.addAll(Arrays.asList(currentClass.getDeclaredFields()));
+
+      if (Model.class.isAssignableFrom(superClass)) {
+        currentClass = superClass;
+      }
+      else {
+        currentClass = null;
+      }
+    }
+
+    return result;
   }
 
   /**
@@ -274,40 +303,110 @@ extends MapBasedModelBuilder<M, B> {
   }
 
   /**
-   * Obtains the type of model that was passed into the generic signature of this builder class
-   * at the time it was declared.
+   * Obtains the type of model that should be assembled by reflecting on the generic signature
+   * and enclosing type of this builder class, at the time it was declared.
    * <p>
-   * This requires that the builder be declared as a static, inner class -- with both of the
-   * expected generic parameters. Otherwise, Java normally uses Type erasure when dealing with
-   * generic parameters.
+   * This requires that the builder be declared as a static, inner class -- with concrete types
+   * provided for generic parameters. If generics are not bound to concrete types, the class that
+   * encloses the builder is examined as a fallback, and is used only if it is a model type.
    *
    * @return  The type of model that this builder creates.
    *
    * @throws  IllegalStateException
-   *          If this builder is not declared as a static inner class with two type parameters.
+   *          If this builder is not declared as a static inner class of the model, with a concrete
+   *          model type.
    */
   @SuppressWarnings("unchecked")
   private Class<? extends M> getModelClass()
   throws IllegalStateException {
-    final Class<? extends M> modelType;
-    final Type               currentClassType = this.getClass().getGenericSuperclass();
+    Class<? extends M>  modelType;
+    final Class<?>      builderClass  = this.getClass();
 
-    if (!(currentClassType instanceof ParameterizedType)) {
-      throw new IllegalStateException(
-        "The builder must be declared as a parameterized, inner class of the model object.");
+    modelType = determineModelTypeByGenericType(builderClass);
+
+    if (modelType == null) {
+      modelType = determineModelTypeByEnclosingClass(builderClass);
     }
-    else {
+
+    if (modelType == null) {
+      throw new IllegalStateException(
+        String.format(
+          "The builder is expected either to have a generic parameter that is a sub-class of " +
+          "`%s`, or to be declared as an inner class of the model it builds.",
+          Model.class.getName()));
+    }
+
+    return modelType;
+  }
+
+  /**
+   * Attempts to determine the type of model that was passed into the generic signature of this
+   * builder class at the time it was declared.
+   * <p>
+   * This requires that the builder be declared as a static, inner class -- with concrete types
+   * provided for the model type generic parameter. Otherwise, Java normally uses Type erasure when
+   * dealing with generic parameters.
+   *
+   * @return  The type of model type that was inferred from the generic type parameter on the
+   *          builder; or, {@code null} if the type could not be inferred (typically because the
+   *          builder uses additional, unbound type parameters to allow sub-classes to provide
+   *          concrete types).
+   */
+  @SuppressWarnings("unchecked")
+  private Class<? extends M> determineModelTypeByGenericType(Class<?> builderClass) {
+    Class<? extends M> modelType        = null;
+    final Type         currentClassType = builderClass.getGenericSuperclass();
+
+    if (currentClassType instanceof ParameterizedType) {
       final ParameterizedType parameterizedCurrentClass;
-      final Type[]            typeParams;
+      final Type              modelTypeParam;
 
       parameterizedCurrentClass = (ParameterizedType)currentClassType;
-      typeParams                = parameterizedCurrentClass.getActualTypeArguments();
 
-      if (typeParams.length != 2) {
-        throw new IllegalStateException("The builder is expected to have two generic parameters.");
+      modelTypeParam =
+        Arrays.stream(parameterizedCurrentClass.getActualTypeArguments()).findFirst().orElse(null);
+
+      if ((modelTypeParam != null) && (modelTypeParam instanceof Class) &&
+          (Model.class.isAssignableFrom((Class)modelTypeParam))) {
+        modelType = (Class<? extends M>)modelTypeParam;
+
+        if (LOGGER.isOk()) {
+          LOGGER.ok(
+            "Inferring model type `{0}` from annotation on builder `{1}`.",
+            modelType.getName(),
+            builderClass.getName());
+        }
       }
+    }
 
-      modelType = (Class<? extends M>)typeParams[0];
+    return modelType;
+  }
+
+  /**
+   * Attempts to determine the type of model to create based on the class that encloses the builder.
+   * <p>
+   * By convention, all builders should be static inner classes of the models they build.
+   *
+   * @return  The type of model type that was inferred from the enclosing class of the builder; or,
+   *          {@code null} if there is no enclosing class, or it is not a type of model.
+   */
+  @SuppressWarnings("unchecked")
+  private Class<? extends M> determineModelTypeByEnclosingClass(Class<?> builderClass) {
+    final Class<? extends M>  modelType;
+    final Class<?>            enclosingClass = builderClass.getEnclosingClass();
+
+    if ((enclosingClass != null) && (Model.class.isAssignableFrom(enclosingClass))) {
+      modelType = (Class<? extends M>)enclosingClass;
+
+      if (LOGGER.isOk()) {
+        LOGGER.ok(
+          "Inferring model type `{0}` from class that encloses builder `{1}`.",
+          modelType.getName(),
+          builderClass.getName());
+      }
+    }
+    else {
+      modelType = null;
     }
 
     return modelType;
