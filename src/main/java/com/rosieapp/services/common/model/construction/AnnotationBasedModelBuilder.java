@@ -22,7 +22,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import org.identityconnectors.common.logging.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An optional base class for model builders that wish to use annotations on fields to control
@@ -37,7 +38,7 @@ import org.identityconnectors.common.logging.Log;
 public abstract class AnnotationBasedModelBuilder<M extends Model,
                                                   B extends AnnotationBasedModelBuilder<M, B>>
 extends MapBasedModelBuilder<M, B> {
-  private static final Log LOGGER = Log.getLog(AnnotationBasedModelBuilder.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationBasedModelBuilder.class);
 
   /**
    * A cache that increases the performance of looking up what fields to populate for a given model
@@ -285,8 +286,8 @@ extends MapBasedModelBuilder<M, B> {
     fields = modelTypeToFieldsCache.getIfPresent(modelClass.getCanonicalName());
 
     if (fields != null) {
-      if (LOGGER.isOk()) {
-        LOGGER.ok("Resolved fields for model type `{0}` using cache.", modelClass.getName());
+      if (LOGGER.isTraceEnabled()) {
+        LOGGER.trace("Resolved fields for model type `{}` using cache.", modelClass.getName());
       }
     }
 
@@ -436,9 +437,9 @@ extends MapBasedModelBuilder<M, B> {
 
     if (modelType != null) {
 
-      if (LOGGER.isOk()) {
-        LOGGER.ok(
-          "Resolved model type `{0}` for builder type `{1}` using cache.",
+      if (LOGGER.isTraceEnabled()) {
+        LOGGER.trace(
+          "Resolved model type `{0}` for builder type `{}` using cache.",
           modelType.getName(),
           builderClass.getName());
       }
@@ -479,9 +480,9 @@ extends MapBasedModelBuilder<M, B> {
           (Model.class.isAssignableFrom((Class)modelTypeParam))) {
         modelType = (Class<? extends M>)modelTypeParam;
 
-        if (LOGGER.isOk()) {
-          LOGGER.ok(
-            "Resolved model type `{0}` for builder type `{1}` using annotation on builder.",
+        if (LOGGER.isTraceEnabled()) {
+          LOGGER.trace(
+            "Resolved model type `{}` for builder type `{}` using annotation on builder.",
             modelType.getName(),
             builderClass.getName());
         }
@@ -508,9 +509,9 @@ extends MapBasedModelBuilder<M, B> {
     if ((enclosingClass != null) && (Model.class.isAssignableFrom(enclosingClass))) {
       modelType = (Class<? extends M>)enclosingClass;
 
-      if (LOGGER.isOk()) {
-        LOGGER.ok(
-          "Resolved model type `{0}` for builder type `{1}` using class that encloses builder.",
+      if (LOGGER.isTraceEnabled()) {
+        LOGGER.trace(
+          "Resolved model type `{}` for builder type `{}` using class that encloses builder.",
           modelType.getName(),
           builderClass.getName());
       }

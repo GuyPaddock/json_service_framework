@@ -9,6 +9,8 @@ import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -29,6 +31,8 @@ implements Iterable<M> {
    * Sentinel value for a page limit that is unbounded (i.e. unlimited).
    */
   public static final int PAGE_LIMIT_UNLIMITED = -1;
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(PagedCollection.class);
 
   private final Function<Integer, Call<JSONAPIDocument<List<M>>>> requestFunction;
   private final int startingPageNumber;
@@ -129,7 +133,7 @@ implements Iterable<M> {
       // FIXME: Research and/or implement a better, more specific exception type
       throw new IOException(
         Requests.failureResponseToString(
-          String.format("Failed to fetch page `%d` of memberships", pageNumber), response));
+          String.format("Failed to fetch page `%d` of results", pageNumber), response));
     }
 
     responseBody = response.body();
@@ -139,7 +143,7 @@ implements Iterable<M> {
       // FIXME: Are we handling JSON API error responses at all?
       throw new IOException(
         String.format(
-          "Unexpectedly received an empty response when fetching page `%d` of memberships.",
+          "Unexpectedly received an empty response when fetching page `%d` of results.",
           pageNumber));
     }
 
@@ -201,8 +205,7 @@ implements Iterable<M> {
       try {
         this.requestNextPage();
       } catch (IOException ex) {
-        // FIXME: Add SL4J or New Relic logging
-        ex.printStackTrace();
+        LOGGER.error("Failed to request page `{}` of results.", this.currentPageNumber, ex);
 
         // Don't try again
         this.markFinished();
