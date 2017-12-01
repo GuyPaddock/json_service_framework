@@ -30,6 +30,7 @@
 
   <modules>
     <module>json-api-framework</module>
+    <module>json-loyalty-client</module>
     <module>openicf-loyalty-connector</module>
   </modules>
 </project>
