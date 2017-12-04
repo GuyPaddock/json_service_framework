@@ -126,7 +126,7 @@ extends MapBasedModelBuilder<M, B> {
       } catch (IllegalAccessException|IllegalArgumentException ex) {
         throw new IllegalStateException(
           MessageFormat.format(
-            "Could not populate the field `{0}` on model type `{0}`.",
+            "Could not populate the field `{0}` on model type `{1}`.",
             fieldName,
             model.getClass().getCanonicalName()),
           ex);
