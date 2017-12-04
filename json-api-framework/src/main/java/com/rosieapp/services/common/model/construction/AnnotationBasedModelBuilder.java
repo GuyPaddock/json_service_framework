@@ -137,7 +137,8 @@ extends MapBasedModelBuilder<M, B> {
   }
 
   @Override
-  public M buildShallow() throws IllegalStateException {
+  public M buildShallow()
+  throws IllegalStateException {
     if (this.getId() == null) {
       throw new IllegalStateException("`id` must be set prior to calling this method");
     }
@@ -165,7 +166,6 @@ extends MapBasedModelBuilder<M, B> {
 
   /**
    * {@inheritDoc}
-   *
    * <p>
    * The name string provided must exactly match the name of a field that has been annotated
    * {@link BuilderPopulatedField} in the model class. An exception will be thrown if no such field
@@ -175,7 +175,7 @@ extends MapBasedModelBuilder<M, B> {
    *          If {@code fieldName} does not match the name of an annotated field on the model.
    */
   @Override
-  protected <F> void putFieldValue(String fieldName, F value)
+  protected <F> void putFieldValue(final String fieldName, final F value)
   throws IllegalArgumentException {
     this.validateFieldName(fieldName);
 
@@ -184,7 +184,6 @@ extends MapBasedModelBuilder<M, B> {
 
   /**
    * {@inheritDoc}
-   *
    * <p>
    * The name string provided must exactly match the name of a field that has been annotated
    * {@link BuilderPopulatedField} in the model class. An exception will be thrown if no such field
@@ -195,7 +194,7 @@ extends MapBasedModelBuilder<M, B> {
    */
   @Override
   @SuppressWarnings("unchecked")
-  protected <F> F getFieldValue(String fieldName)
+  protected <F> F getFieldValue(final String fieldName)
   throws IllegalArgumentException {
     this.validateFieldName(fieldName);
 

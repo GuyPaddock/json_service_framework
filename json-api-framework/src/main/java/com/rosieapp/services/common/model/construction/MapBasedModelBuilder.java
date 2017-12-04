@@ -74,7 +74,7 @@ extends AbstractModelBuilder<M, B> {
    * @param   <F>
    *          The type of the field value.
    */
-  protected <F> void putFieldValue(String fieldName, F value) {
+  protected <F> void putFieldValue(final String fieldName, final F value) {
     this.getFieldValueMap().put(fieldName, value);
   }
 
@@ -91,7 +91,7 @@ extends AbstractModelBuilder<M, B> {
    *          stashed for the field.
    */
   @SuppressWarnings("unchecked")
-  protected <F> F getFieldValue(String fieldName) {
+  protected <F> F getFieldValue(final String fieldName) {
     return (F)this.getFieldValueMap().get(fieldName);
   }
 
