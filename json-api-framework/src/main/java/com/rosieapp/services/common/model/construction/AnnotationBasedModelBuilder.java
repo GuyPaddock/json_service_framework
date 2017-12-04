@@ -4,6 +4,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
+import com.rosieapp.services.common.model.fieldhandling.FieldValuePreprocessor;
 import com.rosieapp.services.common.model.fieldhandling.FieldValueProvider;
 import com.rosieapp.services.common.model.fieldhandling.StrictFieldProvider;
 import com.rosieapp.services.common.model.filtering.ModelFilter;
@@ -122,13 +123,12 @@ extends MapBasedModelBuilder<M, B> {
 
       try {
         this.populateField(model, fieldName, field);
-      } catch (IllegalAccessException ex) {
+      } catch (IllegalAccessException|IllegalArgumentException ex) {
         throw new IllegalStateException(
-          String.format(
-            "Could not populate the field `%s` on model type `%s`: %s",
+          MessageFormat.format(
+            "Could not populate the field `{0}` on model type `{0}`.",
             fieldName,
-            model.getClass().getName(),
-            ex.getMessage()),
+            model.getClass().getCanonicalName()),
           ex);
       }
     }
@@ -352,22 +352,36 @@ extends MapBasedModelBuilder<M, B> {
    * @throws  IllegalAccessException
    *          If this builder does not have the required level of access to the model in order to
    *          populate the field.
+   *
+   * @throws  IllegalArgumentException
+   *          If the field is somehow mis-configured (e.g. it has a bad pre-processor), causing
+   *          attempts to set its value to fail.
    */
   private void populateField(M model, String fieldName, Field field)
-  throws IllegalAccessException {
-    final boolean fieldRequired = field.getAnnotation(BuilderPopulatedField.class).required();
-    final Object  fieldValue;
+  throws IllegalAccessException, IllegalArgumentException {
+    final BuilderPopulatedField                   fieldAnnotation;
+    final boolean                                 fieldIsRequired;
+    final Class<? extends FieldValuePreprocessor> fieldPreprocessor;
+    final Object                                  rawValue,
+                                                  processedValue;
+
+    fieldAnnotation = field.getAnnotation(BuilderPopulatedField.class);
+
+    fieldIsRequired   = fieldAnnotation.required();
+    fieldPreprocessor = fieldAnnotation.preprocessor();
 
     field.setAccessible(true);
 
-    if (fieldRequired) {
-      fieldValue = this.getRequiredField(fieldName);
+    if (fieldIsRequired) {
+      rawValue = this.getRequiredField(fieldName);
     }
     else {
-      fieldValue = this.getOptionalField(fieldName, field.get(model));
+      rawValue = this.getOptionalField(fieldName, field.get(model));
     }
 
-    field.set(model, fieldValue);
+    processedValue = this.invokePreprocessor(fieldPreprocessor, field, rawValue);
+
+    field.set(model, processedValue);
   }
 
   /**
@@ -535,5 +549,49 @@ extends MapBasedModelBuilder<M, B> {
     }
 
     return modelType;
+  }
+
+  /**
+   * Invokes the specified pre-processor on the provided value of the specified field.
+   * <p>
+   * If the field value or the pre-processor are provided as {@code null}, then the raw value is
+   * passed through as-is, without pre-processing.
+   *
+   * @param   fieldPreprocessor
+   *          The pre-processor to invoke.
+   * @param   field
+   *          The field on which the pre-processor is being invoked.
+   * @param   rawFieldValue
+   *          The raw value of the field, prior to pre-processing.
+   *
+   * @return  Either the pre-processed value; or the same value provided for {@code fieldValue} if
+   *          either the field value or the pre-processor was {@code null}.
+   *
+   * @throws  IllegalArgumentException
+   *          If the provided field pre-processor is improperly coded and cannot be instantiated.
+   */
+  protected <T> T invokePreprocessor(
+                                    final Class<? extends FieldValuePreprocessor> fieldPreprocessor,
+                                    final Field field,
+                                    final T rawFieldValue)
+  throws IllegalArgumentException {
+    final T processedValue;
+
+    if ((rawFieldValue != null) && (fieldPreprocessor != null)) {
+      try {
+        processedValue = fieldPreprocessor.newInstance().preprocessField(field, rawFieldValue);
+      }
+      catch (IllegalAccessException|InstantiationException ex) {
+        throw new IllegalArgumentException(
+          MessageFormat.format(
+            "Invalid field pre-processor provided -- `{0}` cannot be instantiated.",
+            fieldPreprocessor.getCanonicalName()));
+      }
+    }
+    else {
+      processedValue = rawFieldValue;
+    }
+
+    return processedValue;
   }
 }
