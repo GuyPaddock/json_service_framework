@@ -3,8 +3,8 @@ package com.rosieapp.services.common.model.construction;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.rosieapp.services.common.model.Model;
-import com.rosieapp.services.common.model.fieldhandling.FieldValueHandler;
-import com.rosieapp.services.common.model.fieldhandling.ValidatingFieldHandler;
+import com.rosieapp.services.common.model.fieldhandling.FieldValueProvider;
+import com.rosieapp.services.common.model.fieldhandling.StrictFieldProvider;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import com.rosieapp.services.common.model.identification.ModelIdentifierFactory;
 import com.rosieapp.services.common.model.identification.NewModelIdentifier;
@@ -24,7 +24,7 @@ import java.util.Optional;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public abstract class AbstractModelBuilder<M extends Model, B extends AbstractModelBuilder<M, B>>
 implements ModelBuilder<M> {
-  private final FieldValueHandler valueHandler;
+  private final FieldValueProvider valueProvider;
 
   private ModelIdentifier id;
 
@@ -34,18 +34,18 @@ implements ModelBuilder<M> {
    * Initializes the model builder to strictly validate required fields.
    */
   protected AbstractModelBuilder() {
-    this(new ValidatingFieldHandler());
+    this(new StrictFieldProvider());
   }
 
   /**
    * Constructor for {@link AbstractModelBuilder}.
    *
-   * @param valueHandler
-   *        A handler for controlling how optional and required fields are handled during object
+   * @param valueProvider
+   *        A provider for controlling how optional and required fields are handled during object
    *        construction.
    */
-  protected AbstractModelBuilder(final FieldValueHandler valueHandler) {
-    this.valueHandler = valueHandler;
+  protected AbstractModelBuilder(final FieldValueProvider valueProvider) {
+    this.valueProvider = valueProvider;
   }
 
   /**
@@ -120,45 +120,45 @@ implements ModelBuilder<M> {
    * Requests, optionally validates, and then returns the value to use when populating the specified
    * required field for a model being constructed by this builder.
    * <p>
-   * The request is delegated to the field value handler. If this builder has not been provided with
-   * a value for the field (i.e. {@code fieldValue} is {@code null}), the field handler may choose
-   * to communicate this by raising an {@link IllegalStateException}, or it may simply supply
+   * The request is delegated to the field value provider. If this builder has not been provided
+   * with a value for the field (i.e. {@code fieldValue} is {@code null}), the field provider may
+   * choose to communicate this by raising an {@link IllegalStateException}, or it may simply supply
    * {@code null} (or a different value of its own choosing) in place of the missing value.
    *
-   * @see     FieldValueHandler
+   * @see     FieldValueProvider
    *
    * @param   fieldValue
    *          The current value this builder has for the field.
    * @param   fieldName
-   *          The name of the field. This may be used by the field value handler to construct an
+   *          The name of the field. This may be used by the field value provider to construct an
    *          exception message if the field has no value.
    *
    * @param   <F>
    *          The type of value expected for the field.
    *
-   * @return  Depending on the field value handler, this will typically be a non-null value to use
-   *          for the field, but may be {@code null} if the value handler is lax on validating
+   * @return  Depending on the field value provider, this will typically be a non-null value to use
+   *          for the field, but may be {@code null} if the value provider is lax on validating
    *          that all required fields are populated.
    *
    * @throws  IllegalStateException
-   *          If the required field value is {@code null} or invalid, and the field value handler
+   *          If the required field value is {@code null} or invalid, and the field value provider
    *          considers this to be an error.
    */
   protected <F> F getRequiredField(final F fieldValue, final String fieldName)
   throws IllegalStateException {
-    return this.getValueHandler().getRequiredField(fieldValue, fieldName);
+    return this.getValueProvider().getRequiredField(fieldValue, fieldName);
   }
 
   /**
    * Returns the value to use when populating the specified optional field for a model being
    * constructed by this builder.
    * <p>
-   * The request is delegated to the field value handler. If this builder has not been provided with
-   * a value for the field (i.e. {@code fieldValue} is {@code null}), then in place of the missing
-   * value, the field handler may choose to return the {@code defaultValue} that the builder has
-   * requested, or any other value of the handler's choosing.
+   * The request is delegated to the field value provider. If this builder has not been provided
+   * with a value for the field (i.e. {@code fieldValue} is {@code null}), then in place of the
+   * missing value, the field provider may choose to return the {@code defaultValue} that the
+   * builder has requested, or any other value of the provider's choosing.
    *
-   * @see     FieldValueHandler
+   * @see     FieldValueProvider
    *
    * @param   fieldValue
    *          The current value this builder has for the field.
@@ -169,20 +169,20 @@ implements ModelBuilder<M> {
    * @param   <F>
    *          The type of value expected for the field.
    *
-   * @return  Depending on the field value handler, this will typically be either the value of
+   * @return  Depending on the field value provider, this will typically be either the value of
    *          the requested field, or the default value if the field did not have a value.
    */
   protected <F> F getOptionalField(final F fieldValue, final F defaultValue) {
-    return this.getValueHandler().getOptionalField(fieldValue, defaultValue);
+    return this.getValueProvider().getOptionalField(fieldValue, defaultValue);
   }
 
   /**
-   * Gets the handler (i.e. strategy) that dictates how the values of fields are retrieved and
+   * Gets the provider (i.e. strategy) that dictates how the values of fields are retrieved and
    * validated.
    *
-   * @return  The field value handler currently in use by this builder.
+   * @return  The field value provider currently in use by this builder.
    */
-  private FieldValueHandler getValueHandler() {
-    return this.valueHandler;
+  private FieldValueProvider getValueProvider() {
+    return this.valueProvider;
   }
 }

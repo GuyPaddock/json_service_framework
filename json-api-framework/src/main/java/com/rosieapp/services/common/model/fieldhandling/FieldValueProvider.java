@@ -4,19 +4,19 @@ package com.rosieapp.services.common.model.fieldhandling;
  * Common interface for objects that provide the values that builders use to populate the fields of
  * the Rosie JSON API service models they are constructing.
  * <p>
- * Field value handlers typically fall into two categories:
- *  - Strict value handlers raise errors when a required field lacks a value.
- *  - Lax value handlers substitute a value when a required field lacks a value.
+ * Field value providers typically fall into two categories:
+ *  - Strict value providers raise errors when a required field lacks a value.
+ *  - Lax value providers substitute a value when a required field lacks a value.
  * <p>
- * However, this interface imposes no requirements on how a Field Value Handler actually interprets
+ * However, this interface imposes no requirements on how a Field Value Provider actually interprets
  * requests for field values, nor on how it retrieves or validates the field values it returns.
  */
-public interface FieldValueHandler {
+public interface FieldValueProvider {
   /**
    * Optionally validates and then returns the value to use when populating the specified required
    * field.
    * <p>
-   * Depending upon implementation, if the field value is {@code null}, the field handler may choose
+   * Depending upon implementation, if the field value is {@code null}, the field provider may choose
    * to communicate this by raising an {@link IllegalStateException}, or it may simply supply
    * {@code null} (or a different value of its own choosing) in place of the missing value.
    *
@@ -43,8 +43,8 @@ public interface FieldValueHandler {
    * Returns the value to use when populating the specified optional field.
    * <p>
    * Depending upon implementation, if the field value is {@code null}, then in place of the missing
-   * value, the field handler may choose to return the {@code defaultValue} that has been provided,
-   * or any other value of the handler's choosing.
+   * value, the field provider may choose to return the {@code defaultValue} that has been provided,
+   * or any other value of the provider's choosing.
    *
    * @param   fieldValue
    *          The current value this builder has for the field.
@@ -55,7 +55,7 @@ public interface FieldValueHandler {
    * @param   <F>
    *          The type of value expected for the field.
    *
-   * @return  Depending on the field value handler, this will typically be either the value of
+   * @return  Depending on the field value provider, this will typically be either the value of
    *          the requested field, or the default value if the field did not have a value.
    */
   <F> F getOptionalField(F fieldValue, F defaultValue);

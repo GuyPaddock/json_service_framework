@@ -4,14 +4,15 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
-import com.rosieapp.services.common.model.fieldhandling.FieldValueHandler;
-import com.rosieapp.services.common.model.fieldhandling.ValidatingFieldHandler;
+import com.rosieapp.services.common.model.fieldhandling.FieldValueProvider;
+import com.rosieapp.services.common.model.fieldhandling.StrictFieldProvider;
 import com.rosieapp.services.common.model.filtering.ModelFilter;
 import com.rosieapp.services.common.model.filtering.ReflectionBasedModelFilter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,9 +32,21 @@ import org.slf4j.LoggerFactory;
  * define constants.
  * <p>
  * The builder must be declared as a static inner class within the model that it builds.
+ * <p>
+ * Each field that the builder is expected to populate should be annotated with a
+ * {@link BuilderPopulatedField} annotation. Any fields that are required for the object to be
+ * constructed should have their {@code required} property on the annotation set to {@code true}.
+ * <p>
+ * In addition to being able to control which properties are required, the
+ * {@code BuilderPopulatedField} annotation also provides control over which
+ * {@link FieldValuePreprocessor} is used when values are being copied from the builder into the
+ * new model instance. The pre-processor is not invoked when building filters, as they might
+ * interfere with object equality during the filtering process.
  *
  * @param <M> {@inheritDoc}
  * @param <B> {@inheritDoc}
+ *
+ * @see BuilderPopulatedField
  */
 public abstract class AnnotationBasedModelBuilder<M extends Model,
                                                   B extends AnnotationBasedModelBuilder<M, B>>
@@ -81,24 +94,25 @@ extends MapBasedModelBuilder<M, B> {
    * Initializes the model builder to strictly validate required fields.
    */
   protected AnnotationBasedModelBuilder() {
-    this(new ValidatingFieldHandler());
+    this(new StrictFieldProvider());
   }
 
   /**
    * Constructor for {@link AnnotationBasedModelBuilder}.
    *
-   * @param valueHandler
-   *        A handler for controlling how optional and required fields are handled during object
+   * @param valueProvider
+   *        A provider for controlling how optional and required fields are handled during object
    *        construction.
    */
-  protected AnnotationBasedModelBuilder(final FieldValueHandler valueHandler) {
-    super(valueHandler);
+  protected AnnotationBasedModelBuilder(final FieldValueProvider valueProvider) {
+    super(valueProvider);
 
     this.populateTargetFields();
   }
 
   @Override
-  public M build() throws IllegalStateException {
+  public M build()
+  throws IllegalStateException {
     final M                   model         = this.instantiateModelWithId();
     final Map<String, Field>  targetFields  = this.getTargetFields();
 

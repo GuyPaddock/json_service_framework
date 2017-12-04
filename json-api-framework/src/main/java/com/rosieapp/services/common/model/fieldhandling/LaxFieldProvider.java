@@ -1,15 +1,15 @@
 package com.rosieapp.services.common.model.fieldhandling;
 
 /**
- * A field handler that handles missing required field values by merely returning {@code null},
+ * A field provider that handles missing required field values by merely returning {@code null},
  * instead of throwing an exception.
  */
-public class LaxFieldHandler
-extends AbstractFieldHandler {
+public class LaxFieldProvider
+extends AbstractFieldProvider {
   /**
    * Returns the value to use when populating the specified required field.
    * <p>
-   * If the field value is {@code null}, this handler simply supplies {@code null} in place of the
+   * If the field value is {@code null}, this provider simply supplies {@code null} in place of the
    * missing value.
    *
    * {@inheritDoc}
