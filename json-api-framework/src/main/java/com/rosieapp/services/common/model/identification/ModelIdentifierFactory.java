@@ -42,6 +42,33 @@ public class ModelIdentifierFactory {
   }
 
   /**
+   * Convenience method for {@code getInstance().createIdFrom(String)}.
+   *
+   * @see #createIdFrom(String)
+   */
+  public static ModelIdentifier valueOf(final String identifier) {
+    return getInstance().createIdFrom(identifier);
+  }
+
+  /**
+   * Convenience method for {@code getInstance().createIdFrom(long)}.
+   *
+   * @see #createIdFrom(long)
+   */
+  public static ModelIdentifier valueOf(final long identifier) {
+    return getInstance().createIdFrom(identifier);
+  }
+
+  /**
+   * Convenience method for {@code getInstance().createIdFrom(UUID)}.
+   *
+   * @see #createIdFrom(UUID)
+   */
+  public static ModelIdentifier valueOf(final UUID identifier) {
+    return getInstance().createIdFrom(identifier);
+  }
+
+  /**
    * Attempts to parse the provided string representation of an identifier into the type of model
    * identifier that is most appropriate for the type of identifier the string represents.
    *

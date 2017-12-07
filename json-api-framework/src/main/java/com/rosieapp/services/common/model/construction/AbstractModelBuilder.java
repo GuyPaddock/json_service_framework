@@ -66,7 +66,7 @@ implements ModelBuilder<M> {
    */
   public B withId(final String identifier)
   throws IllegalArgumentException, NullPointerException {
-    return this.withId(ModelIdentifierFactory.getInstance().createIdFrom(identifier));
+    return this.withId(ModelIdentifierFactory.valueOf(identifier));
   }
 
   /**

@@ -16,6 +16,6 @@ implements ResourceIdHandler {
 
   @Override
   public Object fromString(String identifier) {
-    return ModelIdentifierFactory.getInstance().createIdFrom(identifier);
+    return ModelIdentifierFactory.valueOf(identifier);
   }
 }
