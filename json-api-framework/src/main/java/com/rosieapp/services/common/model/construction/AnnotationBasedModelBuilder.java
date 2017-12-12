@@ -8,6 +8,7 @@ import com.rosieapp.services.common.model.fieldhandling.FieldValuePreprocessor;
 import com.rosieapp.services.common.model.fieldhandling.FieldValueProvider;
 import com.rosieapp.services.common.model.fieldhandling.StrictFieldProvider;
 import com.rosieapp.services.common.model.filtering.ModelFilter;
+import com.rosieapp.services.common.model.filtering.ModelFilterBuilder;
 import com.rosieapp.services.common.model.filtering.ReflectionBasedModelFilter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -147,21 +148,28 @@ extends MapBasedModelBuilder<M, B> {
   }
 
   @Override
-  public ModelFilter<M> buildFilter() {
-    final ReflectionBasedModelFilter<M> filter        = new ReflectionBasedModelFilter<>();
-    final Map<String, Field>            targetFields  = this.getTargetFields();
+  public ModelFilterBuilder<M> toFilterBuilder() {
+    return new ModelFilterBuilder<M>() {
+      @Override
+      public ModelFilter<M> build() throws UnsupportedOperationException {
+        final ReflectionBasedModelFilter<M> filter      = new ReflectionBasedModelFilter<>();
+        final Map<String, Field>            targetFields;
 
-    for (final Entry<String, Field> fieldEntry : targetFields.entrySet()) {
-      final String fieldName  = fieldEntry.getKey();
-      final Field  field      = fieldEntry.getValue();
-      final Object fieldValue = this.getFieldValue(fieldName);
+        targetFields = AnnotationBasedModelBuilder.this.getTargetFields();
 
-      if (fieldValue != null) {
-        filter.addCriterion(field, fieldValue);
+        for (final Entry<String, Field> fieldEntry : targetFields.entrySet()) {
+          final String fieldName  = fieldEntry.getKey();
+          final Field  field      = fieldEntry.getValue();
+          final Object fieldValue = AnnotationBasedModelBuilder.this.getFieldValue(fieldName);
+
+          if (fieldValue != null) {
+            filter.addCriterion(field, fieldValue);
+          }
+        }
+
+        return filter;
       }
-    }
-
-    return filter;
+    };
   }
 
   /**

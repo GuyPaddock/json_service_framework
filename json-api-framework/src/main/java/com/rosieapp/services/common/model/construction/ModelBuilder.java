@@ -1,6 +1,7 @@
 package com.rosieapp.services.common.model.construction;
 
 import com.rosieapp.services.common.model.filtering.ModelFilter;
+import com.rosieapp.services.common.model.filtering.ModelFilterBuilder;
 
 /**
  * Common interface for objects that construct instances of Rosie JSON API service models.
@@ -52,12 +53,19 @@ public interface ModelBuilder<M> {
   M buildShallow() throws IllegalStateException, UnsupportedOperationException;
 
   /**
-   * Instead of building the model itself, build a model <em>filter</em>.
+   * Switch to a builder that can create filters matching the type of model this builder produces.
    * <p>
-   * A {@link ModelFilter} can be used to identify existing instances of a model that have values
-   * matching what has been set on this builder. For example:
+   * The resulting builder is constructed with all of the values that have been set on this builder,
+   * and can then be used to build model <em>filters</em>. The {@link ModelFilter} can them be used
+   * to  identify existing instances of a model that have values matching what has been set on this
+   * builder. For example:
    * <pre>{@code
-   *   ModelFilter<Person> = Person.getBuilder().withName("Bob").withAge(24).buildFilter();
+   *   ModelFilter<Person> filter =
+   *     Person.getBuilder()
+   *       .withName("Bob")
+   *       .withAge(24)
+   *       .toFilterBuilder()
+   *       .build();
    * }</pre>
    * <p>
    * Would build a model filter that can be used to find all people named "Bob" who are age 24.
@@ -66,7 +74,11 @@ public interface ModelBuilder<M> {
    * been given a value through the builder interface will be included in the resulting filter.
    * For instance, in contrast to the earlier example, consider the following:
    * <pre>{@code
-   *   ModelFilter<Person> = Person.getBuilder().withName("Bob").buildFilter();
+   *   ModelFilter<Person> filter =
+   *     Person.getBuilder()
+   *       .withName("Bob")
+   *       .toFilterBuilder()
+   *       .build();
    * }</pre>
    * <p>
    * This would build a filter that can be used to find all people named "Bob" -- of any age.
@@ -77,5 +89,5 @@ public interface ModelBuilder<M> {
    * @throws  UnsupportedOperationException
    *          If the builder or model does not support filtering.
    */
-  ModelFilter<M> buildFilter() throws UnsupportedOperationException;
+  ModelFilterBuilder<M> toFilterBuilder() throws UnsupportedOperationException;
 }
