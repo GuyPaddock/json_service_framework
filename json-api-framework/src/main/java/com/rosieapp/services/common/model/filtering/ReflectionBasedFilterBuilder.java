@@ -52,7 +52,7 @@ extends CriteriaBasedFilterBuilder<M, B> {
    * @return  This object, for chaining builder calls.
    */
   public B withId(final ComparisonType comparisonType, final ModelIdentifier targetId) {
-    return this.addCriterion(comparisonType.buildFor(Model::getId, targetId));
+    return this.withCriterion(comparisonType.buildFor(Model::getId, targetId));
   }
 
   //================================================================================================
@@ -75,7 +75,7 @@ extends CriteriaBasedFilterBuilder<M, B> {
    */
   public B withFieldLessThan(final String fieldName, final Object targetValue)
   throws IllegalArgumentException {
-    return this.addCriterionForField(fieldName, ComparisonType.LESS_THAN, targetValue);
+    return this.withCriterionForField(fieldName, ComparisonType.LESS_THAN, targetValue);
   }
 
   /**
@@ -91,7 +91,7 @@ extends CriteriaBasedFilterBuilder<M, B> {
    * @return  This object, for chaining builder calls.
    */
   public B withFieldLessThan(final Field field, final Object targetValue) {
-    return this.addCriterionForField(field, ComparisonType.LESS_THAN, targetValue);
+    return this.withCriterionForField(field, ComparisonType.LESS_THAN, targetValue);
   }
 
   //================================================================================================
@@ -114,7 +114,7 @@ extends CriteriaBasedFilterBuilder<M, B> {
    */
   public B withFieldLessThanOrEqualTo(final String fieldName, final Object targetValue)
   throws IllegalArgumentException {
-    return this.addCriterionForField(fieldName, ComparisonType.LESS_THAN_OR_EQUAL, targetValue);
+    return this.withCriterionForField(fieldName, ComparisonType.LESS_THAN_OR_EQUAL, targetValue);
   }
 
   /**
@@ -130,7 +130,7 @@ extends CriteriaBasedFilterBuilder<M, B> {
    * @return  This object, for chaining builder calls.
    */
   public B withFieldLessThanOrEqualTo(final Field field, final Object targetValue) {
-    return this.addCriterionForField(field, ComparisonType.LESS_THAN_OR_EQUAL, targetValue);
+    return this.withCriterionForField(field, ComparisonType.LESS_THAN_OR_EQUAL, targetValue);
   }
 
   //================================================================================================
@@ -153,7 +153,7 @@ extends CriteriaBasedFilterBuilder<M, B> {
    */
   public B withFieldEqualTo(final String fieldName, final Object targetValue)
   throws IllegalArgumentException {
-    return this.addCriterionForField(fieldName, ComparisonType.EQUAL_TO, targetValue);
+    return this.withCriterionForField(fieldName, ComparisonType.EQUAL_TO, targetValue);
   }
 
   /**
@@ -169,7 +169,7 @@ extends CriteriaBasedFilterBuilder<M, B> {
    * @return  This object, for chaining builder calls.
    */
   public B withFieldEqualTo(final Field field, final Object targetValue) {
-    return this.addCriterionForField(field, ComparisonType.EQUAL_TO, targetValue);
+    return this.withCriterionForField(field, ComparisonType.EQUAL_TO, targetValue);
   }
 
   //================================================================================================
@@ -192,7 +192,7 @@ extends CriteriaBasedFilterBuilder<M, B> {
    */
   public B withFieldGreaterThanOrEqualTo(final String fieldName, final Object targetValue)
   throws IllegalArgumentException {
-    return this.addCriterionForField(fieldName, ComparisonType.GREATER_THAN_OR_EQUAL, targetValue);
+    return this.withCriterionForField(fieldName, ComparisonType.GREATER_THAN_OR_EQUAL, targetValue);
   }
 
   /**
@@ -208,7 +208,7 @@ extends CriteriaBasedFilterBuilder<M, B> {
    * @return  This object, for chaining builder calls.
    */
   public B withFieldGreaterThanOrEqualTo(final Field field, final Object targetValue) {
-    return this.addCriterionForField(field, ComparisonType.GREATER_THAN_OR_EQUAL, targetValue);
+    return this.withCriterionForField(field, ComparisonType.GREATER_THAN_OR_EQUAL, targetValue);
   }
 
   //================================================================================================
@@ -231,7 +231,7 @@ extends CriteriaBasedFilterBuilder<M, B> {
    */
   public B withFieldGreaterThan(final String fieldName, final Object targetValue)
   throws IllegalArgumentException {
-    return this.addCriterionForField(fieldName, ComparisonType.GREATER_THAN, targetValue);
+    return this.withCriterionForField(fieldName, ComparisonType.GREATER_THAN, targetValue);
   }
 
   /**
@@ -247,7 +247,44 @@ extends CriteriaBasedFilterBuilder<M, B> {
    * @return  This object, for chaining builder calls.
    */
   public B withFieldGreaterThan(final Field field, final Object targetValue) {
-    return this.addCriterionForField(field, ComparisonType.GREATER_THAN, targetValue);
+    return this.withCriterionForField(field, ComparisonType.GREATER_THAN, targetValue);
+  }
+
+  //================================================================================================
+  // Contains
+  //================================================================================================
+  /**
+   * Add a criterion to the next filter built, such that the filter will determine if the specified
+   * value is contained within the value of the specified field, and only proceed if it is.
+   *
+   * @param   fieldName
+   *          The name of the model field being compared against the target.
+   * @param   targetValue
+   *          The value being searched for inside the model value.
+   *
+   * @return  This object, for chaining builder calls.
+   *
+   * @throws  IllegalArgumentException
+   *          If there is no field in the field map of this builder that has the specified name.
+   */
+  public B withFieldContaining(final String fieldName, final Object targetValue)
+  throws IllegalArgumentException {
+    return this.withCriterionForField(fieldName, ComparisonType.CONTAINS, targetValue);
+  }
+
+  /**
+   * Add a criterion to the next filter built, such that the filter will determine if the specified
+   * value is contained within the value of the provided field, and only proceed if it is.
+   *
+   * @param   field
+   *          The model field being compared against the target.
+   * @param   targetValue
+   *          The value against which the model value is being compared.
+   *
+   * @return  This object, for chaining builder calls.
+   */
+  public B withFieldContaining(final Field field, final Object targetValue) {
+    return this.withCriterionForField(field, ComparisonType.CONTAINS, targetValue);
   }
 
   //================================================================================================
@@ -270,10 +307,10 @@ extends CriteriaBasedFilterBuilder<M, B> {
    * @throws  IllegalArgumentException
    *          If there is no field in the field map of this builder that has the specified name.
    */
-  protected B addCriterionForField(final String fieldName, final ComparisonType comparisonType,
-                                   final Object targetValue)
+  public B withCriterionForField(final String fieldName, final ComparisonType comparisonType,
+                                 final Object targetValue)
   throws IllegalArgumentException {
-    return this.addCriterionForField(this.getField(fieldName), comparisonType, targetValue);
+    return this.withCriterionForField(this.getField(fieldName), comparisonType, targetValue);
   }
 
   /**
@@ -287,9 +324,9 @@ extends CriteriaBasedFilterBuilder<M, B> {
    *        The value against which the field will be compared.
    */
   @SuppressWarnings("unchecked")
-  protected B addCriterionForField(final Field field, final ComparisonType comparisonType,
-                                   final Object targetValue) {
-    this.addCriterion(comparisonType.buildFor(field, targetValue));
+  public B withCriterionForField(final Field field, final ComparisonType comparisonType,
+                                 final Object targetValue) {
+    this.withCriterion(comparisonType.buildFor(field, targetValue));
 
     return (B)this;
   }

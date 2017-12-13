@@ -33,7 +33,7 @@ implements ModelFilterBuilder<M> {
    * @return  This object, for chaining builder calls.
    */
   @SuppressWarnings("unchecked")
-  public B addCriterion(final FilterCriterion<M> criterion) {
+  public B withCriterion(final FilterCriterion<M> criterion) {
     this.criteria.add(criterion);
 
     return (B)this;

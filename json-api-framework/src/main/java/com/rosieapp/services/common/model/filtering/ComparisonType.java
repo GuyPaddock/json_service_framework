@@ -21,7 +21,8 @@ public enum ComparisonType {
   LESS_THAN             ((first, second) -> compare(first, second, -1)),
   LESS_THAN_OR_EQUAL    ((first, second) -> compare(first, second, -1, 0)),
   GREATER_THAN          ((first, second) -> compare(first, second,  1)),
-  GREATER_THAN_OR_EQUAL ((first, second) -> compare(first, second,  1, 0));
+  GREATER_THAN_OR_EQUAL ((first, second) -> compare(first, second,  1, 0)),
+  CONTAINS              (ComparisonType::checkContains);
 
   final BiFunction<Object, Object, Boolean> comparisonFunction;
 
@@ -127,6 +128,23 @@ public enum ComparisonType {
     }
 
     return matches;
+  }
+
+  /**
+   * Checks if the string representation of a second object is contained within the string
+   * representation of the first.
+   *
+   * @param   haystack
+   *          The object which will be checked to see if it contains {@code needle}.
+   * @param   needle
+   *          The value that is being searched for inside the string representation of
+   *          {@code haystack}.
+   *
+   * @return  {@code true} if the string representation of {@code needle} is found in
+   *          {@code haystack}; or, {@code false}, otherwise.
+   */
+  private static boolean checkContains(Object haystack, Object needle) {
+    return Objects.toString(haystack).contains(Objects.toString(needle));
   }
 
   /**
