@@ -7,9 +7,7 @@ import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
 import com.rosieapp.services.common.model.fieldhandling.FieldValuePreprocessor;
 import com.rosieapp.services.common.model.fieldhandling.FieldValueProvider;
 import com.rosieapp.services.common.model.fieldhandling.StrictFieldProvider;
-import com.rosieapp.services.common.model.filtering.ModelFilter;
-import com.rosieapp.services.common.model.filtering.ModelFilterBuilder;
-import com.rosieapp.services.common.model.filtering.ReflectionBasedModelFilter;
+import com.rosieapp.services.common.model.filtering.ReflectionBasedFilterBuilder;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -81,7 +79,7 @@ extends MapBasedModelBuilder<M, B> {
         .maximumSize(32)
         .expireAfterWrite(10, TimeUnit.MINUTES);
 
-    modelTypeToFieldsCache  = cacheBuilder.build();
+    modelTypeToFieldsCache   = cacheBuilder.build();
     builderToModelClassCache = cacheBuilder.build();
   }
 
@@ -148,28 +146,26 @@ extends MapBasedModelBuilder<M, B> {
   }
 
   @Override
-  public ModelFilterBuilder<M> toFilterBuilder() {
-    return new ModelFilterBuilder<M>() {
-      @Override
-      public ModelFilter<M> build() throws UnsupportedOperationException {
-        final ReflectionBasedModelFilter<M> filter      = new ReflectionBasedModelFilter<>();
-        final Map<String, Field>            targetFields;
+  public ReflectionBasedFilterBuilder<M, ?> toFilterBuilder() {
+    final ReflectionBasedFilterBuilder<M, ?> filterBuilder;
 
-        targetFields = AnnotationBasedModelBuilder.this.getTargetFields();
+    filterBuilder = new ReflectionBasedFilterBuilder<>(this.getTargetFields());
 
-        for (final Entry<String, Field> fieldEntry : targetFields.entrySet()) {
-          final String fieldName  = fieldEntry.getKey();
-          final Field  field      = fieldEntry.getValue();
-          final Object fieldValue = AnnotationBasedModelBuilder.this.getFieldValue(fieldName);
+    for (Entry<String, Field> fieldEntry : targetFields.entrySet()) {
+      final String  fieldName;
+      final Field   field;
+      final Object  targetValue;
 
-          if (fieldValue != null) {
-            filter.addCriterion(field, fieldValue);
-          }
-        }
+      fieldName   = fieldEntry.getKey();
+      field       = fieldEntry.getValue();
+      targetValue = AnnotationBasedModelBuilder.this.getFieldValue(fieldName);
 
-        return filter;
+      if (targetValue != null) {
+        filterBuilder.withFieldEqualTo(field, targetValue);
       }
-    };
+    }
+
+    return filterBuilder;
   }
 
   /**
@@ -211,9 +207,6 @@ extends MapBasedModelBuilder<M, B> {
 
   /**
    * Gets the list of fields that the builder is expected to populate.
-   * <p>
-   * Only fields declared directly in the model class are returned. Fields declared in parent
-   * classes of the model class are not currently supported.
    * <p>
    * The list is cached, for performance reasons.
    *

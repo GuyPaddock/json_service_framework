@@ -1,6 +1,7 @@
 package com.rosieapp.services.common.model.filtering;
 
 
+import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.construction.ModelBuilder;
 
 /**
@@ -33,8 +34,11 @@ import com.rosieapp.services.common.model.construction.ModelBuilder;
  * <p>
  * This would create a filter builder that can builder filters that find all people named "Bob" --
  * of any age.
+ *
+ * @param <M>
+ *        The type of model for which a filter is being constructed.
  */
-public interface ModelFilterBuilder<M> {
+public interface ModelFilterBuilder<M extends Model> {
   /**
    * Build a model filter.
    * <p>

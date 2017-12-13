@@ -16,7 +16,8 @@ import java.util.Optional;
  * This implementation provides built-in handling for the identifier fields, which require special
  * handling for JSON API serialization and de-serialization.
  *
- * @param <M> {@inheritDoc}
+ * @param <M>
+ *        The type of model that the builder builds.
  * @param <B>
  *        The builder class itself. (This must be the same type as the class being defined, to avoid
  *        a {@code ClassCastException}).

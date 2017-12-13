@@ -1,5 +1,6 @@
 package com.rosieapp.services.common.model.construction;
 
+import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.filtering.ModelFilter;
 import com.rosieapp.services.common.model.filtering.ModelFilterBuilder;
 
@@ -18,7 +19,7 @@ import com.rosieapp.services.common.model.filtering.ModelFilterBuilder;
  * @param <M>
  *        The type of model that the builder builds.
  */
-public interface ModelBuilder<M> {
+public interface ModelBuilder<M extends Model> {
   /**
    * Builds a model instance using information that has been built up through this interface.
    * <p>
