@@ -1,6 +1,7 @@
 package com.rosieapp.services.common.model.filtering;
 
 import com.rosieapp.services.common.model.Model;
+import com.rosieapp.services.common.model.filtering.criteria.ReferencedModelCriterion;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
@@ -288,9 +289,54 @@ extends CriteriaBasedFilterBuilder<M, B> {
   }
 
   //================================================================================================
+  // Sub-model Matching
+  //================================================================================================
+  /**
+   * Adds a criterion to this filter for matching the provided model filter against the model
+   * reference field having the specified name.
+   * <p>
+   * The field must be one that was registered in the map that was provided to this builder when
+   * it was created, or an exception will be raised.
+   *
+   * @param   fieldName
+   *          The name of the target field.
+   * @param   modelFilter
+   *          The filter to evaluate on the model that the field references.
+   *
+   * @return  This object, for chaining builder calls.
+   *
+   * @throws  IllegalArgumentException
+   *          If there is no field in the field map of this builder that has the specified name.
+   */
+  public <S extends Model> B withCriterionForSubModel(final String fieldName,
+                                                      final ModelFilter<S> modelFilter)
+  throws IllegalArgumentException {
+    return this.withCriterionForSubModel(this.getField(fieldName), modelFilter);
+  }
+
+  /**
+   * Adds a criterion to this filter for matching the provided model filter against the provided
+   * model reference field.
+   *
+   * @param   referencedField
+   *          The target field.
+   * @param   modelFilter
+   *          The filter to evaluate on the model that the field references.
+   *
+   * @return  This object, for chaining builder calls.
+   *
+   * @throws  IllegalArgumentException
+   *          If there is no field in the field map of this builder that has the specified name.
+   */
+  public <S extends Model> B withCriterionForSubModel(final Field referencedField,
+                                                      final ModelFilter<S> modelFilter)
+  throws IllegalArgumentException {
+    return this.withCriterion(new ReferencedModelCriterion<>(referencedField, modelFilter));
+  }
+
+  //================================================================================================
   // Utility Methods
   //================================================================================================
-
   /**
    * Adds a criterion to this filter for matching values against the field with the specified name.
    * <p>
@@ -304,6 +350,8 @@ extends CriteriaBasedFilterBuilder<M, B> {
    * @param   targetValue
    *          The value against which the field will be compared.
    *
+   * @return  This object, for chaining builder calls.
+   *
    * @throws  IllegalArgumentException
    *          If there is no field in the field map of this builder that has the specified name.
    */
@@ -316,12 +364,14 @@ extends CriteriaBasedFilterBuilder<M, B> {
   /**
    * Adds a criterion to this filter for matching values against the provided field of the model.
    *
-   * @param field
-   *        The target field.
-   * @param comparisonType
-   *        The type of comparison being done between the field and the target value.
-   * @param targetValue
-   *        The value against which the field will be compared.
+   * @param   field
+   *          The target field.
+   * @param   comparisonType
+   *          The type of comparison being done between the field and the target value.
+   * @param   targetValue
+   *          The value against which the field will be compared.
+   *
+   * @return  This object, for chaining builder calls.
    */
   @SuppressWarnings("unchecked")
   public B withCriterionForField(final Field field, final ComparisonType comparisonType,
@@ -337,7 +387,7 @@ extends CriteriaBasedFilterBuilder<M, B> {
    * @param   name
    *          The name of the desired field from the map.
    *
-   * @return  The desired field
+   * @return  The desired field.
    *
    * @throws  IllegalArgumentException
    *          If there is no field in the field map of this builder that has the specified name.
