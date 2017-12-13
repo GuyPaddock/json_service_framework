@@ -6,7 +6,9 @@ import java.util.Optional;
 /**
  * A model identifier that uses an opaque string to unique identify a persisted model.
  */
-public final class StringIdentifier extends PersistedModelIdentifier {
+public final class StringIdentifier
+extends PersistedModelIdentifier
+implements Comparable<StringIdentifier> {
   /**
    * The underlying identifier value.
    */
@@ -106,5 +108,10 @@ public final class StringIdentifier extends PersistedModelIdentifier {
     Objects.requireNonNull(value, "value cannot be null");
 
     this.value = value;
+  }
+
+  @Override
+  public int compareTo(StringIdentifier other) {
+    return this.getValue().compareTo(other.getValue());
   }
 }

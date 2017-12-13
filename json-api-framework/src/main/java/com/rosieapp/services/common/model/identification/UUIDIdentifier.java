@@ -11,7 +11,9 @@ import java.util.UUID;
  * A UUID is typically represented in string format like:
  * {@code 82159191-e513-459d-8a2c-c4a5cf45c7a2}
  */
-public final class UUIDIdentifier extends PersistedModelIdentifier {
+public final class UUIDIdentifier
+extends PersistedModelIdentifier
+implements Comparable<UUIDIdentifier> {
   /**
    * The underlying identifier value.
    */
@@ -162,5 +164,10 @@ public final class UUIDIdentifier extends PersistedModelIdentifier {
     Objects.requireNonNull(value, "value cannot be null");
 
     this.value = value;
+  }
+
+  @Override
+  public int compareTo(final UUIDIdentifier other) {
+    return this.getValue().compareTo(other.getValue());
   }
 }
