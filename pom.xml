@@ -29,8 +29,8 @@
   </scm>
 
   <modules>
-    <module>json-api-framework</module>
-    <module>json-loyalty-client</module>
-    <module>openicf-loyalty-connector</module>
+    <module>rosie-json-api-framework</module>
+    <module>rosie-loyalty-client</module>
+    <module>openicf-rosie-loyalty-connector</module>
   </modules>
 </project>
