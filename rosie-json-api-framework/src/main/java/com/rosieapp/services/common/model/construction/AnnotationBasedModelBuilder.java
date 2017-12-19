@@ -43,8 +43,11 @@ import org.slf4j.LoggerFactory;
  * new model instance. The pre-processor is not invoked when building filters, as they might
  * interfere with object equality during the filtering process.
  *
- * @param <M> {@inheritDoc}
- * @param <B> {@inheritDoc}
+ * @param <M>
+ *        The type of model that the builder builds.
+ * @param <B>
+ *        The builder class itself. (This must be the same type as the class being defined, to avoid
+ *        a {@code ClassCastException}).
  *
  * @see BuilderPopulatedField
  */
@@ -90,7 +93,7 @@ extends MapBasedModelBuilder<M, B> {
 
   /**
    * Default constructor for {@link AnnotationBasedModelBuilder}.
-   *
+   * <p>
    * Initializes the model builder to strictly validate required fields.
    */
   protected AnnotationBasedModelBuilder() {
@@ -149,7 +152,7 @@ extends MapBasedModelBuilder<M, B> {
   public ReflectionBasedFilterBuilder<M, ?> toFilterBuilder() {
     final ReflectionBasedFilterBuilder<M, ?> filterBuilder;
 
-    filterBuilder = new ReflectionBasedFilterBuilder<>(this.getTargetFields());
+    filterBuilder = this.createFilterBuilder(this.getTargetFields());
 
     for (Entry<String, Field> fieldEntry : targetFields.entrySet()) {
       final String  fieldName;
@@ -203,6 +206,18 @@ extends MapBasedModelBuilder<M, B> {
     this.validateFieldName(fieldName);
 
     return super.getFieldValue(fieldName);
+  }
+
+  /**
+   * Constructs a new filter builder to wrap the provided model builder field values.
+   * <p>
+   * This is an injection point for sub-classes to provide their own specific filter builder types.
+   *
+   * @return  The new filter builder.
+   */
+  protected ReflectionBasedFilterBuilder<M, ?> createFilterBuilder(
+                                                            final Map<String, Field> targetFields) {
+    return new ReflectionBasedFilterBuilder<>(targetFields);
   }
 
   /**
