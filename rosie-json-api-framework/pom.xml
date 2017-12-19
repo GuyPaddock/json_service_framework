@@ -27,6 +27,7 @@
   </repositories>
    
   <dependencies>
+    <!-- JSON API Converter -->
     <dependency>
       <groupId>com.github.jasminb</groupId>
       <artifactId>jsonapi-converter</artifactId>
@@ -45,23 +46,37 @@
       <version>2.3.0</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.7.1</version>
+      <!-- Provided by client application -->
+      <scope>provided</scope>
+    </dependency>
+
     <!-- Utilities -->
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
       <version>2.4</version>
+      <!-- Provided by client application -->
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>23.5-jre</version>
+      <!-- Provided by client application -->
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.25</version>
+      <!-- Provided by client application -->
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
@@ -76,6 +91,24 @@
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
+      </plugin>
+
+      <!-- Create a fat jar with all the dependencies of the JSON framework, so that client
+           applications do not have to include all of the JARs for our dependant libraries. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.1.0</version>
+
+        <executions>
+          <execution>
+            <phase>package</phase>
+
+            <goals>
+              <goal>shade</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
