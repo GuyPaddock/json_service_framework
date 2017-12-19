@@ -22,7 +22,9 @@ public enum ComparisonType {
   LESS_THAN_OR_EQUAL    ((first, second) -> compare(first, second, -1, 0)),
   GREATER_THAN          ((first, second) -> compare(first, second,  1)),
   GREATER_THAN_OR_EQUAL ((first, second) -> compare(first, second,  1, 0)),
-  CONTAINS              (ComparisonType::checkContains);
+  STARTS_WITH           (ComparisonType::checkStartsWith),
+  CONTAINS              (ComparisonType::checkContains),
+  ENDS_WITH             (ComparisonType::checkEndsWith);
 
   final BiFunction<Object, Object, Boolean> comparisonFunction;
 
@@ -132,7 +134,7 @@ public enum ComparisonType {
 
   /**
    * Checks if the string representation of a second object is contained within the string
-   * representation of the first.
+   * representation of the first object.
    *
    * @param   haystack
    *          The object which will be checked to see if it contains {@code needle}.
@@ -145,6 +147,40 @@ public enum ComparisonType {
    */
   private static boolean checkContains(Object haystack, Object needle) {
     return Objects.toString(haystack).contains(Objects.toString(needle));
+  }
+
+  /**
+   * Checks if the string representation of a second object appears as the first few characters
+   * of the string representation of the first object.
+   *
+   * @param   haystack
+   *          The object which will be checked to see if it starts with {@code needle}.
+   * @param   needle
+   *          The value that is being searched for at the start of the string representation of
+   *          {@code haystack}.
+   *
+   * @return  {@code true} if the string representation of {@code needle} is found at the start of
+   *          {@code haystack}; or, {@code false}, otherwise.
+   */
+  private static Boolean checkStartsWith(Object haystack, Object needle) {
+    return Objects.toString(haystack).startsWith(Objects.toString(needle));
+  }
+
+  /**
+   * Checks if the string representation of a second object appears as the last few characters
+   * of the string representation of the first object.
+   *
+   * @param   haystack
+   *          The object which will be checked to see if it ends with {@code needle}.
+   * @param   needle
+   *          The value that is being searched for at the end of the string representation of
+   *          {@code haystack}.
+   *
+   * @return  {@code true} if the string representation of {@code needle} is found at the end of
+   *          {@code haystack}; or, {@code false}, otherwise.
+   */
+  private static Boolean checkEndsWith(Object haystack, Object needle) {
+    return Objects.toString(haystack).endsWith(Objects.toString(needle));
   }
 
   /**
