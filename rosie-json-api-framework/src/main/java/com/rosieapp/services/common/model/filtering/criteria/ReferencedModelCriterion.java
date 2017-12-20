@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
  * The matching is done by applying a model filter to the value of a field within the top-level
  * model. This criterion only matches if that model filter returns a match on the sub-model.
  */
-public class ReferencedModelCriterion<M extends Model, S extends Model>
+public final class ReferencedModelCriterion<M extends Model, S extends Model>
 extends AbstractReflectionBasedCriterion<M> {
   private final ModelFilter<S> subModelFilter;
 
@@ -38,5 +38,19 @@ extends AbstractReflectionBasedCriterion<M> {
     S subModel = (S)currentValue;
 
     return (currentValue != null) && this.subModelFilter.matches(subModel);
+  }
+
+  @Override
+  public String toString() {
+    final String value;
+
+    value =
+      String.format(
+        "(Field `%s` (`%s` %s))",
+        this.getTargetField().getName(),
+        this.getTargetField().getType(),
+        this.subModelFilter);
+
+    return value;
   }
 }

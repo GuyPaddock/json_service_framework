@@ -2,6 +2,7 @@ package com.rosieapp.services.common.model.filtering.criteria.logic;
 
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.filtering.FilterCriterion;
+import com.rosieapp.services.common.model.filtering.criteria.AbstractFilterCriterion;
 import java.util.Objects;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Objects;
  * <em>not</em> match.
  */
 public class NotCriterion<M extends Model>
-implements FilterCriterion<M> {
+extends AbstractFilterCriterion<M> {
   final FilterCriterion<M> wrappedCriterion;
 
   /**
@@ -29,5 +30,17 @@ implements FilterCriterion<M> {
   @Override
   public boolean matches(M model) {
     return !this.wrappedCriterion.matches(model);
+  }
+
+  @Override
+  public String toString() {
+    final String value;
+
+    value =
+      String.format(
+        "(Not %s)",
+        this.wrappedCriterion.toString());
+
+    return value;
   }
 }

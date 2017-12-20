@@ -10,7 +10,7 @@ import com.rosieapp.services.common.model.Model;
  * benefit of allowing filters to be composed as criteria within other filters.
  *
  * @param <M>
- *        The type of model that the filter applies to.
+ *        The type of model that the criterion applies to.
  */
 public interface FilterCriterion<M extends Model> {
   /**

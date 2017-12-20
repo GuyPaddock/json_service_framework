@@ -1,7 +1,6 @@
 package com.rosieapp.services.common.model.filtering.criteria;
 
 import com.rosieapp.services.common.model.Model;
-import com.rosieapp.services.common.model.filtering.FilterCriterion;
 import java.lang.reflect.Field;
 
 /**
@@ -11,7 +10,7 @@ import java.lang.reflect.Field;
  * @param <M> {@inheritDoc}
  */
 public abstract class AbstractReflectionBasedCriterion<M extends Model>
-implements FilterCriterion<M> {
+extends AbstractFilterCriterion<M> {
   private final Field targetField;
 
   /**
@@ -66,4 +65,13 @@ implements FilterCriterion<M> {
    */
   protected abstract boolean valueMatches(final Object currentValue, final M model,
                                           final Field field);
+
+  /**
+   * Gets the field in the model that will be checked against this criterion.
+   *
+   * @return  The reflection field for the field in the model.
+   */
+  protected Field getTargetField() {
+    return this.targetField;
+  }
 }

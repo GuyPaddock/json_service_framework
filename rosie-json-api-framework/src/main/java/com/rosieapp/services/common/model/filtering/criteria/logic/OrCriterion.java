@@ -2,6 +2,7 @@ package com.rosieapp.services.common.model.filtering.criteria.logic;
 
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.filtering.FilterCriterion;
+import com.rosieapp.services.common.model.filtering.criteria.AbstractFilterCriterion;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ import java.util.Objects;
  * wraps matches.
  */
 public class OrCriterion<M extends Model>
-implements FilterCriterion<M> {
+extends AbstractFilterCriterion<M> {
   final List<FilterCriterion<M>> wrappedCriteria;
 
   /**
@@ -46,5 +47,17 @@ implements FilterCriterion<M> {
   @Override
   public boolean matches(final M model) {
     return this.wrappedCriteria.stream().anyMatch((criterion) -> criterion.matches(model));
+  }
+
+  @Override
+  public String toString() {
+    final String value;
+
+    value =
+      String.format(
+        "(Or %s)",
+        this.wrappedCriteria.toString());
+
+    return value;
   }
 }

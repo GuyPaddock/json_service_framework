@@ -26,6 +26,9 @@ extends AbstractReflectionBasedCriterion<M> {
    *        The field in the model that will be checked against this criterion.
    * @param targetValue
    *        The value the field must have for this criterion to match.
+   * @param comparisonFunction
+   *        The function that compares the field value against the target value and returns whether
+   *        or not the two are a match.
    */
   public FunctionBasedReflectionCriterion(
                                    final Field targetField, final Object targetValue,
@@ -39,5 +42,19 @@ extends AbstractReflectionBasedCriterion<M> {
   @Override
   protected boolean valueMatches(final Object currentValue, final M model, final Field field) {
     return this.comparisonFunction.apply(currentValue, targetValue);
+  }
+
+  @Override
+  public String toString() {
+    final String value;
+
+    value =
+      String.format(
+        "(Field `%s` against `%s` via `%s`)",
+        this.getTargetField().getName(),
+        this.targetValue.toString(),
+        this.comparisonFunction.getClass().getCanonicalName());
+
+    return value;
   }
 }

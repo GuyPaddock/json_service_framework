@@ -1,7 +1,6 @@
 package com.rosieapp.services.common.model.filtering.criteria;
 
 import com.rosieapp.services.common.model.Model;
-import com.rosieapp.services.common.model.filtering.FilterCriterion;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -13,7 +12,7 @@ import java.util.function.Function;
  *        The type of model that the criterion applies to.
  */
 public final class FunctionBasedCriterion<M extends Model>
-implements FilterCriterion<M> {
+extends AbstractFilterCriterion<M> {
   final Function<M, Object> valueProvider;
   final Object targetValue;
   final BiFunction<Object, Object, Boolean> comparisonFunction;
@@ -54,5 +53,19 @@ implements FilterCriterion<M> {
     return comparisonFunction.apply(
       this.valueProvider.apply(model),
       this.targetValue);
+  }
+
+  @Override
+  public String toString() {
+    final String value;
+
+    value =
+      String.format(
+        "(Supplier `%s` against `%s` via `%s`)",
+        this.valueProvider.getClass().getCanonicalName(),
+        this.targetValue.toString(),
+        this.comparisonFunction.getClass().getCanonicalName());
+
+    return value;
   }
 }
