@@ -21,16 +21,14 @@ public class Requests {
    *          A message explaining what failed (e.g. "failed to retrieve user").
    * @param   response
    *          The response from the server that indicates failure.
-   * @param   <R>
-   *          The type of the response.
    *
    * @return  A string describing the failure.
    *
    * @throws  IllegalArgumentException
    *          If the provided response was successful (i.e. it was not a failure response).
    */
-  public static <R> String failureResponseToString(final String contextMessage,
-                                                   final Response<R> response) {
+  public static String failureResponseToString(final String contextMessage,
+                                               final Response<?> response) {
     if (response.isSuccessful()) {
       throw new IllegalArgumentException(
         "Response did not fail -- it was successful. This method must not be called for " +
@@ -53,6 +51,7 @@ public class Requests {
           final String errorBodyString = errorBody.string();
 
           if ((errorBodyString != null) && !errorBodyString.isEmpty()) {
+            errorBuilder.append(' ');
             errorBuilder.append(errorBodyString);
           }
         }
