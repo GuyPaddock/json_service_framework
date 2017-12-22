@@ -1,6 +1,7 @@
 package com.rosieapp.services.common.model.identification;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -26,11 +27,12 @@ public class ModelIdentifierFactory {
    * type of identifier the string represents.
    */
   private static final List<Function<String, Optional<ModelIdentifier>>> STRATEGIES =
-    Arrays.asList(
-      LongIdentifier::createFrom,
-      UUIDIdentifier::createFrom,
-      StringIdentifier::createFrom
-    );
+    Collections.unmodifiableList(
+      Arrays.asList(
+        LongIdentifier::createFrom,
+        UUIDIdentifier::createFrom,
+        StringIdentifier::createFrom
+      ));
 
   /**
    * Gets the singleton instance of this factory.
