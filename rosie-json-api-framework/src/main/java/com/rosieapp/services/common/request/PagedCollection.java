@@ -127,7 +127,7 @@ implements Iterable<M> {
     response = this.requestFunction.apply(pageNumber).execute();
 
     if (!response.isSuccessful()) {
-      // FIXME: Research and/or implement a better, more specific exception type
+      // FIXME: Research and/or implement a better, more specific exception type (RJAJ-3)
       throw new IOException(
         Requests.failureResponseToString(
           String.format("Failed to fetch page `%d` of results", pageNumber), response));
@@ -136,8 +136,8 @@ implements Iterable<M> {
     responseBody = response.body();
 
     if (responseBody == null) {
-      // FIXME: Research and/or implement a better, more specific exception type
-      // FIXME: Are we handling JSON API error responses at all?
+      // FIXME: Research and/or implement a better, more specific exception type (RJAJ-3)
+      // FIXME: Are we handling JSON API error responses at all? (RJAJ-3)
       throw new IOException(
         String.format(
           "Unexpectedly received an empty response when fetching page `%d` of results.",

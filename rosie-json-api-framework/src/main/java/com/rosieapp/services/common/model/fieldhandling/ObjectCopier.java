@@ -295,7 +295,7 @@ public final class ObjectCopier {
   private ObjectCopier() {
   }
 
-  // FIXME: Convert this into multiple different unit tests
+  // FIXME: Convert this into multiple different unit tests (RJAJ-6)
   public static void main(String[] args) {
     List<String>        testList1 = Arrays.asList("a", "b", "c"),
                         listCopy1 = ObjectCopier.copy(testList1),
