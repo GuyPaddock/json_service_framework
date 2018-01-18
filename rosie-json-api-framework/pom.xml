@@ -9,7 +9,7 @@
 
   <groupId>com.rosieapp.services.framework</groupId>
   <artifactId>rosie-json-api-framework</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
 
   <name>Rosie JSON API v1 Framework for Java</name>
   <description>A standard framework for connecting to Rosie's JSON API v1-compliant services from Java.</description>
