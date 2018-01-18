@@ -50,7 +50,7 @@ public class Enums {
           () -> new IllegalArgumentException(
             MessageFormat.format(
               "No `{0}` was found that matched the specified filter.",
-              enumClass.getName())));
+              enumClass.getCanonicalName())));
 
     return result;
   }
