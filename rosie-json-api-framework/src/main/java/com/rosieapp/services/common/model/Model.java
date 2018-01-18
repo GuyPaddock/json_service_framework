@@ -17,6 +17,8 @@ public interface Model {
    * <p>
    * This method is typically invoked only by the model's builder and by methods that handle
    * persistence of a model for the first time.
+   * <p>
+   * If the model already has an ID equivalent to the ID being provided, this method has no effect.
    *
    * @param   id
    *          The new ID for this object.

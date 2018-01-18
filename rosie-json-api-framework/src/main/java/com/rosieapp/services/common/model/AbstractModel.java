@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.github.jasminb.jsonapi.annotations.Id;
 import com.rosieapp.services.common.model.identification.JsonModelIdHandler;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
+import com.rosieapp.services.common.model.identification.NewModelIdentifier;
 import java.util.Objects;
 
 /**
@@ -27,24 +28,37 @@ implements Model {
   @Id(value = JsonModelIdHandler.class)
   private ModelIdentifier id;
 
+  /**
+   * Constructor for {@code AbstractModel}.
+   */
+  public AbstractModel() {
+    this.id = NewModelIdentifier.getInstance();
+  }
+
   @Override
   public synchronized void assignId(final ModelIdentifier newId)
   throws IllegalStateException {
-    final ModelIdentifier existingId = this.getId();
+    final ModelIdentifier existingId;
 
-    if ((existingId != null) && !newId.equals(existingId) && !existingId.isObjectNew()) {
-      throw new IllegalStateException(
-        String.format(
-          "This model already has an existing identifier set. An attempt was made to change the " +
-          "identifier from `%s` to `%s`", existingId, newId));
+    Objects.requireNonNull(newId, "`newId` cannot be null");
+
+    existingId = this.getId();
+
+    if (!newId.equals(existingId)) {
+      if (!existingId.isObjectNew()) {
+        throw new IllegalStateException(
+          String.format(
+            "This model already has an existing identifier set. An attempt was made to change the " +
+            "identifier from `%s` to `%s`", existingId, newId));
+      }
+
+      this.id = newId;
     }
-
-    this.id = newId;
   }
 
   @Override
   public ModelIdentifier getId() {
-    return id;
+    return this.id;
   }
 
   @Override
@@ -99,5 +113,20 @@ implements Model {
     }
 
     return hashCode;
+  }
+
+  /**
+   * {@inheritDoc}
+   * <p>
+   * The identifier of the cloned object is automatically reset to a {@link NewModelIdentifier}
+   * placeholder, so it is possible for the clone to be saved as a new, independent model instance.
+   */
+  @Override
+  protected Object clone() throws CloneNotSupportedException {
+    AbstractModel clone = (AbstractModel)super.clone();
+
+    clone.id = NewModelIdentifier.getInstance();
+
+    return clone;
   }
 }
