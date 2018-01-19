@@ -10,6 +10,7 @@ import com.rosieapp.services.common.model.fieldhandling.StrictFieldDependencyHan
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import com.rosieapp.services.common.model.identification.ModelIdentifierFactory;
 import com.rosieapp.services.common.model.identification.NewModelIdentifier;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -74,14 +75,20 @@ implements ModelBuilder<M> {
   /**
    * Builder method for constructing a model with the specified identifier.
    *
-   * @param   id
+   * @param   identifier
    *          The string from an identifier will be parsed.
+   *          This must not be {@code null}, and must represent a valid identifier.
    *
    * @return  This object, for chaining builder calls.
+   *
+   * @throws  NullPointerException
+   *          If {@code identifier} is {@code null}.
    */
   @SuppressWarnings("unchecked")
-  public B withId(final ModelIdentifier id) {
-    this.setId(id);
+  public B withId(final ModelIdentifier identifier) {
+    Objects.requireNonNull(identifier, "identifier cannot be null");
+
+    this.setId(identifier);
 
     return (B)this;
   }
