@@ -106,6 +106,7 @@ public class ModelIdentifierFactory {
    *          If none of the known identifier formats matched the format of the provided identifier
    *          string.
    */
+  @SuppressWarnings("ConstantConditions")
   public ModelIdentifier createIdFrom(final String identifier)
   throws NullPointerException, IllegalArgumentException {
     Objects.requireNonNull(identifier, "identifier cannot be null");
