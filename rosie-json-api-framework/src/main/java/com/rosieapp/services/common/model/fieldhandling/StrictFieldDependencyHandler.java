@@ -7,15 +7,17 @@ package com.rosieapp.services.common.model.fieldhandling;
 import java.util.Optional;
 
 /**
- * A field provider that handles missing required field values by throwing a
- * {@link RequiredFieldMissingException}.
+ * A field dependency handler that handles missing required field values by throwing an
+ * exception.
+ *
+ * @see LaxFieldDependencyHandler
  */
-public class StrictFieldProvider
-extends AbstractFieldProvider {
+public class StrictFieldDependencyHandler
+extends AbstractFieldDependencyHandler {
   /**
    * Validates and returns the value to use when populating the specified required field.
    *
-   * <p>If the field value is {@code null}, the field provider will communicate this by raising a
+   * <p>If the field value is {@code null}, the handler will communicate this by raising a
    * {@link RequiredFieldMissingException}.
    *
    * {@inheritDoc}
@@ -26,7 +28,7 @@ extends AbstractFieldProvider {
    *          If the required field value is {@code null}.
    */
   @Override
-  public <F> F getRequiredField(final F fieldValue, final String fieldName)
+  public <F> F handleRequiredField(final F fieldValue, final String fieldName)
   throws RequiredFieldMissingException {
     return Optional.ofNullable(fieldValue)
       .orElseThrow(() -> new RequiredFieldMissingException(fieldName));

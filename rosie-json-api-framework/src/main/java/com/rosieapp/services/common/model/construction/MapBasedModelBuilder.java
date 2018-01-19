@@ -6,8 +6,8 @@ package com.rosieapp.services.common.model.construction;
 
 import com.rosieapp.common.collections.Maps;
 import com.rosieapp.services.common.model.Model;
-import com.rosieapp.services.common.model.fieldhandling.FieldValueProvider;
-import com.rosieapp.services.common.model.fieldhandling.StrictFieldProvider;
+import com.rosieapp.services.common.model.fieldhandling.FieldDependencyHandler;
+import com.rosieapp.services.common.model.fieldhandling.StrictFieldDependencyHandler;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,17 +52,17 @@ extends AbstractModelBuilder<M, B> {
    * <p>Initializes the model builder to strictly validate required fields.
    */
   protected MapBasedModelBuilder() {
-    this(new StrictFieldProvider());
+    this(new StrictFieldDependencyHandler());
   }
 
   /**
    * Constructor for {@link MapBasedModelBuilder}.
    *
    * @param valueProvider
-   *        A provider for controlling how optional and required fields are handled during object
+   *        A handler for controlling how optional and required fields are treated during object
    *        construction.
    */
-  protected MapBasedModelBuilder(final FieldValueProvider valueProvider) {
+  protected MapBasedModelBuilder(final FieldDependencyHandler valueProvider) {
     super(valueProvider);
 
     this.fieldValueMap = new HashMap<>();
@@ -109,29 +109,29 @@ extends AbstractModelBuilder<M, B> {
    *
    * <p>The value of the field (if any value has been stashed) is automatically retrieved from the
    * map of stashed field values, and then the request is delegated to
-   * {@link #getRequiredField(Object, String)}.
+   * {@link #supplyRequiredField(Object, String)}.
    *
    * @param   fieldName
    *          The name of the field, which is used to retrieve the target field. It may also be used
-   *          by the field value provider to construct an exception message if the field has no
+   *          by the field dependency handler to construct an exception message if the field has no
    *          value.
    *
    * @param   <F>
    *          The type of value expected for the field.
    *
-   * @return  Depending on the field value provider, this will typically be a non-null value to use
-   *          for the field, but may be {@code null} if the value provider is lax on validating
-   *          that all required fields are populated.
+   * @return  Depending on the field dependency handler, this will typically be a non-null value to
+   *          use for the field, but may be {@code null} if the handler is lax on validating that
+   *          all required fields are populated.
    *
    * @throws  IllegalStateException
-   *          If the required field value is {@code null} or invalid, and the field value provider
+   *          If the required field value is {@code null} or invalid, and the field dependency handler
    *          considers this to be an error.
    *
-   * @see     FieldValueProvider
+   * @see     FieldDependencyHandler
    */
   protected <F> F getRequiredField(final String fieldName)
   throws IllegalStateException {
-    return this.getRequiredField(this.getFieldValue(fieldName), fieldName);
+    return this.supplyRequiredField(this.getFieldValue(fieldName), fieldName);
   }
 
   /**
@@ -140,9 +140,9 @@ extends AbstractModelBuilder<M, B> {
    *
    * <p>The value of the field (if any value has been stashed) is automatically retrieved from the
    * map of stashed field values, and then the request is delegated to
-   * {@link #getOptionalField(Object, Object)}.
+   * {@link #validateOptionalField(Object, Object)}.
    *
-   * @see     FieldValueProvider
+   * @see     FieldDependencyHandler
    *
    * @param   fieldName
    *          The name of the field, which is used to retrieve the target field.
@@ -154,12 +154,12 @@ extends AbstractModelBuilder<M, B> {
    * @param   <F>
    *          The type of value expected for the field.
    *
-   * @return  Depending on the field value provider, this will typically be either the value of
+   * @return  Depending on the field dependency handler, this will typically be either the value of
    *          the requested field, or the default value if the field did not have a value.
    */
   @SuppressWarnings("unchecked")
   protected <F> F getOptionalField(final String fieldName, final F defaultValue) {
-    return this.getOptionalField((F)this.getFieldValue(fieldName), defaultValue);
+    return this.supplyOptionalField((F)this.getFieldValue(fieldName), fieldName, defaultValue);
   }
 
   /**

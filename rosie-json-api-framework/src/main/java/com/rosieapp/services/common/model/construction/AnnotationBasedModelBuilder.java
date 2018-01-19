@@ -8,9 +8,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
+import com.rosieapp.services.common.model.fieldhandling.FieldDependencyHandler;
 import com.rosieapp.services.common.model.fieldhandling.FieldValuePreprocessor;
-import com.rosieapp.services.common.model.fieldhandling.FieldValueProvider;
-import com.rosieapp.services.common.model.fieldhandling.StrictFieldProvider;
+import com.rosieapp.services.common.model.fieldhandling.StrictFieldDependencyHandler;
 import com.rosieapp.services.common.model.filtering.ComparisonType;
 import com.rosieapp.services.common.model.filtering.ReflectionBasedFilterBuilder;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
@@ -103,17 +103,17 @@ extends MapBasedModelBuilder<M, B> {
    * <p>Initializes the model builder to strictly validate required fields.
    */
   protected AnnotationBasedModelBuilder() {
-    this(new StrictFieldProvider());
+    this(new StrictFieldDependencyHandler());
   }
 
   /**
    * Constructor for {@link AnnotationBasedModelBuilder}.
    *
    * @param valueProvider
-   *        A provider for controlling how optional and required fields are handled during object
+   *        A handler for controlling how optional and required fields are treated during object
    *        construction.
    */
-  protected AnnotationBasedModelBuilder(final FieldValueProvider valueProvider) {
+  protected AnnotationBasedModelBuilder(final FieldDependencyHandler valueProvider) {
     super(valueProvider);
 
     this.populateTargetFields();

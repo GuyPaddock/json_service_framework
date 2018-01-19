@@ -4,11 +4,9 @@
 
 package com.rosieapp.services.common.model.construction;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.rosieapp.services.common.model.Model;
-import com.rosieapp.services.common.model.fieldhandling.FieldValueProvider;
-import com.rosieapp.services.common.model.fieldhandling.StrictFieldProvider;
+import com.rosieapp.services.common.model.fieldhandling.FieldDependencyHandler;
+import com.rosieapp.services.common.model.fieldhandling.StrictFieldDependencyHandler;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import com.rosieapp.services.common.model.identification.ModelIdentifierFactory;
 import com.rosieapp.services.common.model.identification.NewModelIdentifier;
@@ -28,7 +26,7 @@ import java.util.Optional;
  */
 public abstract class AbstractModelBuilder<M extends Model, B extends AbstractModelBuilder<M, B>>
 implements ModelBuilder<M> {
-  private final FieldValueProvider valueProvider;
+  private final FieldDependencyHandler fieldDependencyHandler;
 
   private ModelIdentifier id;
 
@@ -38,18 +36,18 @@ implements ModelBuilder<M> {
    * <p>Initializes the model builder to strictly validate required fields.
    */
   protected AbstractModelBuilder() {
-    this(new StrictFieldProvider());
+    this(new StrictFieldDependencyHandler());
   }
 
   /**
    * Constructor for {@link AbstractModelBuilder}.
    *
-   * @param valueProvider
-   *        A provider for controlling how optional and required fields are handled during object
+   * @param fieldDependencyHandler
+   *        A handler for controlling how optional and required fields are treated during object
    *        construction.
    */
-  protected AbstractModelBuilder(final FieldValueProvider valueProvider) {
-    this.valueProvider = valueProvider;
+  protected AbstractModelBuilder(final FieldDependencyHandler fieldDependencyHandler) {
+    this.fieldDependencyHandler = fieldDependencyHandler;
   }
 
   /**
@@ -121,49 +119,50 @@ implements ModelBuilder<M> {
   }
 
   /**
-   * Requests, optionally validates, and then returns the value to use when populating the specified
-   * required field for a model being constructed by this builder.
+   * Processes a request for a field that is required in a model being constructed by this builder.
    *
-   * <p>The request is delegated to the field value provider. If this builder has not been provided
-   * with a value for the field (i.e. {@code fieldValue} is {@code null}), the field provider may
-   * choose to communicate this by raising an {@link IllegalStateException}, or it may simply supply
+   * <p>The request is delegated to the field dependency handler. If this builder has not been provided
+   * with a value for the field (i.e. {@code fieldValue} is {@code null}), the handler may choose to
+   * communicate this by raising an {@link IllegalStateException}, or it may simply supply
    * {@code null} (or a different value of its own choosing) in place of the missing value.
    *
    * @param   fieldValue
    *          The current value this builder has for the field.
    * @param   fieldName
-   *          The name of the field. This may be used by the field value provider to construct an
-   *          exception message if the field has no value.
+   *          The name of the field. This may be used by the field dependency handler to construct
+   *          an exception message if the field has no value.
    *
    * @param   <F>
    *          The type of value expected for the field.
    *
-   * @return  Depending on the field value provider, this will typically be a non-null value to use
-   *          for the field, but may be {@code null} if the value provider is lax on validating
-   *          that all required fields are populated.
+   * @return  Depending on the field dependency handler, this will typically be a non-null value to
+   *          use for the field, but may be {@code null} if the handler is lax on validating that
+   *          all required fields are populated.
    *
    * @throws  IllegalStateException
-   *          If the required field value is {@code null} or invalid, and the field value provider
+   *          If the required field value is {@code null} or invalid, and the field dependency handler
    *          considers this to be an error.
    *
-   * @see     FieldValueProvider
+   * @see     FieldDependencyHandler
    */
-  protected <F> F getRequiredField(final F fieldValue, final String fieldName)
+  protected <F> F supplyRequiredField(final F fieldValue, final String fieldName)
   throws IllegalStateException {
-    return this.getValueProvider().getRequiredField(fieldValue, fieldName);
+    return this.getFieldDependencyHandler().handleRequiredField(fieldValue, fieldName);
   }
 
   /**
-   * Returns the value to use when populating the specified optional field for a model being
-   * constructed by this builder.
+   * Processes a request for a field that is optional in a model being constructed by this builder.
    *
-   * <p>The request is delegated to the field value provider. If this builder has not been provided
+   * <p>The request is delegated to the field dependency handler. If this builder has not been provided
    * with a value for the field (i.e. {@code fieldValue} is {@code null}), then in place of the
-   * missing value, the field provider may choose to return the {@code defaultValue} that the
-   * builder has requested, or any other value of the provider's choosing.
+   * missing value, the handler may choose to return the {@code defaultValue} that the builder has
+   * requested, or any other value of the handler's choosing.
    *
    * @param   fieldValue
    *          The current value this builder has for the field.
+   * @param   fieldName
+   *          The name of the field. This may be used by the field dependency handler for debug
+   *          messaging or other internal references.
    * @param   defaultValue
    *          The default value that the builder would prefer to receive if the {@code fieldValue}
    *          is {@code null}.
@@ -171,22 +170,21 @@ implements ModelBuilder<M> {
    * @param   <F>
    *          The type of value expected for the field.
    *
-   * @return  Depending on the field value provider, this will typically be either the value of
+   * @return  Depending on the field dependency handler, this will typically be either the value of
    *          the requested field, or the default value if the field did not have a value.
    *
-   * @see     FieldValueProvider
+   * @see     FieldDependencyHandler
    */
-  protected <F> F getOptionalField(final F fieldValue, final F defaultValue) {
-    return this.getValueProvider().getOptionalField(fieldValue, defaultValue);
+  protected <F> F supplyOptionalField(final F fieldValue, final String fieldName, final F defaultValue) {
+    return this.getFieldDependencyHandler().handleOptionalField(fieldValue, fieldName, defaultValue);
   }
 
   /**
-   * Gets the provider (i.e. strategy) that dictates how the values of fields are retrieved and
-   * validated.
+   * Gets the handler (i.e. strategy) that dictates how requests for field values are satisfied.
    *
-   * @return  The field value provider currently in use by this builder.
+   * @return  The field dependency handler currently in use by this builder.
    */
-  private FieldValueProvider getValueProvider() {
-    return this.valueProvider;
+  private FieldDependencyHandler getFieldDependencyHandler() {
+    return this.fieldDependencyHandler;
   }
 }
