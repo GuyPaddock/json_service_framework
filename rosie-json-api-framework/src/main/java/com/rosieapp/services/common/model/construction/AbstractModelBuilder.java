@@ -26,7 +26,6 @@ import java.util.Optional;
  *        The builder class itself. (This must be the same type as the class being defined, to avoid
  *        a {@code ClassCastException}).
  */
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public abstract class AbstractModelBuilder<M extends Model, B extends AbstractModelBuilder<M, B>>
 implements ModelBuilder<M> {
   private final FieldValueProvider valueProvider;
