@@ -1,5 +1,6 @@
 package com.rosieapp.services.common.model;
 
+import static com.greghaskins.spectrum.dsl.specification.Specification.beforeAll;
 import static com.greghaskins.spectrum.dsl.specification.Specification.beforeEach;
 import static com.greghaskins.spectrum.dsl.specification.Specification.context;
 import static com.greghaskins.spectrum.dsl.specification.Specification.describe;
@@ -8,17 +9,24 @@ import static com.greghaskins.spectrum.dsl.specification.Specification.let;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.github.jasminb.jsonapi.ResourceConverter;
+import com.github.jasminb.jsonapi.annotations.Relationship;
+import com.github.jasminb.jsonapi.annotations.Type;
 import com.greghaskins.spectrum.Spectrum;
 import com.rosieapp.services.common.model.identification.LongIdentifier;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import com.rosieapp.services.common.model.identification.NewModelIdentifier;
 import com.rosieapp.services.common.model.identification.StringIdentifier;
+import com.rosieapp.services.common.model.tests.JSONUtils;
 import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
 @RunWith(Spectrum.class)
 public class AbstractModelTest {
   {
+    beforeAll(JSONUtils::configureTestForJackson);
+
     describe("#assignId", () -> {
       context("when the model does not already have an ID assigned", () -> {
         final Supplier<Model> model = let(TestModel::new);
@@ -456,9 +464,111 @@ public class AbstractModelTest {
         });
       });
     });
+
+    describe("JSON serialization behavior", () -> {
+      context("a model that has no relationships", () -> {
+        final Supplier<Model> model = let(() -> {
+          final TestModel result = new TestModel();
+
+          result.testField = "abc123";
+
+          return result;
+        });
+
+        final Supplier<String> modelJson = let(() -> JSONUtils.toJsonString(model.get()));
+
+        it("can be serialized to JSON-API-compliant JSON", () -> {
+          assertThat(modelJson.get())
+            .isEqualTo("{\"data\":{\"type\":\"test\",\"attributes\":{\"test_field\":\"abc123\"}}}");
+        });
+      });
+
+      context("a model that has relationships", () -> {
+        final Supplier<TestModel> model1 = let(() -> {
+          final TestModel result = new TestModel();
+
+          result.testField = "abc123";
+
+          result.assignId(new LongIdentifier(1));
+
+          return result;
+        });
+
+        final Supplier<Model> model2 = let(() -> {
+          final OtherTestModel result = new OtherTestModel();
+
+          result.otherModel = model1.get();
+          result.testField2 = "batman";
+
+          result.assignId(new LongIdentifier(2));
+
+          return result;
+        });
+
+        final Supplier<ResourceConverter> resourceConverter =
+          let(() -> JSONUtils.createResourceConverterThatIncludesRelationshipsFor(
+            TestModel.class,
+            OtherTestModel.class));
+
+        final Supplier<String> modelJson = let(() -> JSONUtils.toJsonString(model2.get(), resourceConverter.get()));
+
+        it("can be serialized along with its relationships to JSON-API-compliant JSON", () -> {
+          assertThat(modelJson.get())
+            .isEqualTo(
+              "{\"data\":{\"type\":\"other_test\",\"id\":\"2\",\"attributes\":{\"test_field2\":\"batman\"},"
+              + "\"relationships\":{\"other_model\":{\"data\":{\"type\":\"test\",\"id\":\"1\"}}}},"
+              + "\"included\":[{\"type\":\"test\",\"id\":\"1\",\"attributes\":{\"test_field\":\"abc123\"}}]}");
+        });
+      });
+    });
+
+    describe("JSON deserialization behavior", () -> {
+      final Supplier<ResourceConverter> converter =
+        let(() -> JSONUtils.createResourceConverterFor(TestModel.class, OtherTestModel.class));
+
+      context("JSON-API-compliant JSON that represents a model that has no relationships", () -> {
+        final String jsonValue =
+          "{\"data\":{\"id\":6,\"type\":\"test\",\"attributes\":{\"test_field\":\"abc123\"}}}";
+
+        it("can be de-serialized", () -> {
+          final TestModel testModel =
+            JSONUtils.fromJsonString(jsonValue, TestModel.class, converter.get());
+
+          assertThat(testModel).isNotNull();
+          assertThat(testModel.getId()).isEqualTo(new LongIdentifier(6));
+          assertThat(testModel.testField).isEqualTo("abc123");
+        });
+      });
+
+      context("JSON-API-compliant JSON that represents a model and its relationships", () -> {
+        final String jsonValue =
+          "{\"data\":{\"type\":\"other_test\",\"id\":\"2\",\"attributes\":{\"test_field2\":\"batman\"},"
+          + "\"relationships\":{\"other_model\":{\"data\":{\"type\":\"test\",\"id\":\"1\"}}}},"
+          + "\"included\":[{\"type\":\"test\",\"id\":\"1\",\"attributes\":{\"test_field\":\"abc123\"}}]}";
+
+        it("can be de-serialized", () -> {
+          final OtherTestModel otherTestModel;
+          final TestModel      testModel;
+
+          otherTestModel =
+            JSONUtils.fromJsonString(jsonValue, OtherTestModel.class, converter.get());
+
+          assertThat(otherTestModel).isNotNull();
+          assertThat(otherTestModel.getId()).isEqualTo(new LongIdentifier(2));
+          assertThat(otherTestModel.testField2).isEqualTo("batman");
+
+          testModel = otherTestModel.otherModel;
+
+          assertThat(testModel).isNotNull();
+          assertThat(testModel.getId()).isEqualTo(new LongIdentifier(1));
+          assertThat(testModel.testField).isEqualTo("abc123");
+        });
+      });
+    });
   }
 
-  private class TestModel
+  @Type("test")
+  private static class TestModel
   extends AbstractModel
   implements Cloneable {
     public String testField;
@@ -467,5 +577,15 @@ public class AbstractModelTest {
     public Object clone() throws CloneNotSupportedException {
       return super.clone();
     }
+  }
+
+  @Type("other_test")
+  private static class OtherTestModel
+  extends AbstractModel {
+    public String testField2;
+
+    @Relationship("other_model")
+    @JsonIgnore
+    public TestModel otherModel;
   }
 }
