@@ -35,6 +35,7 @@ public interface Model {
    * @return  The identifier for this object, which is typically something like a UUID or long value
    *          primary key.
    */
+  @JsonIgnore
   ModelIdentifier getId();
 
   /**
