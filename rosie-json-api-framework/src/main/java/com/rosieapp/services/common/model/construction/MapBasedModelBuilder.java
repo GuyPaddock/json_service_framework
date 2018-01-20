@@ -159,7 +159,7 @@ extends AbstractModelBuilder<M, B> {
    */
   @SuppressWarnings("unchecked")
   protected <F> F getOptionalField(final String fieldName, final F defaultValue) {
-    return this.supplyOptionalField((F)this.getFieldValue(fieldName), fieldName, defaultValue);
+    return this.supplyOptionalField(this.getFieldValue(fieldName), fieldName, defaultValue);
   }
 
   /**
