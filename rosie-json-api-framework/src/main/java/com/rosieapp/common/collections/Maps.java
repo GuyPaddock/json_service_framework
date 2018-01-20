@@ -26,7 +26,7 @@ public final class Maps {
    *
    * <p>The output is formatted more nicely than the default {@link AbstractMap#toString()}
    * implementation in the JDK. Keys and values are wrapped in quotes, and the values are presented
-   * in alphabetic order by key.
+   * in the order they appear in the map.
    *
    * @param   map
    *          The map to convert to a string.
@@ -39,6 +39,26 @@ public final class Maps {
    */
   public static <K extends Comparable<K>, V> String toString(final Map<K, V> map) {
     return toString(map.entrySet().stream());
+  }
+
+  /**
+   * Converts all of the entries of a map to a string, sorted by key.
+   * <p>
+   * The output is formatted more nicely than the default {@link AbstractMap#toString()}
+   * implementation in the JDK. Keys and values are wrapped in quotes, and the values are presented
+   * in alphabetic order by key.
+   *
+   * @param   map
+   *          The map to convert to a string.
+   * @param   <K>
+   *          The type of key being used in the map.
+   * @param   <V>
+   *          The type of value being used in the map.
+   *
+   * @return  The string representation of the map.
+   */
+  public static <K extends Comparable<K>, V> String toStringSorted(final Map<K, V> map) {
+    return toString(map.entrySet().stream().sorted(Map.Entry.comparingByKey()));
   }
 
   /**
@@ -63,7 +83,6 @@ public final class Maps {
                                                       final Stream<Entry<K, V>> entryStream) {
     final String string =
       entryStream
-        .sorted(Map.Entry.comparingByKey())
         .map(
           (entry) -> String.format("\"%s\": \"%s\"", entry.getKey(), entry.getValue()))
         .collect(Collectors.joining(", "));

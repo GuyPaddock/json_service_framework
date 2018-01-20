@@ -9,7 +9,7 @@ import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.fieldhandling.FieldDependencyHandler;
 import com.rosieapp.services.common.model.fieldhandling.StrictFieldDependencyHandler;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -65,7 +65,7 @@ extends AbstractModelBuilder<M, B> {
   protected MapBasedModelBuilder(final FieldDependencyHandler valueProvider) {
     super(valueProvider);
 
-    this.fieldValueMap = new HashMap<>();
+    this.fieldValueMap = new LinkedHashMap<>();
   }
 
   /**
