@@ -152,7 +152,7 @@ implements ModelBuilder<M> {
    *
    * @see     FieldDependencyHandler
    */
-  protected <F> F supplyRequiredField(final F fieldValue, final String fieldName)
+  protected <F> F supplyRequiredFieldValue(final F fieldValue, final String fieldName)
   throws IllegalStateException {
     return this.getFieldDependencyHandler().handleRequiredField(fieldValue, fieldName);
   }
@@ -182,7 +182,7 @@ implements ModelBuilder<M> {
    *
    * @see     FieldDependencyHandler
    */
-  protected <F> F supplyOptionalField(final F fieldValue, final String fieldName, final F defaultValue) {
+  protected <F> F supplyOptionalFieldValue(final F fieldValue, final String fieldName, final F defaultValue) {
     return this.getFieldDependencyHandler().handleOptionalField(fieldValue, fieldName, defaultValue);
   }
 

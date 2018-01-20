@@ -71,13 +71,15 @@ public class AbstractModelBuilderTests {
         it("uses the provided FDH to validate required fields", () -> {
           modelBuilder.get().build();
 
-          verify(dependencyHandler.get()).handleRequiredField("someRequiredValue", "requiredField");
+          verify(dependencyHandler.get())
+            .handleRequiredField("someRequiredValue", "requiredField");
         });
 
         it("uses the provided FDH to validate optional fields", () -> {
           modelBuilder.get().build();
 
-          verify(dependencyHandler.get()).handleOptionalField("someOptionalValue", "optionalField", "Default");
+          verify(dependencyHandler.get())
+            .handleOptionalField("someOptionalValue", "optionalField", "Default");
         });
       });
     });
@@ -252,19 +254,24 @@ public class AbstractModelBuilderTests {
 
       model.assignId(super.buildId());
 
-      model.requiredField = this.supplyRequiredField(this.requiredField, "requiredField");
-      model.optionalField = this.supplyOptionalField(this.optionalField, "optionalField", "Default");
+      model.requiredField =
+        this.supplyRequiredFieldValue(this.requiredField, "requiredField");
+
+      model.optionalField =
+        this.supplyOptionalFieldValue(this.optionalField, "optionalField", "Default");
 
       return model;
     }
 
     @Override
     public TestModel buildShallow() {
+      // Unused by this test
       return null;
     }
 
     @Override
     public ModelFilterBuilder<TestModel> toFilterBuilder() {
+      // Unused by this test
       return null;
     }
   }

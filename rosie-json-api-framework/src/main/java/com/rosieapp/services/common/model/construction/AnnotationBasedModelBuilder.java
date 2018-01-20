@@ -397,9 +397,9 @@ extends MapBasedModelBuilder<M, B> {
     field.setAccessible(true);
 
     if (fieldIsRequired) {
-      rawValue = this.getRequiredField(fieldName);
+      rawValue = this.getRequiredFieldValue(fieldName);
     } else {
-      rawValue = this.getOptionalField(fieldName, field.get(model));
+      rawValue = this.getOptionalFieldValue(fieldName, field.get(model));
     }
 
     processedValue = this.invokePreprocessor(fieldPreprocessor, field, rawValue);

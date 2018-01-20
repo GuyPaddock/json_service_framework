@@ -109,7 +109,7 @@ extends AbstractModelBuilder<M, B> {
    *
    * <p>The value of the field (if any value has been stashed) is automatically retrieved from the
    * map of stashed field values, and then the request is delegated to
-   * {@link #supplyRequiredField(Object, String)}.
+   * {@link #supplyRequiredFieldValue(Object, String)}.
    *
    * @param   fieldName
    *          The name of the field, which is used to retrieve the target field. It may also be used
@@ -129,9 +129,9 @@ extends AbstractModelBuilder<M, B> {
    *
    * @see     FieldDependencyHandler
    */
-  protected <F> F getRequiredField(final String fieldName)
+  protected <F> F getRequiredFieldValue(final String fieldName)
   throws IllegalStateException {
-    return this.supplyRequiredField(this.getFieldValue(fieldName), fieldName);
+    return this.supplyRequiredFieldValue(this.getFieldValue(fieldName), fieldName);
   }
 
   /**
@@ -140,7 +140,7 @@ extends AbstractModelBuilder<M, B> {
    *
    * <p>The value of the field (if any value has been stashed) is automatically retrieved from the
    * map of stashed field values, and then the request is delegated to
-   * {@link #supplyOptionalField(Object, String, Object)}.
+   * {@link #supplyOptionalFieldValue(Object, String, Object)}.
    *
    * @see     FieldDependencyHandler
    *
@@ -158,8 +158,8 @@ extends AbstractModelBuilder<M, B> {
    *          the requested field, or the default value if the field did not have a value.
    */
   @SuppressWarnings("unchecked")
-  protected <F> F getOptionalField(final String fieldName, final F defaultValue) {
-    return this.supplyOptionalField(this.getFieldValue(fieldName), fieldName, defaultValue);
+  protected <F> F getOptionalFieldValue(final String fieldName, final F defaultValue) {
+    return this.supplyOptionalFieldValue(this.getFieldValue(fieldName), fieldName, defaultValue);
   }
 
   /**
