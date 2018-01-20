@@ -34,6 +34,7 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 @PrepareForTest({ StringIdentifier.class })
 public class AbstractModelBuilderTests {
   {
+    //noinspection Duplicates
     describe("constructors", () -> {
       context("when no field dependency handler is provided", () -> {
         final Supplier<TestModelBuilder> modelBuilder = let(TestModelBuilder::new);
