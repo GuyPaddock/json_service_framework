@@ -58,12 +58,12 @@ extends AbstractModelBuilder<M, B> {
   /**
    * Constructor for {@link MapBasedModelBuilder}.
    *
-   * @param valueProvider
+   * @param dependencyHandler
    *        A handler for controlling how optional and required fields are treated during object
    *        construction.
    */
-  protected MapBasedModelBuilder(final FieldDependencyHandler valueProvider) {
-    super(valueProvider);
+  protected MapBasedModelBuilder(final FieldDependencyHandler dependencyHandler) {
+    super(dependencyHandler);
 
     this.fieldValueMap = new LinkedHashMap<>();
   }
