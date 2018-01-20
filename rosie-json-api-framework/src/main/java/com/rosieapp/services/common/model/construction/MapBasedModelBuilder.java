@@ -140,7 +140,7 @@ extends AbstractModelBuilder<M, B> {
    *
    * <p>The value of the field (if any value has been stashed) is automatically retrieved from the
    * map of stashed field values, and then the request is delegated to
-   * {@link #validateOptionalField(Object, Object)}.
+   * {@link #supplyOptionalField(Object, String, Object)}.
    *
    * @see     FieldDependencyHandler
    *
@@ -174,7 +174,7 @@ extends AbstractModelBuilder<M, B> {
   /**
    * Gets a string representation of all of the values in this builder.
    *
-   * <p>The {@code id} that will be used for the new model is automatically pre-pended to the
+   * <p>The {@code id} that will be used for the new model is automatically prepended to the
    * output, to simplify debugging.
    *
    * @return  A string representation of all of the values that have been stashed so far for
