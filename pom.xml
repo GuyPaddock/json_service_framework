@@ -32,5 +32,6 @@
     <module>rosie-json-api-framework</module>
     <module>rosie-loyalty-client</module>
     <module>openicf-rosie-loyalty-connector</module>
+    <module>rosie-ecom-client</module>
   </modules>
 </project>
