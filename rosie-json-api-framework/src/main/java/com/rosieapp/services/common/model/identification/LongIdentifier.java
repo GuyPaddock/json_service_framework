@@ -1,5 +1,6 @@
 package com.rosieapp.services.common.model.identification;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Optional;
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -7,6 +8,7 @@ import org.apache.commons.lang.math.NumberUtils;
  * A model identifier that uses traditional, long integer primary keys -- typically issued by a
  * single source of record -- to unique identify a persisted model.
  */
+@JsonSerialize(using = LongIdentifierSerializer.class)
 public final class LongIdentifier
 extends PersistedModelIdentifier
 implements Comparable<LongIdentifier> {
@@ -14,6 +16,15 @@ implements Comparable<LongIdentifier> {
    * The underlying identifier value.
    */
   private long value;
+
+
+  /**
+   * Default value for {@code value} used in the default constructor.
+   * <p>
+   * Note: this is an invalid value for an identifier.
+   *
+   */
+  public final static long DEFAULT_VALUE = -1;
 
   /**
    * Attempts to parse the provided string as a long integer model identifier.
@@ -55,6 +66,18 @@ implements Comparable<LongIdentifier> {
   public LongIdentifier(final long value)
   throws IllegalArgumentException {
     this.setValue(value);
+  }
+
+  /**
+   * Default constructor for {@link LongIdentifier}.
+   *
+   * Assigns {@code value} with an invalid default value.
+   * <p>
+   * Note: Required by jackson to properly deserialize JSON.
+   *
+   */
+  private LongIdentifier() {
+    this.value = DEFAULT_VALUE;
   }
 
   /**
