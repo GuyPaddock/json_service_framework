@@ -1,15 +1,11 @@
 package com.rosieapp.services.common.util;
 
 import static com.greghaskins.spectrum.Spectrum.describe;
-import static com.greghaskins.spectrum.Spectrum.let;
-import static com.greghaskins.spectrum.dsl.specification.Specification.beforeAll;
 import static com.greghaskins.spectrum.dsl.specification.Specification.context;
 import static com.greghaskins.spectrum.dsl.specification.Specification.it;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import com.greghaskins.spectrum.Spectrum;
-import java.util.function.Supplier;
-
 import okhttp3.MediaType;
 import okhttp3.Protocol;
 import okhttp3.ResponseBody;
