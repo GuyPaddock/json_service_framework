@@ -1,4 +1,4 @@
-package com.rosieapp.services.common.model.tests;
+package com.rosieapp.util.test;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -133,6 +133,11 @@ public class JSONUtils {
   public static String toJsonString(final JSONAPIDocument<?> document,
                                     final ResourceConverter converter)
   throws DocumentSerializationException {
+
+    if(document.get() instanceof Iterable){
+      return new String(converter.writeDocumentCollection((JSONAPIDocument<? extends Iterable<?>>) document));
+    }
+
     return new String(converter.writeDocument(document));
   }
 
@@ -205,7 +210,7 @@ public class JSONUtils {
 
   /**
    * Sets up a test for AssertJ JSON assertions to leverage Jackson serialization and
-   * de-serialziation.
+   * de-serialization.
    */
   public static void configureTestForJackson() {
     Configuration.setDefaults(new Configuration.Defaults() {

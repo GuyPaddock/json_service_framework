@@ -18,7 +18,7 @@ import com.rosieapp.services.common.model.identification.LongIdentifier;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import com.rosieapp.services.common.model.identification.NewModelIdentifier;
 import com.rosieapp.services.common.model.identification.StringIdentifier;
-import com.rosieapp.services.common.model.tests.JSONUtils;
+import com.rosieapp.util.test.JSONUtils;
 import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
