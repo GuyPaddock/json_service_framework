@@ -3,3 +3,5 @@ plugins:
     enabled: true
     config:
       file: pmd-rules.xml
+  sonar-java:
+    enabled: true
