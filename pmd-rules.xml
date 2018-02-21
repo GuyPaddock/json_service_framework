@@ -13,6 +13,14 @@
     Rules which enforce generally accepted best practices.
     -->
   <rule ref="category/java/bestpractices.xml">
+    <!--
+      False alarms on methods starting with test (e.g. "testXXX()").
+
+      Consider re-enabling when this issue is resolved:
+      https://github.com/pmd/pmd/issues/572
+      -->
+    <exclude name="JUnit4TestShouldUseTestAnnotation" />
+
     <!-- @Expected does not check message -->
     <exclude name="JUnitUseExpected" />
 
