@@ -125,7 +125,7 @@ public class JSONUtils {
                                     final ResourceConverter converter)
   throws DocumentSerializationException {
 
-    if(document.get() instanceof Iterable){
+    if (document.get() instanceof Iterable) {
       return new String(converter.writeDocumentCollection((JSONAPIDocument<? extends Iterable<?>>) document));
     }
 
