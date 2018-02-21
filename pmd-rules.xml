@@ -35,12 +35,15 @@
     Rules which enforce a specific coding style.
     -->
   <rule ref="category/java/codestyle.xml">
-    <!-- Too picky -->
+    <!-- Too picky; let's leave these to best judgment. -->
     <exclude name="AtLeastOneConstructor" />
     <exclude name="PrematureDeclaration" />
     <exclude name="UnnecessaryConstructor" />
     <exclude name="UnnecessaryLocalBeforeReturn" />
     <exclude name="UselessParentheses" />
+
+    <!-- See: https://stackoverflow.com/questions/2900881/generic-type-parameter-naming-convention-for-java-with-multiple-chars -->
+    <exclude name="GenericsNaming" />
 
     <!-- Bad advice -->
     <exclude name="AvoidFinalLocalVariable" />
