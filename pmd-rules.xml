@@ -57,7 +57,15 @@
     <exclude name="AvoidFinalLocalVariable" />
 
     <!-- Customized below -->
+    <exclude name="ShortVariable" />
     <exclude name="LongVariable" />
+  </rule>
+
+  <rule ref="category/java/codestyle.xml/ShortVariable">
+    <properties>
+      <!-- "to", "id", etc are all fine names. Let's NOT force a length > 3. -->
+      <property name="minimum" value="2"/>
+    </properties>
   </rule>
 
   <rule ref="category/java/codestyle.xml/LongVariable">
