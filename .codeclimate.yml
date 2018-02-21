@@ -2,6 +2,6 @@ plugins:
   pmd:
     enabled: true
     config:
-      file: pmd-rules.xml
+      file: .codestyle/rosie-pmd.xml
   sonar-java:
     enabled: true
