@@ -36,6 +36,9 @@
         <property name="lineSeparator" value="lf" />
     </module>
 
+    <!-- Allow warnings to be suppressed on a case-by-case basis-->
+    <module name="SuppressWarningsFilter"/>
+
     <module name="TreeWalker">
         <module name="OuterTypeFilename"/>
 
@@ -333,6 +336,16 @@
 
         <module name="UncommentedMain">
             <property name="excludedClasses" value="\.Main$"/>
+        </module>
+
+        <!-- Allow warnings to be suppressed with an annotation -->
+        <module name="SuppressWarningsHolder"/>
+
+        <!-- Allow warnings to be suppressed with a comment -->
+        <module name="SuppressWithNearbyCommentFilter">
+          <property name="commentFormat" value="CHECKSTYLE IGNORE (\w+)"/>
+          <property name="checkFormat" value="$1"/>
+          <property name="influenceFormat" value="1"/>
         </module>
     </module>
 </module>
