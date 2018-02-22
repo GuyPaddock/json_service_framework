@@ -128,8 +128,8 @@
 
   <rule ref="category/java/design.xml/NcssCount">
     <properties>
-      <!-- 25 non-comment lines per method sounds good. -->
-      <property name="methodReportLevel" value="25" />
+      <!-- 50 non-comment lines per method sounds good. -->
+      <property name="methodReportLevel" value="50" />
     </properties>
   </rule>
 
