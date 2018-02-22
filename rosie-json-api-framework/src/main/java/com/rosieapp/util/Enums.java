@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2017-2018 Rosie Applications, Inc.
  */
+
 package com.rosieapp.util;
 
 import java.text.MessageFormat;
