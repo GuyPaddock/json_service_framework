@@ -33,37 +33,66 @@ public class Requests {
    */
   public static String failureResponseToString(final String contextMessage,
                                                final Response<?> response) {
+    final StringBuilder errorBuilder;
+    final ResponseBody  errorBody;
+    final String        responseMessage;
+
+    // Sanity check
     if (response.isSuccessful()) {
       throw new IllegalArgumentException(
         "Response did not fail -- it was successful. This method must not be called for "
         + "successful responses.");
-    } else {
-      final StringBuilder errorBuilder    = new StringBuilder();
-      final ResponseBody  errorBody       = response.errorBody();
-      final String        responseMessage = response.message();
-
-      errorBuilder.append(String.format("%s: %d", contextMessage, response.code()));
-
-      if ((responseMessage != null) && !responseMessage.isEmpty()) {
-        errorBuilder.append(" - ");
-        errorBuilder.append(responseMessage);
-      }
-
-      if ((errorBody != null)) {
-        try {
-          final String errorBodyString = errorBody.string();
-
-          if ((errorBodyString != null) && !errorBodyString.isEmpty()) {
-            errorBuilder.append(' ');
-            errorBuilder.append(errorBodyString);
-          }
-        } catch (IOException ex) {
-          // Suppress error -- it is not useful to handle it because the only reason we're trying to
-          // get the response is for logging purposes in the first place.
-        }
-      }
-
-      return errorBuilder.toString();
     }
+
+    errorBuilder    = new StringBuilder();
+    errorBody       = response.errorBody();
+    responseMessage = response.message();
+
+    errorBuilder.append(contextMessage);
+    errorBuilder.append(": ");
+    errorBuilder.append(response.code());
+
+    if ((responseMessage != null) && !responseMessage.isEmpty()) {
+      errorBuilder.append(" - ");
+      errorBuilder.append(responseMessage);
+    }
+
+    if (errorBody != null) {
+      final String responseBody = responseBodyToString(errorBody);
+
+      if (!responseBody.isEmpty()) {
+        errorBuilder.append(' ');
+        errorBuilder.append(responseBody);
+      }
+    }
+
+    return errorBuilder.toString();
+  }
+
+  /**
+   * Converts a response body into a format suitable for inclusion in error messages and log
+   * messages.
+   *
+   * @param   responseBody
+   *          The response body to convert to a string.
+   *
+   * @return  A string that represents the contents of the response body.
+   */
+  private static String responseBodyToString(final ResponseBody responseBody) {
+    String result = "";
+
+    try {
+      String bodyString = responseBody.string();
+
+      if (bodyString != null) {
+        result = bodyString.trim();
+      }
+    } catch (IOException ex) {
+      // Suppress error -- it is not useful to bubble it up because the only reason we're
+      // trying to get the response is for diagnostic purposes in the first place.
+      result = "ERROR: Failed to convert response body to string: " + ex.toString();
+    }
+
+    return result;
   }
 }
