@@ -20,6 +20,7 @@ import java.util.function.Function;
  * value of a particular field against a known value via either the
  * {@link #buildFor(Function, Object)} or {@link #buildFor(Field, Object)} methods.
  */
+@SuppressWarnings("checkstyle:MethodParamPad")
 public enum ComparisonType {
   EQUAL_TO              (Objects::equals),
   LESS_THAN             ((first, second) -> compare(first, second, -1)),
