@@ -116,10 +116,10 @@ extends MapBasedModelBuilder<M, B> {
   @Override
   public M build()
   throws IllegalStateException {
-    final M                   model         = this.instantiateModelWithId();
-    final Map<String, Field>  targetFields  = this.getTargetFields();
+    final M                   model       = this.instantiateModelWithId();
+    final Map<String, Field>  fieldValues = this.getTargetFields();
 
-    for (final Entry<String, Field> fieldEntry : targetFields.entrySet()) {
+    for (final Entry<String, Field> fieldEntry : fieldValues.entrySet()) {
       final String  fieldName = fieldEntry.getKey();
       final Field   field     = fieldEntry.getValue();
 
@@ -271,16 +271,16 @@ extends MapBasedModelBuilder<M, B> {
    * Populates the map of field names to field objects.
    */
   private void populateTargetFields() {
-    Map<String, Field>  targetFields;
-    final List<Field>   allFields  = getAllTargetFields();
+    final Map<String, Field>  fields;
+    final List<Field>         allFields  = getAllTargetFields();
 
-    targetFields =
+    fields =
       allFields
         .stream()
         .filter((field) -> field.isAnnotationPresent(BuilderPopulatedField.class))
         .collect(Collectors.toMap(Field::getName, Function.identity()));
 
-    this.targetFields = targetFields;
+    this.targetFields = fields;
   }
 
   /**

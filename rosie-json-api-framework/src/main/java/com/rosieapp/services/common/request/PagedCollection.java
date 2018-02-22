@@ -256,11 +256,12 @@ implements Iterable<M> {
         atPageLimit = false;
       }
       else {
-        final int startingPage  = PagedCollection.this.startingPageNumber,
-                  pageLimit     = PagedCollection.this.pageLimit,
-                  currentPage   = this.currentPageNumber;
+        final PagedCollection collection    = PagedCollection.this;
+        final int             startingPage  = collection.startingPageNumber,
+                              limit         = collection.pageLimit,
+                              currentPage   = this.currentPageNumber;
 
-        atPageLimit = (currentPage >= (startingPage + pageLimit));
+        atPageLimit = (currentPage >= (startingPage + limit));
       }
 
       return atPageLimit;
