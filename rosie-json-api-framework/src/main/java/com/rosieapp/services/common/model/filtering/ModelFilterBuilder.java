@@ -4,7 +4,6 @@
 
 package com.rosieapp.services.common.model.filtering;
 
-
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.construction.ModelBuilder;
 
