@@ -32,7 +32,7 @@ extends AbstractFilterCriterion<M> {
   }
 
   @Override
-  public boolean matches(M model) {
+  public boolean matches(final M model) {
     final Field field = this.targetField;
 
     if (!field.isAccessible()) {

@@ -25,7 +25,7 @@ extends AbstractFilterCriterion<M> {
    * @param wrappedCriterion
    *        The criterion to negate.
    */
-  public NotCriterion(FilterCriterion<M> wrappedCriterion) {
+  public NotCriterion(final FilterCriterion<M> wrappedCriterion) {
     super();
 
     Objects.requireNonNull(wrappedCriterion, "wrappedCriteria");
@@ -34,7 +34,7 @@ extends AbstractFilterCriterion<M> {
   }
 
   @Override
-  public boolean matches(M model) {
+  public boolean matches(final M model) {
     return !this.wrappedCriterion.matches(model);
   }
 

@@ -37,7 +37,8 @@ public class JSONUtils {
    * @return  The new resource converter.
    */
   @SafeVarargs
-  public static ResourceConverter createResourceConverterFor(Class<? extends Model>... modelTypes) {
+  public static ResourceConverter createResourceConverterFor(
+                                                       final Class<? extends Model>... modelTypes) {
     final ResourceConverter converter;
     final ObjectMapper      mapper = new ObjectMapper();
 

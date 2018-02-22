@@ -75,7 +75,7 @@ implements Comparable<StringIdentifier> {
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(final Object other) {
     final boolean result;
 
     if (this == other) {
@@ -114,7 +114,7 @@ implements Comparable<StringIdentifier> {
   }
 
   @Override
-  public int compareTo(StringIdentifier other) {
+  public int compareTo(final StringIdentifier other) {
     return this.getValue().compareTo(other.getValue());
   }
 }

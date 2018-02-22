@@ -82,7 +82,7 @@ public class Requests {
     String result = "";
 
     try {
-      String bodyString = responseBody.string();
+      final String bodyString = responseBody.string();
 
       if (bodyString != null) {
         result = bodyString.trim();

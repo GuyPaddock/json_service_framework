@@ -26,7 +26,7 @@ import okio.Buffer;
 public class NoncompliantJsonContentTypeInterceptor
 implements Interceptor {
   @Override
-  public Response intercept(Chain chain)
+  public Response intercept(final Chain chain)
   throws IOException {
     final Request     originalRequest = chain.request(),
                       newRequest;

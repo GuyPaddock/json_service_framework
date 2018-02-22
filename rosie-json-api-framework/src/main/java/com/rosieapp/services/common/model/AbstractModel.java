@@ -80,7 +80,7 @@ implements Model {
    * equivalent simply as a consequence of not yet having been persisted.
    */
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(final Object other) {
     final boolean result;
 
     if (this == other) {
@@ -88,7 +88,7 @@ implements Model {
     } else if ((other == null) || (this.getClass() != other.getClass())) {
       result = false;
     } else {
-      AbstractModel otherModel = (AbstractModel)other;
+      final AbstractModel otherModel = (AbstractModel)other;
 
       // Don't consider two objects that lack an ID to be equal.
       result = Objects.equals(this.id, otherModel.id) && (!this.isNew());
@@ -125,7 +125,7 @@ implements Model {
    */
   @Override
   protected Object clone() throws CloneNotSupportedException {
-    AbstractModel clone = (AbstractModel)super.clone();
+    final AbstractModel clone = (AbstractModel)super.clone();
 
     clone.id = NewModelIdentifier.getInstance();
 

@@ -23,7 +23,7 @@ import java.lang.reflect.Field;
 public class CloningPreprocessor
 implements FieldValuePreprocessor {
   @Override
-  public <T> T preprocessField(Field field, T fieldValue) {
+  public <T> T preprocessField(final Field field, final T fieldValue) {
     return ObjectCopier.copy(fieldValue);
   }
 }

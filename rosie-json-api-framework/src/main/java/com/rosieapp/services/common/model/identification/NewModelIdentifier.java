@@ -55,7 +55,7 @@ extends AbstractModelIdentifier {
 
   @Override
   @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-  public boolean equals(Object other) {
+  public boolean equals(final Object other) {
     return (this == other);
   }
 

@@ -14,12 +14,12 @@ import java.util.Optional;
 public class JsonModelIdHandler
 implements ResourceIdHandler {
   @Override
-  public String asString(Object identifier) {
+  public String asString(final Object identifier) {
     return Optional.ofNullable(identifier).map(Object::toString).orElse(null);
   }
 
   @Override
-  public Object fromString(String identifier) {
+  public Object fromString(final String identifier) {
     return ModelIdentifierFactory.valueOf(identifier);
   }
 }

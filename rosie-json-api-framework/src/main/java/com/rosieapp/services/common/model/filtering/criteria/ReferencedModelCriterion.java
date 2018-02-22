@@ -38,8 +38,8 @@ extends AbstractReflectionBasedCriterion<M> {
 
   @Override
   @SuppressWarnings("unchecked")
-  protected boolean valueMatches(Object currentValue, M model, Field field) {
-    S subModel = (S)currentValue;
+  protected boolean valueMatches(final Object currentValue, final M model, final Field field) {
+    final S subModel = (S)currentValue;
 
     return (currentValue != null) && this.subModelFilter.matches(subModel);
   }

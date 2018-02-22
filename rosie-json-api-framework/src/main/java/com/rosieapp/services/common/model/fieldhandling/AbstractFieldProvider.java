@@ -14,7 +14,7 @@ import java.util.Optional;
 public abstract class AbstractFieldProvider
 implements FieldValueProvider {
   @Override
-  public <T> T getOptionalField(T fieldValue, T defaultValue) {
+  public <T> T getOptionalField(final T fieldValue, final T defaultValue) {
     return Optional.ofNullable(fieldValue).orElse(defaultValue);
   }
 }

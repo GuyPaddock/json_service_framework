@@ -158,7 +158,7 @@ extends MapBasedModelBuilder<M, B> {
 
     filterBuilder = this.createFilterBuilder(this.getTargetFields());
 
-    for (Entry<String, Field> fieldEntry : this.targetFields.entrySet()) {
+    for (final Entry<String, Field> fieldEntry : this.targetFields.entrySet()) {
       final String  fieldName;
       final Field   field;
       final Object  targetValue;
@@ -294,7 +294,7 @@ extends MapBasedModelBuilder<M, B> {
    * @return  A list of all of the fields that the builder must populate.
    */
   private List<Field> getAllTargetFields() {
-    Class<? extends Model>  modelClass  = this.getModelClass();
+    final Class<? extends Model>  modelClass  = this.getModelClass();
     List<Field>             fields      = this.getCachedTargetFields(modelClass);
 
     if (fields == null) {
@@ -376,7 +376,7 @@ extends MapBasedModelBuilder<M, B> {
    *          If the field is somehow mis-configured (e.g. it has a bad pre-processor), causing
    *          attempts to set its value to fail.
    */
-  private void populateField(M model, String fieldName, Field field)
+  private void populateField(final M model, final String fieldName, final Field field)
   throws IllegalAccessException, IllegalArgumentException {
     final BuilderPopulatedField                   fieldAnnotation;
     final boolean                                 fieldIsRequired;
@@ -413,7 +413,7 @@ extends MapBasedModelBuilder<M, B> {
    * @throws  IllegalArgumentException
    *          If there was no field that was within the model class with the required annotation.
    */
-  private void validateFieldName(String fieldName)
+  private void validateFieldName(final String fieldName)
   throws NullPointerException, IllegalArgumentException {
     Objects.requireNonNull(fieldName, "fieldName must not be null");
 
@@ -443,8 +443,11 @@ extends MapBasedModelBuilder<M, B> {
   @SuppressWarnings("unchecked")
   private Class<? extends M> getModelClass()
   throws IllegalStateException {
-    final Class<? extends M>            modelClass;
-    List<Supplier<Class<? extends M>>>  fetchStrategies = Arrays.asList(
+    final Class<? extends M>                  modelClass;
+    final List<Supplier<Class<? extends M>>>  fetchStrategies;
+
+    // TODO: Move this strategy list to a class constant.
+    fetchStrategies = Arrays.asList(
       this::determineModelTypeUsingCache,
       this::determineModelTypeByGenericType,
       this::determineModelTypeByEnclosingClass

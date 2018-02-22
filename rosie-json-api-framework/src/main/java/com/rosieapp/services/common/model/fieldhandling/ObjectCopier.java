@@ -59,7 +59,7 @@ public final class ObjectCopier {
    *
    * @return  If the object can be copied, a copy of the object; otherwise, the original object.
    */
-  public static <T> T copy(T source) {
+  public static <T> T copy(final T source) {
     return getHandlerFor(source).apply(source);
   }
 
@@ -75,7 +75,7 @@ public final class ObjectCopier {
    * @return  The best function to invoke to obtain a copy of the object.
    */
   @SuppressWarnings("unchecked")
-  private static <T> Function<T, T> getHandlerFor(T source) {
+  private static <T> Function<T, T> getHandlerFor(final T source) {
     Function<Object, Object> typeHandler;
 
     typeHandler =
@@ -296,7 +296,7 @@ public final class ObjectCopier {
   }
 
   // FIXME: Convert this into multiple different unit tests (RJAJ-6)
-  public static void main(String[] args) {
+  public static void main(final String[] args) {
     List<String>        testList1 = Arrays.asList("a", "b", "c"),
                         listCopy1 = ObjectCopier.copy(testList1),
                         testList2 = new LinkedList<>(Arrays.asList("a", "b", "c")),

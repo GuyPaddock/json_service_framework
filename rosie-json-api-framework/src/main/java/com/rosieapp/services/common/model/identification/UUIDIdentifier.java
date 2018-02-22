@@ -115,7 +115,7 @@ implements Comparable<UUIDIdentifier> {
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(final Object other) {
     final boolean result;
 
     if (this == other) {
@@ -123,7 +123,7 @@ implements Comparable<UUIDIdentifier> {
     } else if ((other == null) || (this.getClass() != other.getClass())) {
       result = false;
     } else {
-      UUIDIdentifier otherId = (UUIDIdentifier)other;
+      final UUIDIdentifier otherId = (UUIDIdentifier)other;
 
       result = Objects.equals(this.getValue(), otherId.getValue());
     }

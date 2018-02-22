@@ -122,7 +122,7 @@ implements Iterable<M> {
    * @throws  IOException
    *          If the request to the remote server fails, or returns an empty response body.
    */
-  private JSONAPIDocument<List<M>> requestPage(int pageNumber)
+  private JSONAPIDocument<List<M>> requestPage(final int pageNumber)
   throws IOException {
     Response<JSONAPIDocument<List<M>>> response;
     JSONAPIDocument<List<M>>           responseBody;

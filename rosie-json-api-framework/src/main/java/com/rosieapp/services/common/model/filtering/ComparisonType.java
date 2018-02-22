@@ -125,13 +125,13 @@ public enum ComparisonType {
    */
   protected static <T extends Comparable<T>> boolean compare(final Object first,
                                                              final Object second,
-                                                             int... targetSignums) {
+                                                             final int... targetSignums) {
     boolean   matches          = false;
     final T   comparableFirst  = toComparable(first),
               comparableSecond = toComparable(second);
     final int compareResult    = comparableFirst.compareTo(comparableSecond);
 
-    for (int targetSigNum : targetSignums) {
+    for (final int targetSigNum : targetSignums) {
       if (Integer.signum(compareResult) == Integer.signum(targetSigNum)) {
         matches = true;
         break;
@@ -154,7 +154,7 @@ public enum ComparisonType {
    * @return  {@code true} if the string representation of {@code needle} is found in
    *          {@code haystack}; or, {@code false}, otherwise.
    */
-  private static boolean checkContains(Object haystack, Object needle) {
+  private static boolean checkContains(final Object haystack, final Object needle) {
     return Objects.toString(haystack).contains(Objects.toString(needle));
   }
 
@@ -171,7 +171,7 @@ public enum ComparisonType {
    * @return  {@code true} if the string representation of {@code needle} is found at the start of
    *          {@code haystack}; or, {@code false}, otherwise.
    */
-  private static Boolean checkStartsWith(Object haystack, Object needle) {
+  private static Boolean checkStartsWith(final Object haystack, final Object needle) {
     return Objects.toString(haystack).startsWith(Objects.toString(needle));
   }
 
@@ -188,7 +188,7 @@ public enum ComparisonType {
    * @return  {@code true} if the string representation of {@code needle} is found at the end of
    *          {@code haystack}; or, {@code false}, otherwise.
    */
-  private static Boolean checkEndsWith(Object haystack, Object needle) {
+  private static Boolean checkEndsWith(final Object haystack, final Object needle) {
     return Objects.toString(haystack).endsWith(Objects.toString(needle));
   }
 

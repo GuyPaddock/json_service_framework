@@ -78,7 +78,7 @@ implements Comparable<LongIdentifier> {
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(final Object other) {
     final boolean result;
 
     if (this == other) {
@@ -86,7 +86,7 @@ implements Comparable<LongIdentifier> {
     } else if ((other == null) || (this.getClass() != other.getClass())) {
       result = false;
     } else {
-      LongIdentifier otherId = (LongIdentifier)other;
+      final LongIdentifier otherId = (LongIdentifier)other;
 
       result = (this.getValue() == otherId.getValue());
     }

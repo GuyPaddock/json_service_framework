@@ -56,7 +56,7 @@ extends AbstractFilterCriterion<M> {
    * </ul>
    */
   @Override
-  public boolean matches(M model) {
+  public boolean matches(final M model) {
     return this.comparisonFunction.apply(
       this.valueProvider.apply(model),
       this.targetValue);
