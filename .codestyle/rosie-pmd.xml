@@ -229,6 +229,7 @@
 
   <rule ref="category/java/performance.xml">
     <!-- Too picky -->
+    <exclude name="AvoidInstantiatingObjectsInLoops" />
     <exclude name="SimplifyStartsWith" />
   </rule>
 
