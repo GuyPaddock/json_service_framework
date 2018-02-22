@@ -129,7 +129,7 @@ extends MapBasedModelBuilder<M, B> {
 
       try {
         this.populateField(model, fieldName, field);
-      } catch (IllegalAccessException|IllegalArgumentException ex) {
+      } catch (IllegalAccessException | IllegalArgumentException ex) {
         throw new IllegalStateException(
           MessageFormat.format(
             "Could not populate the field `{0}` on model type `{1}`.",
@@ -598,7 +598,7 @@ extends MapBasedModelBuilder<M, B> {
     if ((rawFieldValue != null) && (fieldPreprocessor != null)) {
       try {
         processedValue = fieldPreprocessor.newInstance().preprocessField(field, rawFieldValue);
-      } catch (IllegalAccessException|InstantiationException ex) {
+      } catch (IllegalAccessException | InstantiationException ex) {
         throw new IllegalArgumentException(
           MessageFormat.format(
             "Invalid field pre-processor provided -- `{0}` cannot be instantiated.",

@@ -158,7 +158,7 @@ public final class ObjectCopier {
     if (mapConstructor != null) {
       try {
         copy = mapConstructor.newInstance(source);
-      } catch (InstantiationException|IllegalAccessException|InvocationTargetException ex) {
+      } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
         throw new IllegalStateException(
           MessageFormat.format(
             "Failed to invoke copy constructor on {0}.",
@@ -193,7 +193,7 @@ public final class ObjectCopier {
 
     try {
       copy = cloneMethod.invoke(source);
-    } catch (IllegalAccessException|InvocationTargetException ex) {
+    } catch (IllegalAccessException | InvocationTargetException ex) {
       throw new IllegalStateException(
         MessageFormat.format(
           "Failed to clone object of type `{0}`.",
