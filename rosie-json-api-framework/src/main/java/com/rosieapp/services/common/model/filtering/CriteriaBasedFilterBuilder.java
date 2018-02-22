@@ -45,9 +45,9 @@ implements ModelFilterBuilder<M> {
 
   @Override
   public ModelFilter<M> build() throws UnsupportedOperationException {
-    final CriteriaBasedFilter<M>   filter;
+    final CriteriaBasedFilter<M> filter;
 
-    filter = new CriteriaBasedFilter<>(criteria);
+    filter = new CriteriaBasedFilter<>(this.criteria);
 
     return filter;
   }

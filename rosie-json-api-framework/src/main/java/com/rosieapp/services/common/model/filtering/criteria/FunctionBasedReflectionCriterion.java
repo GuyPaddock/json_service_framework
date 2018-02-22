@@ -45,7 +45,7 @@ extends AbstractReflectionBasedCriterion<M> {
 
   @Override
   protected boolean valueMatches(final Object currentValue, final M model, final Field field) {
-    return this.comparisonFunction.apply(currentValue, targetValue);
+    return this.comparisonFunction.apply(currentValue, this.targetValue);
   }
 
   @Override

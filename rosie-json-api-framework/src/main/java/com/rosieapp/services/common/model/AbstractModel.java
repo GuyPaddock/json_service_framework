@@ -111,7 +111,7 @@ implements Model {
     if (this.id.isObjectNew()) {
       hashCode = super.hashCode();
     } else {
-      hashCode = Objects.hash(id);
+      hashCode = Objects.hash(this.id);
     }
 
     return hashCode;

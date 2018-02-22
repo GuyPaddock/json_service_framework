@@ -158,7 +158,7 @@ extends MapBasedModelBuilder<M, B> {
 
     filterBuilder = this.createFilterBuilder(this.getTargetFields());
 
-    for (Entry<String, Field> fieldEntry : targetFields.entrySet()) {
+    for (Entry<String, Field> fieldEntry : this.targetFields.entrySet()) {
       final String  fieldName;
       final Field   field;
       final Object  targetValue;
