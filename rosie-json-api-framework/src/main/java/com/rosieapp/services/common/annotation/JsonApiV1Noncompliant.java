@@ -11,7 +11,7 @@ package com.rosieapp.services.common.annotation;
  * <p>The long-term goal is to bring all legacy services into compliance with the specification so
  * that all classes tagged with this annotation can be removed in their entirety.
  */
-public @interface JSONAPIV1Noncompliant {
+public @interface JsonApiV1Noncompliant {
   /**
    * Provides the reason for non-compliance.
    *

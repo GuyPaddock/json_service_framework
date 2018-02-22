@@ -4,7 +4,7 @@
 
 package com.rosieapp.services.common.interception;
 
-import com.rosieapp.services.common.annotation.JSONAPIV1Noncompliant;
+import com.rosieapp.services.common.annotation.JsonApiV1Noncompliant;
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -21,7 +21,7 @@ import okio.Buffer;
  * limitations in Rosie's legacy Rails services that do not handle the
  * {@code application/vnd.api+json} content type properly.
  */
-@JSONAPIV1Noncompliant(reason = "Content type for requests is required to be application/vnd.api+json")
+@JsonApiV1Noncompliant(reason = "Content type for requests is required to be application/vnd.api+json")
 public class NoncompliantJsonContentTypeInterceptor
 implements Interceptor {
   @Override
