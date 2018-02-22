@@ -34,6 +34,8 @@ extends AbstractFilterCriterion<M> {
   public FunctionBasedCriterion(final Function<M, Object> valueProvider,
                                 final Object targetValue,
                                 final BiFunction<Object, Object, Boolean> comparisonFunction) {
+    super();
+
     this.valueProvider      = valueProvider;
     this.targetValue        = targetValue;
     this.comparisonFunction = comparisonFunction;

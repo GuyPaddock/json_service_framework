@@ -38,6 +38,8 @@ extends AbstractFilterCriterion<M> {
    *        The criteria to logically AND together.
    */
   public AndCriterion(final Collection<FilterCriterion<M>> wrappedCriteria) {
+    super();
+
     Objects.requireNonNull(wrappedCriteria, "wrappedCriteria");
 
     this.wrappedCriteria = new LinkedList<>(wrappedCriteria);

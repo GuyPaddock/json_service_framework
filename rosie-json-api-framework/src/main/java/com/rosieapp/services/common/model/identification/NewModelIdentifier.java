@@ -24,11 +24,9 @@ extends AbstractModelIdentifier {
 
   /**
    * Constructor for {@link NewModelIdentifier}.
-   *
-   * @deprecated For efficiency, rather than constructing a new identifier, it is preferable to use
-   *             {@link #getInstance()} instead.
    */
-  public NewModelIdentifier() {
+  private NewModelIdentifier() {
+    super();
   }
 
   /**

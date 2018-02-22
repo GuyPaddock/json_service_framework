@@ -34,6 +34,8 @@ extends CriteriaBasedFilterBuilder<M, B> {
    *        The map from field names to reflection field objects.
    */
   public ReflectionBasedFilterBuilder(final Map<String, Field> fieldMap) {
+    super();
+
     this.fieldMap = Collections.unmodifiableMap(new HashMap<>(fieldMap));
   }
 

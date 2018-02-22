@@ -22,6 +22,8 @@ extends AbstractFilterCriterion<M> {
    *        The criterion to negate.
    */
   public NotCriterion(FilterCriterion<M> wrappedCriterion) {
+    super();
+
     Objects.requireNonNull(wrappedCriterion, "wrappedCriteria");
 
     this.wrappedCriterion = wrappedCriterion;

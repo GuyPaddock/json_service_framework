@@ -73,6 +73,8 @@ implements Comparable<UUIDIdentifier> {
    */
   public UUIDIdentifier(final String value)
   throws NullPointerException, IllegalArgumentException {
+    super();
+
     this.setValue(value);
   }
 
@@ -89,6 +91,8 @@ implements Comparable<UUIDIdentifier> {
    */
   public UUIDIdentifier(final UUID value)
   throws IllegalArgumentException {
+    super();
+
     this.setValue(value);
   }
 

@@ -54,6 +54,8 @@ implements Comparable<LongIdentifier> {
    */
   public LongIdentifier(final long value)
   throws IllegalArgumentException {
+    super();
+
     this.setValue(value);
   }
 

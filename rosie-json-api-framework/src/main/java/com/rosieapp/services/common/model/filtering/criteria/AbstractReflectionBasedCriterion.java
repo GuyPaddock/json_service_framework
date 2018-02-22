@@ -22,6 +22,8 @@ extends AbstractFilterCriterion<M> {
    *        The field in the model that will be checked against this criterion.
    */
   public AbstractReflectionBasedCriterion(final Field targetField) {
+    super();
+
     this.targetField = targetField;
   }
 

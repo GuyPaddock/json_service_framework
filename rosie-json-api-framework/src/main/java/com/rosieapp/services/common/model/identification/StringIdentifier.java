@@ -52,6 +52,8 @@ implements Comparable<StringIdentifier> {
    */
   public StringIdentifier(final String value)
   throws NullPointerException {
+    super();
+
     this.setValue(value);
   }
 

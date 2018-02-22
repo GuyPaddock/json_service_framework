@@ -39,6 +39,8 @@ extends AbstractFilterCriterion<M> {
    *        The criteria to logically OR together.
    */
   public OrCriterion(final Collection<FilterCriterion<M>> wrappedCriteria) {
+    super();
+
     Objects.requireNonNull(wrappedCriteria, "wrappedCriteria");
 
     this.wrappedCriteria = new LinkedList<>(wrappedCriteria);
