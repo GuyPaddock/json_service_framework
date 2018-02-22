@@ -1,12 +1,11 @@
 package com.rosieapp.util;
 
-import static com.greghaskins.spectrum.Spectrum.describe;
-import static com.greghaskins.spectrum.Spectrum.let;
 import static com.greghaskins.spectrum.dsl.specification.Specification.context;
+import static com.greghaskins.spectrum.dsl.specification.Specification.describe;
 import static com.greghaskins.spectrum.dsl.specification.Specification.it;
+import static com.greghaskins.spectrum.dsl.specification.Specification.let;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 import com.greghaskins.spectrum.Spectrum;
 import java.util.Arrays;
@@ -55,7 +54,7 @@ public class EnumsTest {
           final Supplier<Predicate<Colors>> predicate = let(() -> (color) -> color.name().equals("WHITE"));
 
           it("returns the matching value", () -> {
-            assertThat(Enums.findValueOrThrow(enumClass.get(), predicate.get()), is(Colors.WHITE));
+            assertThat(Enums.findValueOrThrow(enumClass.get(), predicate.get())).isEqualTo(Colors.WHITE);
           });
         });
 
@@ -64,7 +63,7 @@ public class EnumsTest {
             (color) -> !Arrays.asList("RED", "WHITE").contains(color.name()));
 
           it("returns the first matching value, according to the order within the enum", () -> {
-            assertThat(Enums.findValueOrThrow(enumClass.get(), predicate.get()), is(Colors.BLUE));
+            assertThat(Enums.findValueOrThrow(enumClass.get(), predicate.get())).isEqualTo(Colors.BLUE);
           });
         });
       });
