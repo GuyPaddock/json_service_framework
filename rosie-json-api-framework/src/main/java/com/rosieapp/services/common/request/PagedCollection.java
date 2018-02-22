@@ -255,10 +255,11 @@ implements Iterable<M> {
         atPageLimit = false;
       }
       else {
-        final int pageLimit     = PagedCollection.this.pageLimit,
+        final int startingPage  = PagedCollection.this.startingPageNumber,
+                  pageLimit     = PagedCollection.this.pageLimit,
                   currentPage   = this.currentPageNumber;
 
-        atPageLimit = (currentPage >= pageLimit);
+        atPageLimit = (currentPage >= (startingPage + pageLimit));
       }
 
       return atPageLimit;
