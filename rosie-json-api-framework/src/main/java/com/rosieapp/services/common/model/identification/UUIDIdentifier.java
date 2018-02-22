@@ -15,6 +15,7 @@ import java.util.UUID;
  * <p>A UUID is typically represented in string format like:
  * {@code 82159191-e513-459d-8a2c-c4a5cf45c7a2}
  */
+@SuppressWarnings("checkstyle:AbbreviationAsWordInName") // Stay consistent with UUID class naming
 public final class UUIDIdentifier
 extends PersistedModelIdentifier
 implements Comparable<UUIDIdentifier> {
