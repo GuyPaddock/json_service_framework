@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
 package com.rosieapp.services.common.model.fieldhandling;
 
 import java.util.Optional;

@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
 package com.rosieapp.services.common.model.filtering.criteria.logic;
 
 import com.rosieapp.services.common.model.Model;

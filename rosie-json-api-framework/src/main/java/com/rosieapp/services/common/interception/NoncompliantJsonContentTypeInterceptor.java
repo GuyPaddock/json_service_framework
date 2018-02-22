@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
 package com.rosieapp.services.common.interception;
 
 import com.rosieapp.services.common.annotation.JSONAPIV1Noncompliant;
