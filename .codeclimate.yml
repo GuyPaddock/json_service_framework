@@ -1,0 +1,11 @@
+plugins:
+  checkstyle:
+    enabled: true
+    config:
+      file: .codestyle/rosie-checkstyle.xml
+  pmd:
+    enabled: true
+    config:
+      file: .codestyle/rosie-pmd.xml
+  sonar-java:
+    enabled: true
