@@ -7,7 +7,13 @@ import java.util.function.Predicate;
 /**
  * Common utility methods for dealing with enumerated types ("enums").
  */
-public class Enums {
+public final class Enums {
+  /**
+   * Private constructor for singleton utility class.
+   */
+  private Enums() {
+  }
+
   /**
    * Applies a filter to a set of enum values to locate one that matches, or throwing an exception
    * if none of the values match.

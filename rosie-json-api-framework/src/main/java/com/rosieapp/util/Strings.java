@@ -1,9 +1,15 @@
-package com.rosieapp.services.common.util;
+package com.rosieapp.util;
 
 /**
  * A class for common utility methods needed when dealing with Strings.
  */
-public class Strings {
+public final class Strings {
+  /**
+   * Private constructor for singleton utility class.
+   */
+  private Strings() {
+  }
+
   /**
    * Converts a string into a format that is suitable for being safely run through
    * {@link java.text.MessageFormat#format(Object)}.

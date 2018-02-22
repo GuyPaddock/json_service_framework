@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 /**
  * Re-usable utility methods for dealing with maps (i.e. {@link Map}).
  */
-public class Maps {
+public final class Maps {
   /**
    * Private constructor; this is a static class.
    */
