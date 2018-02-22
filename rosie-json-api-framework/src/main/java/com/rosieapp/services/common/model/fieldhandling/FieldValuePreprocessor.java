@@ -26,7 +26,7 @@ public interface FieldValuePreprocessor {
    * @param   <T>
    *          The type of field value.
    *
-   * @return
+   * @return  The result of preprocessing the value.
    */
   <T> T preprocessField(Field field, T fieldValue);
 }

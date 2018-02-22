@@ -53,8 +53,12 @@ public enum ComparisonType {
    * <p>The nature of the comparison is dictated by the enum value on which this method is being
    * invoked.
    *
+   * @param   valueProvider
+   *          The function that is expected to return the appropriate field value when given each
+   *          model instance.
    * @param   targetValue
-   *          The value the field must have for the criterion to match.
+   *          The value the field must have for the criterion to match. (This is compared against
+   *          the values returned by {@code valueProvider}.
    *
    * @param   <M>
    *          The type of model that the criterion applies to.

@@ -50,6 +50,12 @@ public class ModelIdentifierFactory {
   /**
    * Convenience method for {@code getInstance().createIdFrom(String)}.
    *
+   * @param   identifier
+   *          The string representation of an identifier that will be parsed into a model
+   *          identifier.
+   *
+   * @return  The identifier that resulted from parsing the identifier string.
+   *
    * @see #createIdFrom(String)
    */
   public static ModelIdentifier valueOf(final String identifier) {
@@ -59,6 +65,11 @@ public class ModelIdentifierFactory {
   /**
    * Convenience method for {@code getInstance().createIdFrom(long)}.
    *
+   * @param   identifier
+   *          The long integer that will be converted into a model identifier.
+   *
+   * @return  The identifier that resulted from wrapping the given identifier.
+   *
    * @see #createIdFrom(long)
    */
   public static ModelIdentifier valueOf(final long identifier) {
@@ -67,6 +78,11 @@ public class ModelIdentifierFactory {
 
   /**
    * Convenience method for {@code getInstance().createIdFrom(UUID)}.
+   *
+   * @param   identifier
+   *          The UUID identifier that will be converted into a model identifier.
+   *
+   * @return  The identifier that resulted from wrapping the given identifier.
    *
    * @see #createIdFrom(UUID)
    */

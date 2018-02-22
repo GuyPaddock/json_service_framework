@@ -93,7 +93,7 @@ implements Comparable<UUIDIdentifier> {
    * @see     ModelIdentifierFactory#createIdFrom(String)
    */
   public UUIDIdentifier(final UUID value)
-  throws IllegalArgumentException {
+  throws NullPointerException {
     super();
 
     this.setValue(value);

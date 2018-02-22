@@ -310,6 +310,10 @@ extends CriteriaBasedFilterBuilder<M, B> {
    * @param   modelFilter
    *          The filter to evaluate on the model that the field references.
    *
+   * @param   <S>
+   *          The sub-model; in other words, the type of model that is being referenced by the
+   *          top-level model.
+   *
    * @return  This object, for chaining builder calls.
    *
    * @throws  IllegalArgumentException
@@ -329,6 +333,10 @@ extends CriteriaBasedFilterBuilder<M, B> {
    *          The target field.
    * @param   modelFilter
    *          The filter to evaluate on the model that the field references.
+   *
+   * @param   <S>
+   *          The sub-model; in other words, the type of model that is being referenced by the
+   *          top-level model.
    *
    * @return  This object, for chaining builder calls.
    *
