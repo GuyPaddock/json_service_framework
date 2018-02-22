@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 /**
  * Re-usable utility methods for dealing with maps (i.e. {@link Map}).
  */
+@SuppressWarnings("PMD.ShortClassName")
 public final class Maps {
   /**
    * Private constructor; this is a static class.
