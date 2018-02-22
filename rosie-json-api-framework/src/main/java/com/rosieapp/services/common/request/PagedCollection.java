@@ -227,8 +227,7 @@ implements Iterable<M> {
     throws IOException {
       if (this.isAtPageLimit()) {
         this.markFinished();
-      }
-      else {
+      } else {
         final int                       nextPageNumber = this.getAndIncrementNextPageNumber();
         final JSONAPIDocument<List<M>>  responseBody;
         final List<M>                   modelList;
@@ -238,8 +237,7 @@ implements Iterable<M> {
 
         if (modelList.isEmpty()) {
           this.markFinished();
-        }
-        else {
+        } else {
           this.currentPageIterator = modelList.iterator();
         }
       }
@@ -257,8 +255,7 @@ implements Iterable<M> {
 
       if (PagedCollection.this.hasUnlimitedPageLimit()) {
         atPageLimit = false;
-      }
-      else {
+      } else {
         final PagedCollection collection    = PagedCollection.this;
         final int             startingPage  = collection.startingPageNumber,
                               limit         = collection.pageLimit,
@@ -281,8 +278,7 @@ implements Iterable<M> {
     private int getAndIncrementNextPageNumber() {
       if (this.currentPageNumber == NO_PAGE_LOADED) {
         this.currentPageNumber = PagedCollection.this.startingPageNumber;
-      }
-      else {
+      } else {
         ++this.currentPageNumber;
       }
 

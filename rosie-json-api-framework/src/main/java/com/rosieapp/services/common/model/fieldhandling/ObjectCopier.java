@@ -158,16 +158,14 @@ public final class ObjectCopier {
     if (mapConstructor != null) {
       try {
         copy = mapConstructor.newInstance(source);
-      }
-      catch (InstantiationException|IllegalAccessException|InvocationTargetException ex) {
+      } catch (InstantiationException|IllegalAccessException|InvocationTargetException ex) {
         throw new IllegalStateException(
           MessageFormat.format(
             "Failed to invoke copy constructor on {0}.",
             sourceType.getCanonicalName()),
           ex);
       }
-    }
-    else {
+    } else {
       // No copy constructor available.
       copy = null;
     }
@@ -195,8 +193,7 @@ public final class ObjectCopier {
 
     try {
       copy = cloneMethod.invoke(source);
-    }
-    catch (IllegalAccessException|InvocationTargetException ex) {
+    } catch (IllegalAccessException|InvocationTargetException ex) {
       throw new IllegalStateException(
         MessageFormat.format(
           "Failed to clone object of type `{0}`.",
@@ -281,8 +278,7 @@ public final class ObjectCopier {
 
     try {
       cloneMethod = objectType.getMethod("clone");
-    }
-    catch (NoSuchMethodException ex) {
+    } catch (NoSuchMethodException ex) {
       throw new IllegalArgumentException(
         MessageFormat.format(
           "Could not find a public clone() method within {0}.",

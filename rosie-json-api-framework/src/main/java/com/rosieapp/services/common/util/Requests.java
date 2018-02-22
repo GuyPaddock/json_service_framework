@@ -37,8 +37,7 @@ public class Requests {
       throw new IllegalArgumentException(
         "Response did not fail -- it was successful. This method must not be called for " +
         "successful responses.");
-    }
-    else {
+    } else {
       final StringBuilder errorBuilder    = new StringBuilder();
       final ResponseBody  errorBody       = response.errorBody();
       final String        responseMessage = response.message();
@@ -58,8 +57,7 @@ public class Requests {
             errorBuilder.append(' ');
             errorBuilder.append(errorBodyString);
           }
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
           // Suppress error -- it is not useful to handle it because the only reason we're trying to
           // get the response is for logging purposes in the first place.
         }

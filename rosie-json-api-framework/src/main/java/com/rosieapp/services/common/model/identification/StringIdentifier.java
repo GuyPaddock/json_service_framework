@@ -34,8 +34,7 @@ implements Comparable<StringIdentifier> {
 
     if (value == null) {
       result = Optional.empty();
-    }
-    else {
+    } else {
       result = Optional.of(new StringIdentifier(value));
     }
 
@@ -81,11 +80,9 @@ implements Comparable<StringIdentifier> {
 
     if (this == other) {
       result = true;
-    }
-    else if ((other == null) || (this.getClass() != other.getClass())) {
+    } else if ((other == null) || (this.getClass() != other.getClass())) {
       result = false;
-    }
-    else {
+    } else {
       final StringIdentifier otherId = (StringIdentifier)other;
 
       result = Objects.equals(this.getValue(), otherId.getValue());

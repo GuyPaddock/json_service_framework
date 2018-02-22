@@ -347,8 +347,7 @@ extends MapBasedModelBuilder<M, B> {
 
       if (Model.class.isAssignableFrom(superClass)) {
         currentClass = superClass;
-      }
-      else {
+      } else {
         currentClass = null;
       }
     }
@@ -394,8 +393,7 @@ extends MapBasedModelBuilder<M, B> {
 
     if (fieldIsRequired) {
       rawValue = this.getRequiredField(fieldName);
-    }
-    else {
+    } else {
       rawValue = this.getOptionalField(fieldName, field.get(model));
     }
 
@@ -563,8 +561,7 @@ extends MapBasedModelBuilder<M, B> {
           modelType.getName(),
           builderClass.getName());
       }
-    }
-    else {
+    } else {
       modelType = null;
     }
 
@@ -600,15 +597,13 @@ extends MapBasedModelBuilder<M, B> {
     if ((rawFieldValue != null) && (fieldPreprocessor != null)) {
       try {
         processedValue = fieldPreprocessor.newInstance().preprocessField(field, rawFieldValue);
-      }
-      catch (IllegalAccessException|InstantiationException ex) {
+      } catch (IllegalAccessException|InstantiationException ex) {
         throw new IllegalArgumentException(
           MessageFormat.format(
             "Invalid field pre-processor provided -- `{0}` cannot be instantiated.",
             fieldPreprocessor.getCanonicalName()));
       }
-    }
-    else {
+    } else {
       processedValue = rawFieldValue;
     }
 

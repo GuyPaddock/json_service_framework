@@ -83,11 +83,9 @@ implements Comparable<LongIdentifier> {
 
     if (this == other) {
       result = true;
-    }
-    else if ((other == null) || (this.getClass() != other.getClass())) {
+    } else if ((other == null) || (this.getClass() != other.getClass())) {
       result = false;
-    }
-    else {
+    } else {
       LongIdentifier otherId = (LongIdentifier)other;
 
       result = (this.getValue() == otherId.getValue());

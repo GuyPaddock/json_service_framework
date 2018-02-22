@@ -41,8 +41,7 @@ implements Comparable<UUIDIdentifier> {
 
     try {
       result = Optional.of(new UUIDIdentifier(value));
-    }
-    catch (IllegalArgumentException ex) {
+    } catch (IllegalArgumentException ex) {
       result = Optional.empty();
     }
 
@@ -120,11 +119,9 @@ implements Comparable<UUIDIdentifier> {
 
     if (this == other) {
       result = true;
-    }
-    else if ((other == null) || (this.getClass() != other.getClass())) {
+    } else if ((other == null) || (this.getClass() != other.getClass())) {
       result = false;
-    }
-    else {
+    } else {
       UUIDIdentifier otherId = (UUIDIdentifier)other;
 
       result = Objects.equals(this.getValue(), otherId.getValue());

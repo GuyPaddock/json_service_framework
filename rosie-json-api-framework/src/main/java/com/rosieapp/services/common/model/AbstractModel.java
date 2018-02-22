@@ -85,11 +85,9 @@ implements Model {
 
     if (this == other) {
       result = true;
-    }
-    else if ((other == null) || (this.getClass() != other.getClass())) {
+    } else if ((other == null) || (this.getClass() != other.getClass())) {
       result = false;
-    }
-    else {
+    } else {
       AbstractModel otherModel = (AbstractModel)other;
 
       // Don't consider two objects that lack an ID to be equal.

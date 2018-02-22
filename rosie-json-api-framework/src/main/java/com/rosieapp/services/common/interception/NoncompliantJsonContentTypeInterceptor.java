@@ -34,8 +34,7 @@ implements Interceptor {
     // GET requests don't have a body.
     if (originalBody == null) {
       newRequest = originalRequest;
-    }
-    else {
+    } else {
       newRequest = rebuildRequest(originalRequest);
     }
 
