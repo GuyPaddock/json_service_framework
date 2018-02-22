@@ -111,8 +111,6 @@ extends AbstractModelBuilder<M, B> {
    * map of stashed field values, and then the request is delegated to
    * {@link #getRequiredField(Object, String)}.
    *
-   * @see     FieldValueProvider
-   *
    * @param   fieldName
    *          The name of the field, which is used to retrieve the target field. It may also be used
    *          by the field value provider to construct an exception message if the field has no
@@ -128,6 +126,8 @@ extends AbstractModelBuilder<M, B> {
    * @throws  IllegalStateException
    *          If the required field value is {@code null} or invalid, and the field value provider
    *          considers this to be an error.
+   *
+   * @see     FieldValueProvider
    */
   protected <F> F getRequiredField(final String fieldName)
   throws IllegalStateException {

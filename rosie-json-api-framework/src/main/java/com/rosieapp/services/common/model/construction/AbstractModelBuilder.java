@@ -130,8 +130,6 @@ implements ModelBuilder<M> {
    * choose to communicate this by raising an {@link IllegalStateException}, or it may simply supply
    * {@code null} (or a different value of its own choosing) in place of the missing value.
    *
-   * @see     FieldValueProvider
-   *
    * @param   fieldValue
    *          The current value this builder has for the field.
    * @param   fieldName
@@ -148,6 +146,8 @@ implements ModelBuilder<M> {
    * @throws  IllegalStateException
    *          If the required field value is {@code null} or invalid, and the field value provider
    *          considers this to be an error.
+   *
+   * @see     FieldValueProvider
    */
   protected <F> F getRequiredField(final F fieldValue, final String fieldName)
   throws IllegalStateException {
@@ -163,8 +163,6 @@ implements ModelBuilder<M> {
    * missing value, the field provider may choose to return the {@code defaultValue} that the
    * builder has requested, or any other value of the provider's choosing.
    *
-   * @see     FieldValueProvider
-   *
    * @param   fieldValue
    *          The current value this builder has for the field.
    * @param   defaultValue
@@ -176,6 +174,8 @@ implements ModelBuilder<M> {
    *
    * @return  Depending on the field value provider, this will typically be either the value of
    *          the requested field, or the default value if the field did not have a value.
+   *
+   * @see     FieldValueProvider
    */
   protected <F> F getOptionalField(final F fieldValue, final F defaultValue) {
     return this.getValueProvider().getOptionalField(fieldValue, defaultValue);

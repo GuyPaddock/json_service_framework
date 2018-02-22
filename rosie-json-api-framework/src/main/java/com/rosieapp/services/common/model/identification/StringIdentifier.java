@@ -44,14 +44,14 @@ implements Comparable<StringIdentifier> {
   /**
    * Constructor for {@link StringIdentifier}.
    *
-   * @see     ModelIdentifierFactory#createIdFrom(String)
-   *
    * @param   value
    *          The string to wrap in the new identifier object.
    *          This value must not be {@code null}.
    *
    * @throws  NullPointerException
    *          If {@code value} is {@code null}.
+   *
+   * @see     ModelIdentifierFactory#createIdFrom(String)
    */
   public StringIdentifier(final String value)
   throws NullPointerException {

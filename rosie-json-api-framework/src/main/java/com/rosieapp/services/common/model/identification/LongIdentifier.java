@@ -47,14 +47,14 @@ implements Comparable<LongIdentifier> {
   /**
    * Constructor for {@link LongIdentifier}.
    *
-   * @see     ModelIdentifierFactory#createIdFrom(String)
-   *
    * @param   value
    *          The long integer value to wrap in the new identifier object.
    *          This value must be greater than {@code 0}.
    *
    * @throws  IllegalArgumentException
    *          If {@code value} is less than or equal to {@code 0}.
+   *
+   * @see     ModelIdentifierFactory#createIdFrom(String)
    */
   public LongIdentifier(final long value)
   throws IllegalArgumentException {

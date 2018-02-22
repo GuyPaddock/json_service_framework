@@ -61,8 +61,6 @@ implements Comparable<UUIDIdentifier> {
    * Constructor for {@link UUIDIdentifier} that populates an identifier by parsing the provided
    * string representation of a UUID.
    *
-   * @see     ModelIdentifierFactory#createIdFrom(String)
-   *
    * @param   value
    *          The string value to interpret as a UUID that will be wrapped in the new identifier
    *          object. This value must not be {@code null} and must be a valid string representation
@@ -72,6 +70,8 @@ implements Comparable<UUIDIdentifier> {
    *          If {@code value} is {@code null}.
    * @throws  IllegalArgumentException
    *          If {@code value} is not a proper string representation of a {@code UUID}.
+   *
+   * @see     ModelIdentifierFactory#createIdFrom(String)
    *
    */
   public UUIDIdentifier(final String value)
@@ -84,13 +84,13 @@ implements Comparable<UUIDIdentifier> {
   /**
    * Constructor for {@link UUIDIdentifier}.
    *
-   * @see     ModelIdentifierFactory#createIdFrom(String)
-   *
    * @param   value
    *          This value must not be {@code null}.
    *
    * @throws  NullPointerException
    *          If {@code value} is {@code null}.
+   *
+   * @see     ModelIdentifierFactory#createIdFrom(String)
    */
   public UUIDIdentifier(final UUID value)
   throws IllegalArgumentException {
