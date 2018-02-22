@@ -42,6 +42,7 @@
     -->
   <rule ref="category/java/codestyle.xml">
     <!-- Too picky; let's leave these to best judgment. -->
+    <exclude name="AbstractNaming" />
     <exclude name="AtLeastOneConstructor" />
     <exclude name="PrematureDeclaration" />
     <exclude name="UnnecessaryConstructor" />
