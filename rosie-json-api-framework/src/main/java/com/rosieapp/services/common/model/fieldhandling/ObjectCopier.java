@@ -340,6 +340,7 @@ public final class ObjectCopier {
       "cloneableObject == cloneableCopy: " + (cloneableObject == cloneableCopy));
 
     System.out.println(
-      "uncloneableObject == uncloneableObjectCopy: " + (uncloneableObject == uncloneableObjectCopy));
+      "uncloneableObject == uncloneableObjectCopy: "
+      + (uncloneableObject == uncloneableObjectCopy));
   }
 }

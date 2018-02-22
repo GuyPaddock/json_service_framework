@@ -22,7 +22,8 @@ import java.util.Map;
  *        The builder class itself. (This must be the same type as the class being defined, to avoid
  *        a {@code ClassCastException}).
  */
-public class ReflectionBasedFilterBuilder<M extends Model, B extends ReflectionBasedFilterBuilder<M, B>>
+public class ReflectionBasedFilterBuilder<M extends Model,
+                                          B extends ReflectionBasedFilterBuilder<M, B>>
 extends CriteriaBasedFilterBuilder<M, B> {
   final Map<String, Field> fieldMap;
 

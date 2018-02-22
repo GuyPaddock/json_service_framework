@@ -59,7 +59,8 @@ public final class Maps {
    *
    * @return  The string representation of the map.
    */
-  public static <K extends Comparable<K>, V> String toString(final Stream<Entry<K, V>> entryStream) {
+  public static <K extends Comparable<K>, V> String toString(
+                                                      final Stream<Entry<K, V>> entryStream) {
     final String string =
       entryStream
         .sorted(Map.Entry.comparingByKey())
