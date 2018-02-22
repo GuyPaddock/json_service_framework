@@ -24,6 +24,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -152,11 +154,12 @@ extends MapBasedModelBuilder<M, B> {
   @Override
   public ReflectionBasedFilterBuilder<M, ?> toFilterBuilder() {
     final ReflectionBasedFilterBuilder<M, ?> filterBuilder;
+    final ModelIdentifier id = this.getId();
 
     filterBuilder = this.createFilterBuilder(this.getTargetFields());
 
-    if(this.getId()!=null){
-      filterBuilder.withId(ComparisonType.EQUAL_TO,this.getId());
+    if (id != null) {
+      filterBuilder.withId(ComparisonType.EQUAL_TO,id);
     }
 
     for (Entry<String, Field> fieldEntry : targetFields.entrySet()) {

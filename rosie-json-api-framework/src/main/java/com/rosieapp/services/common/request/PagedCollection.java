@@ -51,6 +51,9 @@ implements Iterable<M> {
    *
    * @param requestFunction
    *        The function to call with a page number in order to obtain each page of results.
+   * @param pageLimit
+   *        The maximum number of pages (starting from the {@code startingPageNumber}) to process.
+   *
    */
   public PagedCollection(final Function<Integer, Call<JSONAPIDocument<List<M>>>> requestFunction, final int pageLimit) {
     this(requestFunction, 1, pageLimit);
