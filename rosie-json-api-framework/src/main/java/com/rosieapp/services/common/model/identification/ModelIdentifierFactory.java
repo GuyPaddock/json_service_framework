@@ -93,10 +93,10 @@ public class ModelIdentifierFactory {
     return STRATEGIES.stream()
       .map((strategy) -> strategy.apply(identifier))
       .filter(Optional::isPresent)
+      .map(Optional::get)
       .findFirst()
       .orElseThrow(
-        () -> new IllegalArgumentException("Unrecognized identifier format: " + identifier))
-      .get();
+        () -> new IllegalArgumentException("Unrecognized identifier format: " + identifier));
   }
 
   /**
