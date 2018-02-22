@@ -5,8 +5,8 @@ import java.lang.reflect.Field;
 /**
  * Field pre-processors are responsible for making last-minute changes to values being set by
  * model builders.
- * <p>
- * A field pre-processor is typically associated with a field via the
+ *
+ * <p>A field pre-processor is typically associated with a field via the
  * {@link com.rosieapp.services.common.model.annotation.BuilderPopulatedField} annotation on the
  * field.
  */

@@ -10,15 +10,16 @@ import com.rosieapp.services.common.model.identification.NewModelIdentifier;
 public interface Model {
   /**
    * Assigns this model an identifier.
-   * <p>
-   * A given instance of a model may only be assigned an identifier once. The model must not already
-   * have an existing object identifier set, with the exception that the model may have an
+   *
+   * <p>A given instance of a model may only be assigned an identifier once. The model must not
+   * already have an existing object identifier set, with the exception that the model may have an
    * identifier of type {@link NewModelIdentifier}.
-   * <p>
-   * This method is typically invoked only by the model's builder and by methods that handle
+   *
+   * <p>This method is typically invoked only by the model's builder and by methods that handle
    * persistence of a model for the first time.
-   * <p>
-   * If the model already has an ID equivalent to the ID being provided, this method has no effect.
+   *
+   * <p>If the model already has an ID equivalent to the ID being provided, this method has no
+   * effect.
    *
    * @param   id
    *          The new ID for this object.

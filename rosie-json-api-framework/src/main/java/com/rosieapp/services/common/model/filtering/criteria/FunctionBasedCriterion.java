@@ -19,8 +19,8 @@ extends AbstractFilterCriterion<M> {
 
   /**
    * Constructor for {@code FunctionBasedCriterion}.
-   * <p>
-   * Initializes a criterion that obtains a value from the model through the provided value
+   *
+   * <p>Initializes a criterion that obtains a value from the model through the provided value
    * provider function, and then compares the result against a target value using the provided
    * comparision function.
    *
@@ -43,6 +43,7 @@ extends AbstractFilterCriterion<M> {
 
   /**
    * {@inheritDoc}
+   *
    * <ul>
    *   <li>The value is obtained using the <em>value provider</em> that was provided when this
    *   criterion was created.</li>

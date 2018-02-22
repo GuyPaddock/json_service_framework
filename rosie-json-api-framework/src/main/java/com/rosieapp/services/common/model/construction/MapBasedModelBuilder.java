@@ -45,7 +45,7 @@ extends AbstractModelBuilder<M, B> {
   /**
    * Default constructor for {@link MapBasedModelBuilder}.
    *
-   * Initializes the model builder to strictly validate required fields.
+   * <p>Initializes the model builder to strictly validate required fields.
    */
   protected MapBasedModelBuilder() {
     this(new StrictFieldProvider());
@@ -66,8 +66,8 @@ extends AbstractModelBuilder<M, B> {
 
   /**
    * Stashes the value to use for the specified field when the model is constructed.
-   * <p>
-   * Sub-classes must ensure that the type of the object is correct for the type of field being
+   *
+   * <p>Sub-classes must ensure that the type of the object is correct for the type of field being
    * stashed, since all field values are stored in the same map.
    *
    * @param   fieldName
@@ -102,9 +102,9 @@ extends AbstractModelBuilder<M, B> {
   /**
    * Requests, optionally validates, and then returns the value to use when populating the specified
    * required field for a model being constructed by this builder.
-   * <p>
-   * The value of the field (if any value has been stashed) is automatically retrieved from the map
-   * of stashed field values, and then the request is delegated to
+   *
+   * <p>The value of the field (if any value has been stashed) is automatically retrieved from the
+   * map of stashed field values, and then the request is delegated to
    * {@link #getRequiredField(Object, String)}.
    *
    * @see     FieldValueProvider
@@ -133,9 +133,9 @@ extends AbstractModelBuilder<M, B> {
   /**
    * Returns the value to use when populating the specified optional field for a model being
    * constructed by this builder.
-   * <p>
-   * The value of the field (if any value has been stashed) is automatically retrieved from the map
-   * of stashed field values, and then the request is delegated to
+   *
+   * <p>The value of the field (if any value has been stashed) is automatically retrieved from the
+   * map of stashed field values, and then the request is delegated to
    * {@link #getOptionalField(Object, Object)}.
    *
    * @see     FieldValueProvider
@@ -169,8 +169,8 @@ extends AbstractModelBuilder<M, B> {
 
   /**
    * Gets a string representation of all of the values in this builder.
-   * <p>
-   * The {@code id} that will be used for the new model is automatically pre-pended to the
+   *
+   * <p>The {@code id} that will be used for the new model is automatically pre-pended to the
    * output, to simplify debugging.
    *
    * @return  A string representation of all of the values that have been stashed so far for

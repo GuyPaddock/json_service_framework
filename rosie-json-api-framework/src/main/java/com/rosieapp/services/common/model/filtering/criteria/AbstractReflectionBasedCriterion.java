@@ -15,8 +15,8 @@ extends AbstractFilterCriterion<M> {
 
   /**
    * Constructor for {@code AbstractReflectionBasedCriterion}.
-   * <p>
-   * Initializes a criterion that matches against the specified field of the model.
+   *
+   * <p>Initializes a criterion that matches against the specified field of the model.
    *
    * @param targetField
    *        The field in the model that will be checked against this criterion.

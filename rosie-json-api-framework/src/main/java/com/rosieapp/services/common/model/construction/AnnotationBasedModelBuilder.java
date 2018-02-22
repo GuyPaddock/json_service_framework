@@ -30,14 +30,14 @@ import org.slf4j.LoggerFactory;
  * An optional base class for model builders that wish to use annotations on fields to control
  * field population, to avoid having to declare fields in both the model and builder classes and
  * define constants.
- * <p>
- * The builder must be declared as a static inner class within the model that it builds.
- * <p>
- * Each field that the builder is expected to populate should be annotated with a
+ *
+ * <p>The builder must be declared as a static inner class within the model that it builds.
+ *
+ * <p>Each field that the builder is expected to populate should be annotated with a
  * {@link BuilderPopulatedField} annotation. Any fields that are required for the object to be
  * constructed should have their {@code required} property on the annotation set to {@code true}.
- * <p>
- * In addition to being able to control which properties are required, the
+ *
+ * <p>In addition to being able to control which properties are required, the
  * {@code BuilderPopulatedField} annotation also provides control over which
  * {@link FieldValuePreprocessor} is used when values are being copied from the builder into the
  * new model instance. The pre-processor is not invoked when building filters, as they might
@@ -59,18 +59,18 @@ extends MapBasedModelBuilder<M, B> {
   /**
    * A cache that increases the performance of looking up what fields to populate for a given model
    * type.
-   * <p>
-   * The cache is configured to store fields for no more than 32 model classes at a time, and evicts
-   * entries after 10 minutes of use. This helps to ensure high throughput on payloads that are
-   * processing the same types of models over and over.
+   *
+   * <p>The cache is configured to store fields for no more than 32 model classes at a time, and
+   * evicts entries after 10 minutes of use. This helps to ensure high throughput on payloads that
+   * are processing the same types of models over and over.
    */
   private static final Cache<String, List<Field>> modelTypeToFieldsCache;
 
   /**
    * A cache that increases the performance of looking up what type of model to create for each
    * type of builder.
-   * <p>
-   * The cache is configured to store no more than 32 model classes at a time, and evicts entries
+   *
+   * <p>The cache is configured to store no more than 32 model classes at a time, and evicts entries
    * after 10 minutes of use. This helps to ensure high throughput on payloads that are processing
    * the same types of models over and over.
    */
@@ -93,8 +93,8 @@ extends MapBasedModelBuilder<M, B> {
 
   /**
    * Default constructor for {@link AnnotationBasedModelBuilder}.
-   * <p>
-   * Initializes the model builder to strictly validate required fields.
+   *
+   * <p>Initializes the model builder to strictly validate required fields.
    */
   protected AnnotationBasedModelBuilder() {
     this(new StrictFieldProvider());
@@ -173,8 +173,8 @@ extends MapBasedModelBuilder<M, B> {
 
   /**
    * {@inheritDoc}
-   * <p>
-   * The name string provided must exactly match the name of a field that has been annotated
+   *
+   * <p>The name string provided must exactly match the name of a field that has been annotated
    * {@link BuilderPopulatedField} in the model class. An exception will be thrown if no such field
    * is found.
    *
@@ -191,8 +191,8 @@ extends MapBasedModelBuilder<M, B> {
 
   /**
    * {@inheritDoc}
-   * <p>
-   * The name string provided must exactly match the name of a field that has been annotated
+   *
+   * <p>The name string provided must exactly match the name of a field that has been annotated
    * {@link BuilderPopulatedField} in the model class. An exception will be thrown if no such field
    * is found.
    *
@@ -210,8 +210,9 @@ extends MapBasedModelBuilder<M, B> {
 
   /**
    * Constructs a new filter builder to wrap the provided model builder field values.
-   * <p>
-   * This is an injection point for sub-classes to provide their own specific filter builder types.
+   *
+   * <p>This is an injection point for sub-classes to provide their own specific filter builder
+   * types.
    *
    * @return  The new filter builder.
    */
@@ -222,8 +223,8 @@ extends MapBasedModelBuilder<M, B> {
 
   /**
    * Gets the list of fields that the builder is expected to populate.
-   * <p>
-   * The list is cached, for performance reasons.
+   *
+   * <p>The list is cached, for performance reasons.
    *
    * @return  The list of target fields.
    */
@@ -354,7 +355,7 @@ extends MapBasedModelBuilder<M, B> {
   /**
    * Attempts to populate the specified field in the provided model object.
    *
-   * The value of the field is retrieved through the standard internal builder interface for
+   * <p>The value of the field is retrieved through the standard internal builder interface for
    * required & optional fields.
    *
    * @param   model
@@ -426,8 +427,8 @@ extends MapBasedModelBuilder<M, B> {
   /**
    * Obtains the type of model that should be assembled by reflecting on the generic signature
    * and enclosing type of this builder class, at the time it was declared.
-   * <p>
-   * This requires that the builder be declared as a static, inner class -- with concrete types
+   *
+   * <p>This requires that the builder be declared as a static, inner class -- with concrete types
    * provided for generic parameters. If generics are not bound to concrete types, the class that
    * encloses the builder is examined as a fallback, and is used only if it is a model type.
    *
@@ -494,8 +495,8 @@ extends MapBasedModelBuilder<M, B> {
   /**
    * Attempts to determine the type of model that was passed into the generic signature of this
    * builder class at the time it was declared.
-   * <p>
-   * This requires that the builder be declared as a static, inner class -- with concrete types
+   *
+   * <p>This requires that the builder be declared as a static, inner class -- with concrete types
    * provided for the model type generic parameter. Otherwise, Java normally uses Type erasure when
    * dealing with generic parameters.
    *
@@ -537,8 +538,8 @@ extends MapBasedModelBuilder<M, B> {
 
   /**
    * Attempts to determine the type of model to create based on the class that encloses the builder.
-   * <p>
-   * By convention, all builders should be static inner classes of the models they build.
+   *
+   * <p>By convention, all builders should be static inner classes of the models they build.
    *
    * @return  The type of model type that was inferred from the enclosing class of the builder; or,
    *          {@code null} if there is no enclosing class, or it is not a type of model.
@@ -568,8 +569,8 @@ extends MapBasedModelBuilder<M, B> {
 
   /**
    * Invokes the specified pre-processor on the provided value of the specified field.
-   * <p>
-   * If the field value or the pre-processor are provided as {@code null}, then the raw value is
+   *
+   * <p>If the field value or the pre-processor are provided as {@code null}, then the raw value is
    * passed through as-is, without pre-processing.
    *
    * @param   fieldPreprocessor

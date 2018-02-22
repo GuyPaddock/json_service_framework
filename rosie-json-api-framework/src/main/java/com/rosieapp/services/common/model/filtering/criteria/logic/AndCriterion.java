@@ -18,8 +18,8 @@ extends AbstractFilterCriterion<M> {
 
   /**
    * Constructor for {@code OrCriterion}.
-   * <p>
-   * Initializes a new criterion that matches if all of the provided criteria match.
+   *
+   * <p>Initializes a new criterion that matches if all of the provided criteria match.
    *
    * @param wrappedCriteria
    *        The criteria to logically AND together.
@@ -31,8 +31,8 @@ extends AbstractFilterCriterion<M> {
 
   /**
    * Constructor for {@code OrCriterion}.
-   * <p>
-   * Initializes a new criterion that matches if all of the provided criteria match.
+   *
+   * <p>Initializes a new criterion that matches if all of the provided criteria match.
    *
    * @param wrappedCriteria
    *        The criteria to logically AND together.

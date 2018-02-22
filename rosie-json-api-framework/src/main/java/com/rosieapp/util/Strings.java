@@ -13,8 +13,8 @@ public final class Strings {
   /**
    * Converts a string into a format that is suitable for being safely run through
    * {@link java.text.MessageFormat#format(Object)}.
-   * <p>
-   * This is typically required if curly braces (e.g. <code>{</code> or <code>}</code>) will be
+   *
+   * <p>This is typically required if curly braces (e.g. <code>{</code> or <code>}</code>) will be
    * included within the string, as these characters usually indicate the start of argument
    * references for {@code MessageFormat}.
    *

@@ -3,21 +3,24 @@ package com.rosieapp.services.common.model.fieldhandling;
 /**
  * Common interface for objects that provide the values that builders use to populate the fields of
  * the Rosie JSON API service models they are constructing.
- * <p>
- * Field value providers typically fall into two categories:
- *  - Strict value providers raise errors when a required field lacks a value.
- *  - Lax value providers substitute a value when a required field lacks a value.
- * <p>
- * However, this interface imposes no requirements on how a Field Value Provider actually interprets
- * requests for field values, nor on how it retrieves or validates the field values it returns.
+ *
+ * <p>Field value providers typically fall into two categories:
+ * <ul>
+ *   <li>Strict value providers raise errors when a required field lacks a value.
+ *   <li>Lax value providers substitute a value when a required field lacks a value.
+ * </ul>
+ *
+ * <p>However, this interface imposes no requirements on how a Field Value Provider actually
+ * interprets requests for field values, nor on how it retrieves or validates the field values it
+ * returns.
  */
 public interface FieldValueProvider {
   /**
    * Optionally validates and then returns the value to use when populating the specified required
    * field.
    * <p>
-   * Depending upon implementation, if the field value is {@code null}, the field provider may choose
-   * to communicate this by raising an {@link IllegalStateException}, or it may simply supply
+   * Depending upon implementation, if the field value is {@code null}, the field provider may
+   * choose to communicate this by raising an {@link IllegalStateException}, or it may simply supply
    * {@code null} (or a different value of its own choosing) in place of the missing value.
    *
    * @param   fieldValue

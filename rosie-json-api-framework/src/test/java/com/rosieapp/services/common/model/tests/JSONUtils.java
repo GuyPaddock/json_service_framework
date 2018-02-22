@@ -22,8 +22,8 @@ import java.util.Set;
 public class JSONUtils {
   /**
    * Creates a JSON resource converter suitable for use in tests.
-   * <p>
-   * The resource converter is configured as follows:
+   *
+   * <p>The resource converter is configured as follows:
    * <ul>
    *   <li>Unknown / unmapped properties are ignored during deserialization.</li>
    * </ul>
@@ -47,8 +47,8 @@ public class JSONUtils {
 
   /**
    * Creates a JSON resource converter suitable for use in tests.
-   * <p>
-   * The resource converter is configured as follows:
+   *
+   * <p>The resource converter is configured as follows:
    * <ul>
    *   <li>All relationships are automatically included in the {@code included} portion of each JSON
    *       API response.</li>
@@ -72,8 +72,8 @@ public class JSONUtils {
 
   /**
    * Converts the provided model to a string of JSON-API-compliant JSON.
-   * <p>
-   * A resource converter is constructed on-the-fly to handle the operation.
+   *
+   * <p>A resource converter is constructed on-the-fly to handle the operation.
    *
    * @param   model
    *          The model to convert to JSON.
@@ -116,8 +116,8 @@ public class JSONUtils {
   /**
    * Converts the provided JSON API document to a string of JSON using the provided resource
    * converter.
-   * <p>
-   * This is useful for performing lower-level introspection of a JSON API response (i.e. dumping
+   *
+   * <p>This is useful for performing lower-level introspection of a JSON API response (i.e. dumping
    * a JSON API document that has already been parsed back into JSON format).
    *
    * @param   document

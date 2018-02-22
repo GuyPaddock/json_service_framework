@@ -19,8 +19,8 @@ public final class Maps {
 
   /**
    * Converts all of the entries of a map to a string.
-   * <p>
-   * The output is formatted more nicely than the default {@link AbstractMap#toString()}
+   *
+   * <p>The output is formatted more nicely than the default {@link AbstractMap#toString()}
    * implementation in the JDK. Keys and values are wrapped in quotes, and the values are presented
    * in alphabetic order by key.
    *
@@ -39,12 +39,12 @@ public final class Maps {
 
   /**
    * Converts a stream of map entries to a string.
-   * <p>
-   * This overload is provided for cases in which information from multiple maps is being combined
-   * into the same output.
-   * <p>
-   * Keys and values are wrapped in quotes in the resulting string, and the values are presented in
-   * alphabetic order by key.
+   *
+   * <p>This overload is provided for cases in which information from multiple maps is being
+   * combined into the same output.
+   *
+   * <p>Keys and values are wrapped in quotes in the resulting string, and the values are presented
+   * in alphabetic order by key.
    *
    * @param   entryStream
    *          The stream of map entries to convert to a string.

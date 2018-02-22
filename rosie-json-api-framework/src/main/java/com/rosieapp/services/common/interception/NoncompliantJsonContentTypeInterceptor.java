@@ -11,8 +11,8 @@ import okio.Buffer;
 
 /**
  * An interceptor that modifies the content type on an outgoing JSON API request.
- * <p>
- * The content type is changed to a non-standard value of {@code application/json} instead of the
+ *
+ * <p>The content type is changed to a non-standard value of {@code application/json} instead of the
  * JSON-API-standard-compliant value of {@code application/vnd.api+json}. This works around
  * limitations in Rosie's legacy Rails services that do not handle the
  * {@code application/vnd.api+json} content type properly.

@@ -10,8 +10,8 @@ public class StrictFieldProvider
 extends AbstractFieldProvider {
   /**
    * Validates and returns the value to use when populating the specified required field.
-   * <p>
-   * If the field value is {@code null}, the field provider will communicate this by raising a
+   *
+   * <p>If the field value is {@code null}, the field provider will communicate this by raising a
    * {@link RequiredFieldMissingException}.
    *
    * {@inheritDoc}

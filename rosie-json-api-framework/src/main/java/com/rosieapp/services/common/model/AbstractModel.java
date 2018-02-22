@@ -10,17 +10,17 @@ import java.util.Objects;
 
 /**
  * Optional, abstract parent class provided for use by all models in the system.
- * <p>
- * This implementation provides built-in handling for the identifier fields, which require special
- * handling for JSON API serialization and de-serialization.
+ *
+ * <p>This implementation provides built-in handling for the identifier fields, which require
+ * special handling for JSON API serialization and de-serialization.
  */
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public abstract class AbstractModel
 implements Model {
   /**
    * The identifier for this model.
-   * <p>
-   * This exists as a standalone field within the builder, rather than being stored in some other
+   *
+   * <p>This exists as a standalone field within the builder, rather than being stored in some other
    * structure (e.g. a map), to allow it to be annotated for JSON API Converter. This ensures that
    * identifiers for model sub-classes are already configured for JSON API serialization and
    * de-serialization.
@@ -68,8 +68,8 @@ implements Model {
 
   /**
    * {@inheritDoc}
-   * <p>
-   * In this base implementation, two models are equal if and only if they are the same type and
+   *
+   * <p>In this base implementation, two models are equal if and only if they are the same type and
    * have the same ID. If two different models have the same type, but both objects do not have an
    * assigned ID (i.e. they are new and un-persisted), they are not considered equal. This ensures
    * that multiple un-persisted instances with different data are not, by default, considered to be
@@ -97,8 +97,8 @@ implements Model {
 
   /**
    * {@inheritDoc}
-   * <p>
-   * In this base implementation, a model's hashcode is based on its ID unless the model does not
+   *
+   * <p>In this base implementation, a model's hashcode is based on its ID unless the model does not
    * have an assigned ID (i.e. it is new and un-persisted). For new models, the JDK's base
    * hashcode implementation is used.
    */
@@ -117,8 +117,8 @@ implements Model {
 
   /**
    * {@inheritDoc}
-   * <p>
-   * The identifier of the cloned object is automatically reset to a {@link NewModelIdentifier}
+   *
+   * <p>The identifier of the cloned object is automatically reset to a {@link NewModelIdentifier}
    * placeholder, so it is possible for the clone to be saved as a new, independent model instance.
    */
   @Override

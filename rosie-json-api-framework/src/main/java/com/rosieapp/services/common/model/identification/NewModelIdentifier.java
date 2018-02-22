@@ -12,8 +12,8 @@ extends AbstractModelIdentifier {
 
   /**
    * Gets the singleton, flyweight instance of this identifier.
-   * <p>
-   * For efficiency, this is preferred to using the constructor since every instance has no
+   *
+   * <p>For efficiency, this is preferred to using the constructor since every instance has no
    * instance state and behaves exactly the same way.
    *
    * @return The identifier instance.

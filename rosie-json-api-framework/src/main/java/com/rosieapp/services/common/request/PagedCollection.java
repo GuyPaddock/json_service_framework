@@ -16,8 +16,8 @@ import retrofit2.Response;
 
 /**
  * A proxy object for a remote collection of models that are accessible through a paged resource.
- * <p>
- * This class transparently handles requesting each page of results behind an {@link Iterable}
+ *
+ * <p>This class transparently handles requesting each page of results behind an {@link Iterable}
  * interface, making it compatible with the Java streams API. Note, however, that iterating over
  * the full collection can incur a significant overhead from constantly making requests to the
  * remote system.
@@ -40,14 +40,13 @@ implements Iterable<M> {
 
   /**
    * Constructor for {@code PagedCollection}.
-   * <p>
-   * Initializes the new instance to use the specified request function to obtain each page of
+   *
+   * <p>Initializes the new instance to use the specified request function to obtain each page of
    * results, starting at page number 1, and requesting up to the specified maximum number of pages.
-   * <p>
-   * With care, {@link #PAGE_LIMIT_UNLIMITED} can be passed-in to request as many pages as the
+   *
+   * <p>With care, {@link #PAGE_LIMIT_UNLIMITED} can be passed-in to request as many pages as the
    * remote resource will provide. This option should be used sparingly, as it can easily overwhelm
    * the remote resource with requests, possibly resulting in downtime or rate limiting.
-   *
    *
    * @param requestFunction
    *        The function to call with a page number in order to obtain each page of results.
@@ -61,8 +60,8 @@ implements Iterable<M> {
 
   /**
    * Constructor for {@code PagedCollection}.
-   * <p>
-   * Initializes the new instance to use the specified request function to obtain each page of
+   *
+   * <p>Initializes the new instance to use the specified request function to obtain each page of
    * results, starting at the specified page number, and requesting up to a maximum number of pages.
    *
    * @param requestFunction
@@ -149,8 +148,8 @@ implements Iterable<M> {
 
   /**
    * A sequential iterator over the records of the paged collection resource.
-   * <p>
-   * Each iterator is independent, allowing multiple iterators to be used in order to support
+   *
+   * <p>Each iterator is independent, allowing multiple iterators to be used in order to support
    * concurrent operations over the same paged collection.
    */
   private class Iterator
@@ -189,13 +188,13 @@ implements Iterable<M> {
 
     /**
      * Attempts to request the next page from the remote resource, failing silently if it fails.
-     * <p>
-     * If the request succeeds, the results of the request are automatically available for the
+     *
+     * <p>If the request succeeds, the results of the request are automatically available for the
      * iterator to continue returning via {@link #next()}. If the resource returns no more results,
      * or the page limit has been reached, then this iterator will be marked finished, such that
      * future calls to {@link #hasNext()} on this instance will return {@link false}.
-     * <p>
-     * If the request fails, it is treated the same as if the remote resource had no additional
+     *
+     * <p>If the request fails, it is treated the same as if the remote resource had no additional
      * results, and the iterator be marked finished.
      */
     private void safelyRequestNextPage() {
@@ -211,8 +210,8 @@ implements Iterable<M> {
 
     /**
      * Requests the next page of data, unless the iterator is at the page limit.
-     * <p>
-     * If the request succeeds, the results of the request are automatically available for the
+     *
+     * <p>If the request succeeds, the results of the request are automatically available for the
      * iterator to continue returning via {@link #next()}. If the resource returns no more results,
      * or the page limit has been reached, then this iterator will be marked finished, such that
      * future calls to {@link #hasNext()} on this instance will return {@link false}.
@@ -269,9 +268,9 @@ implements Iterable<M> {
 
     /**
      * Gets and increments the next page number that this iterator should request.
-     * <p>
-     * If the iterator currently has no page loaded, the next page number of this iterator will be
-     * set to the starting page number of the collection.
+     *
+     * <p>If the iterator currently has no page loaded, the next page number of this iterator will
+     * be set to the starting page number of the collection.
      *
      * @return  The one-based page number that should be requested next.
      */

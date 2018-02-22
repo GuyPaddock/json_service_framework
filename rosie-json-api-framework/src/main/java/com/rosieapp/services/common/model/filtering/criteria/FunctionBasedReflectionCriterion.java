@@ -18,8 +18,8 @@ extends AbstractReflectionBasedCriterion<M> {
 
   /**
    * Constructor for {@code FunctionBasedReflectionCriterion}.
-   * <p>
-   * Initializes an exact match criterion that ensures the specified field of the model matches
+   *
+   * <p>Initializes an exact match criterion that ensures the specified field of the model matches
    * the specified value.
    *
    * @param targetField

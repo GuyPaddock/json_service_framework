@@ -24,8 +24,8 @@ extends CriteriaBasedFilterBuilder<M, B> {
 
   /**
    * Constructor for {@code ReflectionBasedFilterBuilder}.
-   * <p>
-   * Initializes a new reflection-based builder with the provided map of fields. This map is
+   *
+   * <p>Initializes a new reflection-based builder with the provided map of fields. This map is
    * typically provided by a corresponding
    * {@link com.rosieapp.services.common.model.construction.MapBasedModelBuilder} instance that has
    * built up its own map of fields using its intimate level of knowledge about the model it builds.
@@ -296,8 +296,8 @@ extends CriteriaBasedFilterBuilder<M, B> {
   /**
    * Adds a criterion to this filter for matching the provided model filter against the model
    * reference field having the specified name.
-   * <p>
-   * The field must be one that was registered in the map that was provided to this builder when
+   *
+   * <p>The field must be one that was registered in the map that was provided to this builder when
    * it was created, or an exception will be raised.
    *
    * @param   fieldName
@@ -341,8 +341,8 @@ extends CriteriaBasedFilterBuilder<M, B> {
   //================================================================================================
   /**
    * Adds a criterion to this filter for matching values against the field with the specified name.
-   * <p>
-   * The field must be one that was registered in the map that was provided to this builder when
+   *
+   * <p>The field must be one that was registered in the map that was provided to this builder when
    * it was created, or an exception will be raised.
    *
    * @param   fieldName

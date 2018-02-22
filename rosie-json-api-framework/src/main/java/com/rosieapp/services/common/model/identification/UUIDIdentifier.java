@@ -7,8 +7,8 @@ import java.util.UUID;
 /**
  * A model identifier that uses a Universally Unique Identifier to unique identify a persisted
  * model.
- * <p>
- * A UUID is typically represented in string format like:
+ *
+ * <p>A UUID is typically represented in string format like:
  * {@code 82159191-e513-459d-8a2c-c4a5cf45c7a2}
  */
 public final class UUIDIdentifier
@@ -21,13 +21,13 @@ implements Comparable<UUIDIdentifier> {
 
   /**
    * Attempts to parse the provided string as a UUID.
-   * <p>
-   * If the string cannot be parsed, an empty {@link Optional} is returned.
+   *
+   * <p>If the string cannot be parsed, an empty {@link Optional} is returned.
    *
    * @param   value
    *          The string to attempt to parse as a model identifier.
    *
-   * @return  Either a {@code Optional} that contains the {@code {@link UUIDIdentifier}} that was
+   * @return  Either a {@code Optional} that contains the {@code UUIDIdentifier} that was
    *          populated by interpreting the provided identifier value; or, an empty {@code Optional}
    *          that signifies that the provided string is not the string representation of a UUID
    *          value.
@@ -47,8 +47,8 @@ implements Comparable<UUIDIdentifier> {
 
   /**
    * Constructor for {@link UUIDIdentifier} that generates a random, new identifier.
-   * <p>
-   * The generated identifier should be safe to use to identify a new object in any system.
+   *
+   * <p>The generated identifier should be safe to use to identify a new object in any system.
    */
   public UUIDIdentifier() {
     this(UUID.randomUUID());

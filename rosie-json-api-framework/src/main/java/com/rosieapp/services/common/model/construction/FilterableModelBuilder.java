@@ -9,10 +9,9 @@ import java.util.Map;
 /**
  * A convenient parent class for builders that provider their own custom type of model filter
  * builder.
- * <p>
- * The generic types on this class ensure that model builder implementations are prompted to return
- * the correct type of model filter builder.
  *
+ * <p>The generic types on this class ensure that model builder implementations are prompted to
+ * return the correct type of model filter builder.
  *
  * @param <M>
  *        The type of model that the builder builds.
@@ -28,8 +27,8 @@ public abstract class FilterableModelBuilder<M extends Model,
 extends AnnotationBasedModelBuilder<M, B> {
   /**
    * Default constructor for {@link FilterableModelBuilder}.
-   * <p>
-   * Initializes the model builder to strictly validate required fields.
+   *
+   * <p>Initializes the model builder to strictly validate required fields.
    */
   public FilterableModelBuilder() {
     super();
@@ -37,10 +36,10 @@ extends AnnotationBasedModelBuilder<M, B> {
 
   /**
    * Constructor for {@link FilterableModelBuilder}.
-   * <p>
-   * @param valueProvider A provider for controlling how optional and required fields are handled
-   * during object
-   * construction.
+   *
+   * @param   valueProvider
+   *          A provider for controlling how optional and required fields are handled during object
+   *          construction.
    */
   public FilterableModelBuilder(final FieldValueProvider valueProvider) {
     super(valueProvider);
@@ -48,8 +47,8 @@ extends AnnotationBasedModelBuilder<M, B> {
 
   /**
    * {@inheritDoc}
-   * <p>
-   * The returned type of builder is guaranteed to be the specific builder type {@code <FB>} that
+   *
+   * <p>The returned type of builder is guaranteed to be the specific builder type {@code <FB>} that
    * was specified at the time this builder was declared.
    */
   @Override

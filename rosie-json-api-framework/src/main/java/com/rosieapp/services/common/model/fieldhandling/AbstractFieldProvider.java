@@ -4,8 +4,8 @@ import java.util.Optional;
 
 /**
  * Optional, abstract parent class provided for use by field providers in the system.
- * <p>
- * This implementation provides built-in handling for defaulting missing optional fields.
+ *
+ * <p>This implementation provides built-in handling for defaulting missing optional fields.
  */
 public abstract class AbstractFieldProvider
 implements FieldValueProvider {

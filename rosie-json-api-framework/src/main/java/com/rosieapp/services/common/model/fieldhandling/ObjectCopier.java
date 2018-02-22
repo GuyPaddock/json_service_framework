@@ -20,8 +20,8 @@ import javax.naming.directory.BasicAttribute;
 
 /**
  * A utility class for getting a shallow copy of an object, if the object can be duplicated.
- * <p>
- * This is used to provide a defensive, "safe" field value -- a value that is not shared among
+ *
+ * <p>This is used to provide a defensive, "safe" field value -- a value that is not shared among
  * multiple instances of the same model.
  */
 public final class ObjectCopier {
@@ -38,8 +38,8 @@ public final class ObjectCopier {
 
   /**
    * Obtains a copy of the specified object.
-   * <p>
-   * Different strategies are used for each object type:
+   *
+   * <p>Different strategies are used for each object type:
    * <ul>
    *   <li>Maps and collections are copied to a new instance of the same collection type via the
    *       copy constructor provided by the appropriate object type.</li>
@@ -130,8 +130,8 @@ public final class ObjectCopier {
   /**
    * Attempts to generates a shallow copy of an object by invoking its "copy constructor" -- a
    * single-argument constructor that takes in an object of the same type or its supertype.
-   * <p>
-   * For example, {@link java.util.LinkedList#LinkedList(Collection)} is a copy constructor for
+   *
+   * <p>For example, {@link java.util.LinkedList#LinkedList(Collection)} is a copy constructor for
    * lists.
    *
    * @param   source
@@ -205,9 +205,9 @@ public final class ObjectCopier {
 
   /**
    * Finds the public copy constructor within the specified class.
-   * <p>
-   * If the object does not have a public, single-argument constructor that accepts the same type of
-   * object or its super-type, then {@code null} is returned instead.
+   *
+   * <p>If the object does not have a public, single-argument constructor that accepts the same type
+   * of object or its super-type, then {@code null} is returned instead.
    *
    * @param   objectType
    *          The type of object being cloned.
@@ -230,8 +230,8 @@ public final class ObjectCopier {
   /**
    * Determines whether or not the provided constructor is a copy constructor for its declaring
    * type.
-   * <p>
-   * A constructor is considered a copy constructor if and only if all of the following are true:
+   *
+   * <p>A constructor is considered a copy constructor if and only if all of the following are true:
    * <ul>
    *   <li>The constructor is public.</li>
    *   <li>The constructor takes a single argument.</li>
@@ -259,9 +259,9 @@ public final class ObjectCopier {
 
   /**
    * Finds the public {@code clone()} method within the specified class.
-   * <p>
-   * The object must have a public {@link #clone()} method, or an {@link IllegalArgumentException}
-   * will be thrown.
+   *
+   * <p>The object must have a public {@link #clone()} method, or an
+   * {@link IllegalArgumentException} will be thrown.
    *
    * @param   objectType
    *          The type of object being cloned.

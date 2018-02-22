@@ -11,10 +11,10 @@ import java.util.function.Function;
 
 /**
  * An enumeration of the possible ways to match the value of a field against a known target.
- * <p>
- * Each enum value can be used to produce a concrete {@link FilterCriterion} for matching the value
- * of a particular field against a known value via either the {@link #buildFor(Function, Object)} or
- * {@link #buildFor(Field, Object)} methods.
+ *
+ * <p>Each enum value can be used to produce a concrete {@link FilterCriterion} for matching the
+ * value of a particular field against a known value via either the
+ * {@link #buildFor(Function, Object)} or {@link #buildFor(Field, Object)} methods.
  */
 public enum ComparisonType {
   EQUAL_TO              (Objects::equals),
@@ -30,8 +30,8 @@ public enum ComparisonType {
 
   /**
    * Private constructor for {@code ComparisonType}.
-   * <p>
-   * The provided function will be used by the {@link FilterCriterion} object that is returned by
+   *
+   * <p>The provided function will be used by the {@link FilterCriterion} object that is returned by
    * this enum value whenever the criterion needs to compare a field value against a particular
    * value.
    *
@@ -45,8 +45,8 @@ public enum ComparisonType {
   /**
    * Builds a criterion that compares the value of a field returned by the given value provider
    * against the provided target value.
-   * <p>
-   * The nature of the comparison is dictated by the enum value on which this method is being
+   *
+   * <p>The nature of the comparison is dictated by the enum value on which this method is being
    * invoked.
    *
    * @param   targetValue
@@ -65,8 +65,8 @@ public enum ComparisonType {
   /**
    * Builds a criterion that compares the value of the specified field against the provided target
    * value.
-   * <p>
-   * The nature of the comparison is dictated by the enum value on which this method is being
+   *
+   * <p>The nature of the comparison is dictated by the enum value on which this method is being
    * invoked.
    *
    * @param   targetField
@@ -88,9 +88,9 @@ public enum ComparisonType {
   /**
    * Compares two objects via their {@code compare()} method, and checks the result against the
    * provided magnitude signs.
-   * <p>
-   * The two objects are considered a match if the signum of comparing the first against the second
-   * matches any of the provided signums. For example, if the result returned by
+   *
+   * <p>The two objects are considered a match if the signum of comparing the first against the
+   * second matches any of the provided signums. For example, if the result returned by
    * {@link Comparable#compareTo(Object)} when comparing {@code first} and {@code second} was
    * {@code -6}, and the {@code targetSignums} included {@code -1}, then the objects are a match
    * because {@code signum(-6) == -1}.
@@ -185,10 +185,10 @@ public enum ComparisonType {
 
   /**
    * Uses voodoo and black magic to coerce an object into being an instance of {@code Comparable}.
-   * <p>
-   * The object must already extend from a class that implements the {@link Comparable} interface.
-   * All this method really does is ensure that it's safe to typecast the object for comparison,
-   * throwing an appropriate, helpful error message if it is not safe.
+   *
+   * <p>The object must already extend from a class that implements the {@link Comparable}
+   * interface. All this method really does is ensure that it's safe to typecast the object for
+   * comparison, throwing an appropriate, helpful error message if it is not safe.
    *
    * @param   object
    *          The object to typecast.

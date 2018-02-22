@@ -15,8 +15,8 @@ extends AbstractFilterCriterion<M> {
 
   /**
    * Constructor for {@code NotCriterion}.
-   * <p>
-   * Initializes a new criterion to negate the provided criterion.
+   *
+   * <p>Initializes a new criterion to negate the provided criterion.
    *
    * @param wrappedCriterion
    *        The criterion to negate.
