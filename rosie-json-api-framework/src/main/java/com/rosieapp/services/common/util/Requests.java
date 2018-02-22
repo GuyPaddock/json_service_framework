@@ -35,8 +35,8 @@ public class Requests {
                                                final Response<?> response) {
     if (response.isSuccessful()) {
       throw new IllegalArgumentException(
-        "Response did not fail -- it was successful. This method must not be called for " +
-        "successful responses.");
+        "Response did not fail -- it was successful. This method must not be called for "
+        + "successful responses.");
     } else {
       final StringBuilder errorBuilder    = new StringBuilder();
       final ResponseBody  errorBody       = response.errorBody();

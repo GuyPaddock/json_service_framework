@@ -210,8 +210,8 @@ public enum ComparisonType {
     if (!(object instanceof Comparable)) {
       throw new ClassCastException(
         MessageFormat.format(
-          "Provided object is of type {0}, which does not implement Comparable. It must inherit " +
-          "from Comparable to support approximate matching.",
+          "Provided object is of type {0}, which does not implement Comparable. It must inherit "
+          + "from Comparable to support approximate matching.",
           object.getClass().getCanonicalName()));
     }
 

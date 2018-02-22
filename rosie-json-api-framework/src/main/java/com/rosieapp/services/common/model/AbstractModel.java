@@ -52,8 +52,8 @@ implements Model {
       if (!existingId.isObjectNew()) {
         throw new IllegalStateException(
           String.format(
-            "This model already has an existing identifier set. An attempt was made to change the " +
-            "identifier from `%s` to `%s`", existingId, newId));
+            "This model already has an existing identifier set. An attempt was made to change the "
+            + "identifier from `%s` to `%s`", existingId, newId));
       }
 
       this.id = newId;

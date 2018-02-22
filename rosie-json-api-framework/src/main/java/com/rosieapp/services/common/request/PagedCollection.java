@@ -173,8 +173,8 @@ implements Iterable<M> {
 
     @Override
     public boolean hasNext() {
-      if (!this.atEnd &&
-          ((this.currentPageIterator == null) || !this.currentPageIterator.hasNext())) {
+      if (!this.atEnd
+          && ((this.currentPageIterator == null) || !this.currentPageIterator.hasNext())) {
         this.safelyRequestNextPage();
       }
 

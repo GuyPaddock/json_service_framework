@@ -458,8 +458,8 @@ extends MapBasedModelBuilder<M, B> {
         .orElseThrow(() ->
           new IllegalStateException(
             String.format(
-              "The builder is expected either to have a generic parameter that is a sub-class of " +
-              "`%s`, or it is expected to be declared as an inner class of the model it builds.",
+              "The builder is expected either to have a generic parameter that is a sub-class of "
+              + "`%s`, or it is expected to be declared as an inner class of the model it builds.",
               Model.class.getName())));
 
     builderToModelClassCache.put(this.getClass().getName(), modelClass);
@@ -522,8 +522,9 @@ extends MapBasedModelBuilder<M, B> {
       modelTypeParam =
         Arrays.stream(parameterizedCurrentClass.getActualTypeArguments()).findFirst().orElse(null);
 
-      if ((modelTypeParam != null) && (modelTypeParam instanceof Class) &&
-          (Model.class.isAssignableFrom((Class)modelTypeParam))) {
+      if ((modelTypeParam != null)
+          && (modelTypeParam instanceof Class)
+          && (Model.class.isAssignableFrom((Class)modelTypeParam))) {
         modelType = (Class<? extends M>)modelTypeParam;
 
         if (LOGGER.isTraceEnabled()) {

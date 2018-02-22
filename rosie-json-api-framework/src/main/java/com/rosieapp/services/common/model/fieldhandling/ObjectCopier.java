@@ -251,9 +251,9 @@ public final class ObjectCopier {
     final Class<?>  objectType = constructor.getDeclaringClass();
 
     result =
-      (constructor.getParameterCount() == 1) &&
-        Arrays.stream(constructor.getParameterTypes())
-          .allMatch((param) -> param.isAssignableFrom(objectType));
+      (constructor.getParameterCount() == 1)
+      && Arrays.stream(constructor.getParameterTypes())
+           .allMatch((param) -> param.isAssignableFrom(objectType));
 
     return result;
   }
