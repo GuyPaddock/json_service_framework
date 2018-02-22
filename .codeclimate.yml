@@ -1,3 +1,20 @@
+version: "2"
+checks:
+  argument-count:
+    # Handled by PMD
+    enabled: false
+  file-lines:
+    # Handled by PMD
+    enabled: false
+  method-count:
+    # Handled by PMD
+    enabled: false
+  method-lines:
+    # Handled by PMD
+    enabled: false
+  return-statements:
+    # Handled by PMD
+    enabled: false
 plugins:
   checkstyle:
     enabled: true
