@@ -295,7 +295,7 @@ extends MapBasedModelBuilder<M, B> {
    */
   private List<Field> getAllTargetFields() {
     final Class<? extends Model>  modelClass  = this.getModelClass();
-    List<Field>             fields      = this.getCachedTargetFields(modelClass);
+    List<Field>                   fields      = this.getCachedTargetFields(modelClass);
 
     if (fields == null) {
       fields = this.identifyTargetFields(modelClass);
@@ -319,10 +319,8 @@ extends MapBasedModelBuilder<M, B> {
 
     fields = modelTypeToFieldsCache.getIfPresent(modelClass.getCanonicalName());
 
-    if (fields != null) {
-      if (LOGGER.isTraceEnabled()) {
-        LOGGER.trace("Resolved fields for model type `{}` using cache.", modelClass.getName());
-      }
+    if ((fields != null) && LOGGER.isTraceEnabled()) {
+      LOGGER.trace("Resolved fields for model type `{0}` using cache.", modelClass.getName());
     }
 
     return fields;
@@ -484,14 +482,11 @@ extends MapBasedModelBuilder<M, B> {
 
     modelType = (Class<? extends M>)builderToModelClassCache.getIfPresent(builderClass.getName());
 
-    if (modelType != null) {
-
-      if (LOGGER.isTraceEnabled()) {
-        LOGGER.trace(
-          "Resolved model type `{0}` for builder type `{1}` using cache.",
-          modelType.getName(),
-          builderClass.getName());
-      }
+    if ((modelType != null) && LOGGER.isTraceEnabled()) {
+      LOGGER.trace(
+        "Resolved model type `{0}` for builder type `{1}` using cache.",
+        modelType.getName(),
+        builderClass.getName());
     }
 
     return modelType;
