@@ -41,8 +41,8 @@ extends AbstractFilterCriterion<M> {
 
     try {
       return valueMatches(field.get(model), model, field);
-    } catch (IllegalAccessException ex) {
-      throw new RuntimeException(
+    } catch (final IllegalAccessException ex) {
+      throw new UnsupportedOperationException(
         String.format(
           "Unexpectedly failed to access field `%s` on model of type `%s`: %s",
           field.getName(),
