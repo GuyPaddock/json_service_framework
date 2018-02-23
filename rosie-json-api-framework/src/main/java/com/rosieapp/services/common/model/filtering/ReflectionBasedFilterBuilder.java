@@ -22,6 +22,7 @@ import java.util.Map;
  *        The builder class itself. (This must be the same type as the class being defined, to avoid
  *        a {@code ClassCastException}).
  */
+@SuppressWarnings("PMD.ExcessivePublicCount") // Fluent interface
 public class ReflectionBasedFilterBuilder<M extends Model,
                                           B extends ReflectionBasedFilterBuilder<M, B>>
 extends CriteriaBasedFilterBuilder<M, B> {
