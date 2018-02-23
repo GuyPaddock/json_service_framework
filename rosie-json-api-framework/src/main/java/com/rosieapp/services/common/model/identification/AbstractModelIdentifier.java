@@ -15,7 +15,7 @@ implements ModelIdentifier {
   public abstract String toString();
 
   @Override
-  public abstract boolean equals(Object o);
+  public abstract boolean equals(Object other);
 
   @Override
   public abstract int hashCode();
