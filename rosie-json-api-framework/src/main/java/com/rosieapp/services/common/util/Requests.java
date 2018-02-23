@@ -48,21 +48,17 @@ public final class Requests {
     errorBody       = response.errorBody();
     responseMessage = response.message();
 
-    errorBuilder.append(contextMessage);
-    errorBuilder.append(": ");
-    errorBuilder.append(response.code());
+    errorBuilder.append(contextMessage).append(": ").append(response.code());
 
     if ((responseMessage != null) && !responseMessage.isEmpty()) {
-      errorBuilder.append(" - ");
-      errorBuilder.append(responseMessage);
+      errorBuilder.append(" - ").append(responseMessage);
     }
 
     if (errorBody != null) {
       final String responseBody = responseBodyToString(errorBody);
 
       if (!responseBody.isEmpty()) {
-        errorBuilder.append(' ');
-        errorBuilder.append(responseBody);
+        errorBuilder.append(' ').append(responseBody);
       }
     }
 
