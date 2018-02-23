@@ -204,6 +204,7 @@
 
     <!-- Customized below -->
     <exclude name="AssignmentInOperand" />
+    <exclude name="AvoidDuplicateLiterals" />
     <exclude name="AvoidLiteralsInIfCondition" />
     <exclude name="ProperLogger" />
   </rule>
@@ -211,6 +212,13 @@
   <rule ref="category/java/errorprone.xml/AssignmentInOperand">
     <properties>
       <property name="allowWhile" value="true" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals">
+    <properties>
+      <!-- Ignore, for example, values like "unchecked" in @SuppressWarnings("unchecked") -->
+      <property name="skipAnnotations" value="true" />
     </properties>
   </rule>
 
