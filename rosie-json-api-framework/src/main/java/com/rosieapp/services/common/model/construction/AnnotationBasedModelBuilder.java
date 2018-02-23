@@ -488,7 +488,7 @@ extends MapBasedModelBuilder<M, B> {
 
       if (LOGGER.isTraceEnabled()) {
         LOGGER.trace(
-          "Resolved model type `{0}` for builder type `{}` using cache.",
+          "Resolved model type `{0}` for builder type `{1}` using cache.",
           modelType.getName(),
           builderClass.getName());
       }
