@@ -40,23 +40,25 @@ implements Model {
   }
 
   @Override
-  public synchronized void assignId(final ModelIdentifier newId)
+  public void assignId(final ModelIdentifier newId)
   throws IllegalStateException {
     final ModelIdentifier existingId;
 
     Objects.requireNonNull(newId, "`newId` cannot be null");
 
-    existingId = this.getId();
+    synchronized (this) {
+      existingId = this.getId();
 
-    if (!newId.equals(existingId)) {
-      if (!existingId.isObjectNew()) {
-        throw new IllegalStateException(
-          String.format(
-            "This model already has an existing identifier set. An attempt was made to change the "
-            + "identifier from `%s` to `%s`", existingId, newId));
+      if (!newId.equals(existingId)) {
+        if (!existingId.isObjectNew()) {
+          throw new IllegalStateException(
+            String.format(
+              "This model already has an existing identifier set. An attempt was made to change "
+              + "the identifier from `%s` to `%s`", existingId, newId));
+        }
+
+        this.id = newId;
       }
-
-      this.id = newId;
     }
   }
 
