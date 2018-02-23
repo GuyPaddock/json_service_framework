@@ -30,9 +30,18 @@
     <exclude name="PositionLiteralsFirstInCaseInsensitiveComparisons" />
     <exclude name="PositionLiteralsFirstInComparisons" />
 
-    <!-- Doesn't recognize Java 8 lambda parameters properly; doesn't allow us to
-         denote unused params with an underscore. -->
+    <!--
+      Doesn't recognize Java 8 lambda parameters properly; doesn't allow us to denote unused params
+      with an underscore.
+      -->
     <exclude name="UnusedFormalParameter" />
+
+    <!--
+      What is the point? Why do we care about abstract classes without abstract methods?
+
+      An answer (if any) will hopefully appear here: https://github.com/pmd/pmd/issues/933
+      -->
+    <exclude name="AbstractClassWithoutAbstractMethod" />
   </rule>
 
   <!--
