@@ -11,7 +11,7 @@ import retrofit2.Response;
 /**
  * A class for common utility methods needed when dealing with JSON requests.
  */
-public class Requests {
+public final class Requests {
   /**
    * Private constructor to ensure this class is static.
    */
