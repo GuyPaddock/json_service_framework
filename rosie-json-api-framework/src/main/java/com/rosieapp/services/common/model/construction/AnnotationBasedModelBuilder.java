@@ -527,7 +527,7 @@ extends MapBasedModelBuilder<M, B> {
 
         if (LOGGER.isTraceEnabled()) {
           LOGGER.trace(
-            "Resolved model type `{}` for builder type `{}` using annotation on builder.",
+            "Resolved model type `{0}` for builder type `{1}` using annotation on builder.",
             modelType.getName(),
             builderClass.getName());
         }
@@ -556,7 +556,7 @@ extends MapBasedModelBuilder<M, B> {
 
       if (LOGGER.isTraceEnabled()) {
         LOGGER.trace(
-          "Resolved model type `{}` for builder type `{}` using class that encloses builder.",
+          "Resolved model type `{0}` for builder type `{1}` using class that encloses builder.",
           modelType.getName(),
           builderClass.getName());
       }

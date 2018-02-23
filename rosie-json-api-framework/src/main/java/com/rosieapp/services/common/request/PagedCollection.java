@@ -205,7 +205,7 @@ implements Iterable<M> {
       try {
         this.requestNextPage();
       } catch (IOException ex) {
-        LOGGER.error("Failed to request page `{}` of results.", this.currentPageNumber, ex);
+        LOGGER.error("Failed to request page `{0}` of results.", this.currentPageNumber, ex);
 
         // Don't try again
         this.markFinished();
