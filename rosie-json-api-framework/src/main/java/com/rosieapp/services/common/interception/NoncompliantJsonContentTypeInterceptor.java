@@ -21,8 +21,7 @@ import okio.Buffer;
  * limitations in Rosie's legacy Rails services that do not handle the
  * {@code application/vnd.api+json} content type properly.
  */
-@JsonApiV1Noncompliant(
-  reason = "Content type for requests is required to be application/vnd.api+json")
+@JsonApiV1Noncompliant(reason = JsonApiV1Noncompliant.REASON_BAD_CONTENT_TYPE)
 public class NoncompliantJsonContentTypeInterceptor
 implements Interceptor {
   @Override
