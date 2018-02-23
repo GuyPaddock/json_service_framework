@@ -17,9 +17,9 @@ import java.util.function.Function;
  */
 public final class FunctionBasedCriterion<M extends Model>
 extends AbstractFilterCriterion<M> {
-  final Function<M, Object> valueProvider;
-  final Object targetValue;
-  final BiFunction<Object, Object, Boolean> comparisonFunction;
+  private final Function<M, Object> valueProvider;
+  private final Object targetValue;
+  private final BiFunction<Object, Object, Boolean> comparisonFunction;
 
   /**
    * Constructor for {@code FunctionBasedCriterion}.

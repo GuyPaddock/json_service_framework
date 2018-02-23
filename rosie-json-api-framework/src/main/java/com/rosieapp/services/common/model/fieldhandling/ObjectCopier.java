@@ -32,7 +32,7 @@ public final class ObjectCopier {
   /**
    * The different strategies employed to copy different types of objects.
    */
-  static final ImmutableMap<Class<?>, Function<Object, Object>> COPY_FUNCTIONS =
+  private static final ImmutableMap<Class<?>, Function<Object, Object>> COPY_FUNCTIONS =
     new ImmutableMap.Builder<Class<?>, Function<Object, Object>>()
       .put(Map.class,         ObjectCopier::copyMap)
       .put(Collection.class,  ObjectCopier::copyCollection)

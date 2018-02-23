@@ -15,7 +15,7 @@ import java.util.Objects;
  */
 public class NotCriterion<M extends Model>
 extends AbstractFilterCriterion<M> {
-  final FilterCriterion<M> wrappedCriterion;
+  private final FilterCriterion<M> wrappedCriterion;
 
   /**
    * Constructor for {@code NotCriterion}.

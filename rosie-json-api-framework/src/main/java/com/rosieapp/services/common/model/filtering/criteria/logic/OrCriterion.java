@@ -19,7 +19,7 @@ import java.util.Objects;
  */
 public class OrCriterion<M extends Model>
 extends AbstractFilterCriterion<M> {
-  final List<FilterCriterion<M>> wrappedCriteria;
+  private final List<FilterCriterion<M>> wrappedCriteria;
 
   /**
    * Constructor for {@code OrCriterion}.

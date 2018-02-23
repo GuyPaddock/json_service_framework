@@ -17,8 +17,8 @@ import java.util.function.BiFunction;
  */
 public final class FunctionBasedReflectionCriterion<M extends Model>
 extends AbstractReflectionBasedCriterion<M> {
-  final Object targetValue;
-  final BiFunction<Object, Object, Boolean> comparisonFunction;
+  private final Object targetValue;
+  private final BiFunction<Object, Object, Boolean> comparisonFunction;
 
   /**
    * Constructor for {@code FunctionBasedReflectionCriterion}.

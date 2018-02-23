@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class CriteriaBasedFilterBuilder<M extends Model, B extends CriteriaBasedFilterBuilder<M, B>>
 implements ModelFilterBuilder<M> {
-  final List<FilterCriterion<M>> criteria;
+  private final List<FilterCriterion<M>> criteria;
 
   /**
    * Default constructor for {@code CriteriaBasedFilterBuilder}.

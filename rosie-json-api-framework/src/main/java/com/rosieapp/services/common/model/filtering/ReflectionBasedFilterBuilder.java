@@ -25,7 +25,7 @@ import java.util.Map;
 public class ReflectionBasedFilterBuilder<M extends Model,
                                           B extends ReflectionBasedFilterBuilder<M, B>>
 extends CriteriaBasedFilterBuilder<M, B> {
-  final Map<String, Field> fieldMap;
+  private final Map<String, Field> fieldMap;
 
   /**
    * Constructor for {@code ReflectionBasedFilterBuilder}.
