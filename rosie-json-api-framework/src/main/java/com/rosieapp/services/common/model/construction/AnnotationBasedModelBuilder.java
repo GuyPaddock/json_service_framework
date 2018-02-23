@@ -165,7 +165,7 @@ extends MapBasedModelBuilder<M, B> {
 
       fieldName   = fieldEntry.getKey();
       field       = fieldEntry.getValue();
-      targetValue = AnnotationBasedModelBuilder.this.getFieldValue(fieldName);
+      targetValue = this.getFieldValue(fieldName);
 
       if (targetValue != null) {
         filterBuilder.withFieldEqualTo(field, targetValue);

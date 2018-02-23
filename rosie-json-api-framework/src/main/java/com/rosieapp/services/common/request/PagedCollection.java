@@ -106,7 +106,7 @@ implements Iterable<M> {
    *          {@code false} if there is a limit in place.
    */
   private boolean hasUnlimitedPageLimit() {
-    return (PagedCollection.this.pageLimit == PAGE_LIMIT_UNLIMITED);
+    return (this.pageLimit == PAGE_LIMIT_UNLIMITED);
   }
 
   /**
