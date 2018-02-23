@@ -35,10 +35,10 @@ implements Comparable<LongIdentifier> {
     final Optional<ModelIdentifier> result;
     final long                      numberValue = NumberUtils.toLong(value, -1);
 
-    if (numberValue != -1) {
-      result = Optional.of(new LongIdentifier(numberValue));
-    } else {
+    if (numberValue == -1) {
       result = Optional.empty();
+    } else {
+      result = Optional.of(new LongIdentifier(numberValue));
     }
 
     return result;

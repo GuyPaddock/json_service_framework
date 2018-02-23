@@ -155,7 +155,10 @@ public final class ObjectCopier {
 
     mapConstructor = findCopyConstructor(sourceType);
 
-    if (mapConstructor != null) {
+    if (mapConstructor == null) {
+      // No copy constructor available.
+      copy = null;
+    } else {
       try {
         copy = mapConstructor.newInstance(source);
       } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
@@ -165,9 +168,6 @@ public final class ObjectCopier {
             sourceType.getCanonicalName()),
           ex);
       }
-    } else {
-      // No copy constructor available.
-      copy = null;
     }
 
     return copy;

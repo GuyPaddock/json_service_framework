@@ -598,7 +598,9 @@ extends MapBasedModelBuilder<M, B> {
   throws IllegalArgumentException {
     final T processedValue;
 
-    if ((rawFieldValue != null) && (fieldPreprocessor != null)) {
+    if ((rawFieldValue == null) || (fieldPreprocessor == null)) {
+      processedValue = rawFieldValue;
+    } else {
       try {
         processedValue = fieldPreprocessor.newInstance().preprocessField(field, rawFieldValue);
       } catch (IllegalAccessException | InstantiationException ex) {
@@ -607,8 +609,6 @@ extends MapBasedModelBuilder<M, B> {
             "Invalid field pre-processor provided -- `{0}` cannot be instantiated.",
             fieldPreprocessor.getCanonicalName()));
       }
-    } else {
-      processedValue = rawFieldValue;
     }
 
     return processedValue;
