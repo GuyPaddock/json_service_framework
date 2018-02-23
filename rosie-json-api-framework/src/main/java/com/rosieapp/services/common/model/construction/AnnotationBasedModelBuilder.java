@@ -602,7 +602,8 @@ extends MapBasedModelBuilder<M, B> {
         throw new IllegalArgumentException(
           MessageFormat.format(
             "Invalid field pre-processor provided -- `{0}` cannot be instantiated.",
-            fieldPreprocessor.getCanonicalName()));
+            fieldPreprocessor.getCanonicalName()),
+          ex);
       }
     }
 
