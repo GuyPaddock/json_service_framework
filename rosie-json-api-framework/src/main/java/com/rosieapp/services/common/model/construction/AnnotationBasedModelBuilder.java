@@ -68,7 +68,7 @@ extends MapBasedModelBuilder<M, B> {
    * evicts entries after 10 minutes of use. This helps to ensure high throughput on payloads that
    * are processing the same types of models over and over.
    */
-  private static final Cache<String, List<Field>> modelTypeToFieldsCache;
+  private static final Cache<String, List<Field>> MODEL_FIELDS_CACHE;
 
   /**
    * A cache that increases the performance of looking up what type of model to create for each
@@ -78,7 +78,7 @@ extends MapBasedModelBuilder<M, B> {
    * after 10 minutes of use. This helps to ensure high throughput on payloads that are processing
    * the same types of models over and over.
    */
-  private static final Cache<String, Class<? extends Model>> builderToModelClassCache;
+  private static final Cache<String, Class<? extends Model>> BUILD_MODEL_TYPE_CACHE;
 
   static {
     final CacheBuilder<Object, Object> cacheBuilder =
@@ -86,8 +86,8 @@ extends MapBasedModelBuilder<M, B> {
         .maximumSize(32)
         .expireAfterWrite(10, TimeUnit.MINUTES);
 
-    modelTypeToFieldsCache   = cacheBuilder.build();
-    builderToModelClassCache = cacheBuilder.build();
+    MODEL_FIELDS_CACHE     = cacheBuilder.build();
+    BUILD_MODEL_TYPE_CACHE = cacheBuilder.build();
   }
 
   /**
@@ -300,7 +300,7 @@ extends MapBasedModelBuilder<M, B> {
     if (fields == null) {
       fields = this.identifyTargetFields(modelClass);
 
-      modelTypeToFieldsCache.put(modelClass.getCanonicalName(), fields);
+      MODEL_FIELDS_CACHE.put(modelClass.getCanonicalName(), fields);
     }
 
     return fields;
@@ -317,7 +317,7 @@ extends MapBasedModelBuilder<M, B> {
   private List<Field> getCachedTargetFields(final Class<? extends Model> modelClass) {
     final List<Field> fields;
 
-    fields = modelTypeToFieldsCache.getIfPresent(modelClass.getCanonicalName());
+    fields = MODEL_FIELDS_CACHE.getIfPresent(modelClass.getCanonicalName());
 
     if ((fields != null) && LOGGER.isTraceEnabled()) {
       LOGGER.trace("Resolved fields for model type `{0}` using cache.", modelClass.getName());
@@ -463,7 +463,7 @@ extends MapBasedModelBuilder<M, B> {
               + "`%s`, or it is expected to be declared as an inner class of the model it builds.",
               Model.class.getName())));
 
-    builderToModelClassCache.put(this.getClass().getName(), modelClass);
+    BUILD_MODEL_TYPE_CACHE.put(this.getClass().getName(), modelClass);
 
     return modelClass;
   }
@@ -480,7 +480,7 @@ extends MapBasedModelBuilder<M, B> {
     final Class<?>            builderClass = this.getClass();
     final Class<? extends M>  modelType;
 
-    modelType = (Class<? extends M>)builderToModelClassCache.getIfPresent(builderClass.getName());
+    modelType = (Class<? extends M>) BUILD_MODEL_TYPE_CACHE.getIfPresent(builderClass.getName());
 
     if ((modelType != null) && LOGGER.isTraceEnabled()) {
       LOGGER.trace(
