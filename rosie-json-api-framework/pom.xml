@@ -55,6 +55,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.7.1</version>
+    </dependency>
+
     <!-- Utilities -->
     <dependency>
       <groupId>commons-lang</groupId>
