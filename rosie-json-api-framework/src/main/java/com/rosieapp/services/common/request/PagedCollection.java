@@ -221,11 +221,13 @@ implements Iterable<M> {
      */
     private void requestNextPage()
     throws IOException {
+
+      final int nextPageNumber = this.getAndIncrementNextPageNumber();
+
       if (this.isAtPageLimit()) {
         this.markFinished();
       }
       else {
-        final int                       nextPageNumber = this.getAndIncrementNextPageNumber();
         final JSONAPIDocument<List<M>>  responseBody;
         final List<M>                   modelList;
 
