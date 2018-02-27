@@ -24,7 +24,7 @@ implements Comparable<LongIdentifier> {
    * Note: this is an invalid value for an identifier.
    *
    */
-  public final static long DEFAULT_VALUE = -1;
+  public final static long UNKNOWN_VALUE = -1;
 
   /**
    * Attempts to parse the provided string as a long integer model identifier.
@@ -40,9 +40,9 @@ implements Comparable<LongIdentifier> {
    */
   public static Optional<ModelIdentifier> createFrom(final String value) {
     final Optional<ModelIdentifier> result;
-    final long                      numberValue = NumberUtils.toLong(value, -1);
+    final long                      numberValue = NumberUtils.toLong(value, UNKNOWN_VALUE);
 
-    if (numberValue != -1) {
+    if (numberValue != UNKNOWN_VALUE) {
       result = Optional.of(new LongIdentifier(numberValue));
     } else {
       result = Optional.empty();
@@ -77,7 +77,7 @@ implements Comparable<LongIdentifier> {
    *
    */
   private LongIdentifier() {
-    this.value = DEFAULT_VALUE;
+    this.value = UNKNOWN_VALUE;
   }
 
   /**
