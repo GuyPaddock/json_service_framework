@@ -1,0 +1,242 @@
+<?xml version="1.0"?>
+<ruleset name="Custom ruleset"
+  xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+  <description>Rosie's Official PMD Coding Standards for Java + Maven.</description>
+
+  <!--
+    Java - Best Practices
+    =====================
+    Rules which enforce generally accepted best practices.
+    -->
+  <rule ref="category/java/bestpractices.xml">
+    <!--
+      False alarms on methods starting with test (e.g. "testXXX()").
+
+      Consider re-enabling when this issue is resolved:
+      https://github.com/pmd/pmd/issues/572
+      -->
+    <exclude name="JUnit4TestShouldUseTestAnnotation" />
+
+    <!-- @Expected does not check message -->
+    <exclude name="JUnitUseExpected" />
+
+    <!--
+      This feels unnecessarily picky. Developers should be able to keep track of
+      what might be null or not without having to re-arrange expressions or
+      write Yoda Expressions.
+      -->
+    <exclude name="PositionLiteralsFirstInCaseInsensitiveComparisons" />
+    <exclude name="PositionLiteralsFirstInComparisons" />
+
+    <!-- Doesn't recognize Java 8 lambda parameters properly; doesn't allow us to
+         denote unused params with an underscore. -->
+    <exclude name="UnusedFormalParameter" />
+  </rule>
+
+  <!--
+    Java - Code Style
+    =================
+    Rules which enforce a specific coding style.
+    -->
+  <rule ref="category/java/codestyle.xml">
+    <!-- Too picky; let's leave these to best judgment. -->
+    <exclude name="AtLeastOneConstructor" />
+    <exclude name="PrematureDeclaration" />
+    <exclude name="UnnecessaryConstructor" />
+    <exclude name="UnnecessaryLocalBeforeReturn" />
+    <exclude name="UselessParentheses" />
+
+    <!-- See: https://stackoverflow.com/questions/2900881/generic-type-parameter-naming-convention-for-java-with-multiple-chars -->
+    <exclude name="GenericsNaming" />
+
+    <!-- Bad advice -->
+    <exclude name="AvoidFinalLocalVariable" />
+
+    <!-- Customized below -->
+    <exclude name="ShortVariable" />
+    <exclude name="LongVariable" />
+  </rule>
+
+  <rule ref="category/java/codestyle.xml/ShortVariable">
+    <properties>
+      <!-- "to", "id", etc are all fine names. Let's NOT force a length > 3. -->
+      <property name="minimum" value="2"/>
+    </properties>
+  </rule>
+
+  <rule ref="category/java/codestyle.xml/LongVariable">
+    <properties>
+      <!-- Let us use longer variables -->
+      <property name="minimum" value="26"/>
+    </properties>
+  </rule>
+
+  <!--
+    Java - Design
+    =============
+    Rules that help you discover design issues.
+    -->
+  <rule ref="category/java/design.xml">
+      <!--
+        JDK 8 encourages throwing an NPE.
+        See: https://github.com/pmd/pmd/issues/832
+        -->
+    <exclude name="AvoidThrowingNullPointerException" />
+
+    <!--
+      We use NCSS instead, so that we count only code lines.
+      We want to encourage more docs and comments!
+      -->
+    <exclude name="ExcessiveMethodLength" />
+
+    <!--
+      Good rule, but hard to programmatically enforce. It's better for us to
+      enforce this manually through code reviews.
+      -->
+    <exclude name="LawOfDemeter" />
+
+    <!-- Unused -->
+    <exclude name="LoosePackageCoupling" />
+
+    <!-- Deprecated -->
+    <exclude name="ModifiedCyclomaticComplexity" />
+    <exclude name="NcssConstructorCount" />
+    <exclude name="NcssMethodCount" />
+    <exclude name="NcssTypeCount" />
+    <exclude name="StdCyclomaticComplexity" />
+
+    <!-- Customized below -->
+    <exclude name="ExcessiveParameterList" />
+    <exclude name="ExcessivePublicCount" />
+    <exclude name="NcssCount" />
+    <exclude name="TooManyMethods" />
+  </rule>
+
+  <rule ref="category/java/design.xml/ExcessiveParameterList">
+    <properties>
+      <property name="minimum" value="6" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/design.xml/ExcessivePublicCount">
+    <properties>
+      <property name="minimum" value="15" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/design.xml/NcssCount">
+    <properties>
+      <!-- 25 non-comment lines per method sounds good. -->
+      <property name="methodReportLevel" value="25" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/design.xml/TooManyMethods">
+    <properties>
+      <property name="maxmethods" value="30" />
+    </properties>
+  </rule>
+
+  <!--
+    Java - Documentation
+    ====================
+    Rules that are related to code documentation.
+    -->
+  <rule ref="category/java/documentation.xml">
+    <!-- Too picky -->
+    <exclude name="CommentContent" />
+
+    <!-- Customized below -->
+    <exclude name="CommentRequired" />
+    <exclude name="CommentSize" />
+  </rule>
+
+  <rule ref="category/java/documentation.xml/CommentRequired">
+    <properties>
+      <!--
+        Fields are encapsulated and used internally by objects.
+
+        Accessors (if any) are used by code *outside* the class. So, it's more
+        important for us to have documentation on the interface to our classes
+        than to document every internal field, since we should not be thinking
+        of classes as data objects.
+        -->
+      <property name="fieldCommentRequirement" value="Ignored"/>
+      <property name="accessorCommentRequirement" value="Required"/>
+    </properties>
+  </rule>
+
+  <rule ref="category/java/documentation.xml/CommentSize">
+    <properties>
+      <property name="maxLines" value="100"/>
+      <property name="maxLineLength" value="100"/>
+    </properties>
+  </rule>
+
+  <!--
+    Java - Error Prone
+    ==================
+    Rules to detect constructs that are either broken, extremely confusing or prone to runtime
+    errors.
+    -->
+  <rule ref="category/java/errorprone.xml">
+    <!-- Too picky -->
+    <exclude name="AvoidAccessibilityAlteration" />
+    <exclude name="ConstructorCallsOverridableMethod" />
+    <exclude name="DataflowAnomalyAnalysis" />
+    <exclude name="DoNotCallGarbageCollectionExplicitly" />
+    <exclude name="NullAssignment" />
+
+    <!-- Not applicable -->
+    <exclude name="BeanMembersShouldSerialize" />
+
+    <!-- Customized below -->
+    <exclude name="AssignmentInOperand" />
+    <exclude name="AvoidLiteralsInIfCondition" />
+    <exclude name="ProperLogger" />
+  </rule>
+
+  <rule ref="category/java/errorprone.xml/AssignmentInOperand">
+    <properties>
+      <property name="allowWhile" value="true" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
+    <properties>
+      <property name="ignoreMagicNumbers" value="-1,0,1" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/errorprone.xml/ProperLogger">
+    <properties>
+      <property name="staticLoggerName" value="LOGGER" />
+    </properties>
+  </rule>
+
+  <!--
+      Java - Multithreading
+      =====================
+      Rules that flag issues when dealing with multiple threads of execution.
+   -->
+  <rule ref="category/java/multithreading.xml">
+    <!-- Too picky -->
+    <exclude name="AvoidUsingVolatile" />
+    <exclude name="UseConcurrentHashMap" />
+  </rule>
+
+  <rule ref="category/java/performance.xml">
+    <!-- Too picky -->
+    <exclude name="SimplifyStartsWith" />
+  </rule>
+
+  <!--
+      Maven - Error Prone
+      ===================
+      Rules to detect constructs that are either broken, extremely confusing or prone to runtime
+      errors.
+    -->
+  <rule ref="category/pom/errorprone.xml" />
+</ruleset>
