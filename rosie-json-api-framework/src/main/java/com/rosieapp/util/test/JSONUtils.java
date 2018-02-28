@@ -2,6 +2,7 @@ package com.rosieapp.util.test;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.jasminb.jsonapi.JSONAPIDocument;
 import com.github.jasminb.jsonapi.ResourceConverter;
 import com.github.jasminb.jsonapi.SerializationFeature;
@@ -30,6 +31,11 @@ public class JSONUtils {
     final ObjectMapper      mapper = new ObjectMapper();
 
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    mapper.registerModule(new JavaTimeModule());
+    mapper.configure(
+      com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
+      false
+    );
 
     converter = new ResourceConverter(mapper, modelTypes);
 
