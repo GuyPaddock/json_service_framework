@@ -26,12 +26,11 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  * provide the interface for the service. </p>
  */
 public abstract class ServiceClientBuilder<T> {
+  private final Class<? extends T> serviceInterface;
 
   private   String             baseUrl;
   private   String             authToken;
   private   Converter.Factory  converterFactory;
-  private   Class<? extends T> serviceInterface;
-
 
   /**
    * Constructor for {@code ServiceClientBuilder}.
