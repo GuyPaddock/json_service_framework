@@ -27,6 +27,11 @@ import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
 @RunWith(Spectrum.class)
+@SuppressWarnings({
+  "PMD.AvoidDuplicateLiterals",
+  "PMD.NonStaticInitializer",
+  "PMD.TooManyStaticImports"
+})
 public class AbstractModelTest {
   {
     beforeAll(JSONTestHelper::configureTestForJackson);

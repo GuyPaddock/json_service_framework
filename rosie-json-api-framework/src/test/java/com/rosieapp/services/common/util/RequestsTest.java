@@ -14,6 +14,10 @@ import org.junit.runner.RunWith;
 import retrofit2.Response;
 
 @RunWith(Spectrum.class)
+@SuppressWarnings({
+  "PMD.TooManyStaticImports",
+  "PMD.NonStaticInitializer"
+})
 public class RequestsTest {
   {
     describe(".failureResponseToString", () -> {
