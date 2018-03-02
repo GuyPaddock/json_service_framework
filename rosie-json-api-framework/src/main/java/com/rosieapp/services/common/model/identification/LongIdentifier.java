@@ -4,6 +4,7 @@
 
 package com.rosieapp.services.common.model.identification;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Optional;
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -11,6 +12,7 @@ import org.apache.commons.lang.math.NumberUtils;
  * A model identifier that uses traditional, long integer primary keys -- typically issued by a
  * single source of record -- to unique identify a persisted model.
  */
+@JsonSerialize(using = LongIdentifierSerializer.class)
 public final class LongIdentifier
 extends PersistedModelIdentifier
 implements Comparable<LongIdentifier> {
@@ -18,6 +20,15 @@ implements Comparable<LongIdentifier> {
    * The underlying identifier value.
    */
   private long value;
+
+
+  /**
+   * Default value for {@code value} used in the default constructor.
+   * <p>
+   * Note: this is an invalid value for an identifier.
+   *
+   */
+  public final static long UNKNOWN_VALUE = -1;
 
   /**
    * Attempts to parse the provided string as a long integer model identifier.
@@ -33,9 +44,9 @@ implements Comparable<LongIdentifier> {
    */
   public static Optional<ModelIdentifier> createFrom(final String value) {
     final Optional<ModelIdentifier> result;
-    final long                      numberValue = NumberUtils.toLong(value, -1);
+    final long                      numberValue = NumberUtils.toLong(value, UNKNOWN_VALUE);
 
-    if (numberValue == -1) {
+    if (numberValue == UNKNOWN_VALUE) {
       result = Optional.empty();
     } else {
       result = Optional.of(new LongIdentifier(numberValue));
@@ -61,6 +72,18 @@ implements Comparable<LongIdentifier> {
     super();
 
     this.setValue(value);
+  }
+
+  /**
+   * Default constructor for {@link LongIdentifier}.
+   *
+   * Assigns {@code value} with an invalid default value.
+   * <p>
+   * Note: Required by jackson to properly deserialize JSON.
+   *
+   */
+  private LongIdentifier() {
+    this.value = UNKNOWN_VALUE;
   }
 
   /**

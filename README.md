@@ -20,3 +20,8 @@ An OpenICF connector that allows systems like OpenIDM to interact with the Rosie
 over JSON-API-compliant REST.
 
 See `openicf-rosie-loyalty-connector/README.md` for details.
+
+## Java Service Client for Rosie ECOM (`rosie-ecom-client`)
+A Java-based client for connecting to Rosie's ECOM Service (using the JSON API framework).
+
+See `rosie-ecom-client/README.md` for details.

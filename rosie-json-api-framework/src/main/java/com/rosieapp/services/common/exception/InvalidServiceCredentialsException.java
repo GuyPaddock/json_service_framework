@@ -57,7 +57,7 @@ extends RuntimeException {
    */
   private static String generateMessage(final String serviceName, final String serviceUrl) {
     return MessageFormat.format(
-      "The credentials provided for connecting to the {0} at `{1}` is unavailable.",
+      "The credentials provided for connecting to the {0} at `{1}` are incorrect.",
       serviceName,
       serviceUrl);
   }

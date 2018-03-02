@@ -56,12 +56,11 @@ implements Iterable<M> {
    *        The function to call with a page number in order to obtain each page of results.
    * @param pageLimit
    *        The maximum number of pages (starting from the {@code startingPageNumber}) to process.
+   *
    */
-  public PagedCollection(final Function<Integer, Call<JSONAPIDocument<List<M>>>> requestFunction,
-                         final int pageLimit) {
-    this(requestFunction, 1, PAGE_LIMIT_UNLIMITED);
+  public PagedCollection(final Function<Integer, Call<JSONAPIDocument<List<M>>>> requestFunction, final int pageLimit) {
+    this(requestFunction, 1, pageLimit);
   }
-
   /**
    * Constructor for {@code PagedCollection}.
    *
@@ -225,10 +224,12 @@ implements Iterable<M> {
      */
     private void requestNextPage()
     throws IOException {
+
+      final int nextPageNumber = this.getAndIncrementNextPageNumber();
+
       if (this.isAtPageLimit()) {
         this.markFinished();
       } else {
-        final int                       nextPageNumber = this.getAndIncrementNextPageNumber();
         final JSONAPIDocument<List<M>>  responseBody;
         final List<M>                   modelList;
 
