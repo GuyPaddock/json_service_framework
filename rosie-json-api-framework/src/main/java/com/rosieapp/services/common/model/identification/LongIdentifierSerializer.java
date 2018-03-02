@@ -16,13 +16,13 @@ public class LongIdentifierSerializer
     this(null);
   }
 
-  public LongIdentifierSerializer(Class<LongIdentifier> t) {
-    super(t);
+  public LongIdentifierSerializer(final Class<LongIdentifier> identifier) {
+    super(identifier);
   }
 
   @Override
-  public void serialize(LongIdentifier longIdentifier, JsonGenerator jsonGenerator,
-    SerializerProvider serializerProvider) throws IOException {
+  public void serialize(final LongIdentifier longIdentifier, final JsonGenerator jsonGenerator,
+                        final SerializerProvider serializerProvider) throws IOException {
     jsonGenerator.writeNumber(longIdentifier.getValue());
   }
 }

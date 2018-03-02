@@ -40,7 +40,7 @@ public abstract class ServiceClientBuilder<T> {
    *
    * @param serviceInterface The service interface for the client being built.
    */
-  public ServiceClientBuilder(Class<? extends T> serviceInterface) {
+  public ServiceClientBuilder(final Class<? extends T> serviceInterface) {
     this.serviceInterface = serviceInterface;
   }
 
