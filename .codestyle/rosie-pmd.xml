@@ -42,6 +42,17 @@
       An answer (if any) will hopefully appear here: https://github.com/pmd/pmd/issues/933
       -->
     <exclude name="AbstractClassWithoutAbstractMethod" />
+
+    <!--
+      Accessing private constructors through builders is a design element in our projects, so we
+      don't want to make the pattern more complicated just because we're ending up with synthetic
+      accessor methods.
+
+      We can re-evaluate this if we need to slim down the framework to run on embedded or mobile
+      platforms like Android that have method limits; or, if we discover a security concern with
+      the code having synthetic methods generated with package-private access.
+      -->
+    <exclude name="AccessorMethodGeneration" />
   </rule>
 
   <!--
