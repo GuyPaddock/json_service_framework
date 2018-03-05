@@ -83,6 +83,8 @@ implements Comparable<LongIdentifier> {
    *
    */
   private LongIdentifier() {
+    super();
+
     this.value = UNKNOWN_VALUE;
   }
 
