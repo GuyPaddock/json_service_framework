@@ -10,7 +10,12 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class JSONTestHelper {
+public final class JSONTestHelper {
+  /**
+   * Private constructor for singleton utility class.
+   */
+  private JSONTestHelper() {
+  }
 
   /**
    * Sets up a test for AssertJ JSON assertions to leverage Jackson serialization and

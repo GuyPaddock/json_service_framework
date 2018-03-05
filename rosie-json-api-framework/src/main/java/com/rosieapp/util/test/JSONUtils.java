@@ -14,7 +14,13 @@ import com.rosieapp.services.common.model.Model;
 /**
  * Several convenient utility methods, for working with JSON in service model tests.
  */
-public class JSONUtils {
+public final class JSONUtils {
+  /**
+   * Private constructor for singleton utility class.
+   */
+  private JSONUtils() {
+  }
+
   /**
    * Creates a JSON resource converter suitable for use in tests.
    *
