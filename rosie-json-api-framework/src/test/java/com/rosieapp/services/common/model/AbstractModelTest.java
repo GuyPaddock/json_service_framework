@@ -583,8 +583,8 @@ public class AbstractModelTest {
     public String testField;
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-      return super.clone();
+    public TestModel clone() throws CloneNotSupportedException {
+      return (TestModel)super.clone();
     }
   }
 

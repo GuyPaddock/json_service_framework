@@ -122,10 +122,22 @@ implements Model {
   /**
    * {@inheritDoc}
    *
+   * <p>This is a default implementation upon which models that want to implement Cloneable can
+   * build. Subclasses that implement Cloneable must declare a public override of this method that
+   * calls this super-class implementation, casts the return value to match the type of their model,
+   * and clones instance state as desired.
+   *
    * <p>The identifier of the cloned object is automatically reset to a {@link NewModelIdentifier}
-   * placeholder, so it is possible for the clone to be saved as a new, independent model instance.
+   * placeholder, so it is possible for the cloned object to be saved as a new, independent model
+   * instance.
    */
   @Override
+  @SuppressWarnings({
+    // This method provides skeleton code for sub-classes. It is intended to be incomplete.
+    "PMD.CloneMethodMustBePublic",
+    "PMD.CloneMethodMustImplementCloneable",
+    "PMD.CloneMethodReturnTypeMustMatchClassName"
+  })
   protected Object clone() throws CloneNotSupportedException {
     final AbstractModel clone = (AbstractModel)super.clone();
 
