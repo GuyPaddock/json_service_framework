@@ -21,9 +21,10 @@ public final class JSONTestHelper {
    * Sets up a test for AssertJ JSON assertions to leverage Jackson serialization and
    * de-serialization.
    */
+  @SuppressWarnings("PMD.AvoidFieldNameMatchingMethodName")
   public static void configureTestForJackson() {
     Configuration.setDefaults(new Configuration.Defaults() {
-      private final JsonProvider jsonProvider    = new JacksonJsonProvider();
+      private final JsonProvider jsonProvider = new JacksonJsonProvider();
       private final MappingProvider mappingProvider = new JacksonMappingProvider();
 
       @Override
