@@ -28,7 +28,10 @@ import org.junit.runner.RunWith;
 
 @RunWith(Spectrum.class)
 @SuppressWarnings({
+  "PMD.AvoidCatchingNPE",
+  "PMD.AvoidCatchingGenericException",
   "PMD.AvoidDuplicateLiterals",
+  "PMD.EmptyCatchBlock",
   "PMD.NcssCount",
   "PMD.NonStaticInitializer",
   "PMD.TooManyStaticImports"
@@ -76,7 +79,7 @@ public class AbstractModelTest {
             try {
               model.get().assignId(newId.get());
             }
-            catch (Exception ex) {
+            catch (NullPointerException ex) {
               // Silence exception
             }
 
@@ -138,7 +141,7 @@ public class AbstractModelTest {
               try {
                 model.get().assignId(newId.get());
               }
-              catch (Exception ex) {
+              catch (NullPointerException ex) {
                 // Silence exception
               }
 
@@ -164,7 +167,7 @@ public class AbstractModelTest {
               try {
                 model.get().assignId(newId.get());
               }
-              catch (Exception ex) {
+              catch (IllegalStateException ex) {
                 // Silence exception
               }
 
@@ -190,7 +193,7 @@ public class AbstractModelTest {
               try {
                 model.get().assignId(newId.get());
               }
-              catch (Exception ex) {
+              catch (IllegalStateException ex) {
                 // Silence exception
               }
 
