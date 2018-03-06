@@ -81,19 +81,28 @@
     <!-- Customized below -->
     <exclude name="ShortVariable" />
     <exclude name="LongVariable" />
+    <exclude name="TooManyStaticImports" />
   </rule>
 
   <rule ref="category/java/codestyle.xml/ShortVariable">
     <properties>
       <!-- "to", "id", etc are all fine names. Let's NOT force a length > 3. -->
-      <property name="minimum" value="2"/>
+      <property name="minimum" value="2" />
     </properties>
   </rule>
 
   <rule ref="category/java/codestyle.xml/LongVariable">
     <properties>
       <!-- Let us use longer variables -->
-      <property name="minimum" value="26"/>
+      <property name="minimum" value="26" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/codestyle.xml/TooManyStaticImports">
+    <properties>
+      <!-- Suppress this inspection for tests -->
+      <property name="violationSuppressXPath"
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -132,10 +141,29 @@
     <exclude name="StdCyclomaticComplexity" />
 
     <!-- Customized below -->
+    <exclude name="AvoidCatchingGenericException" />
+    <exclude name="ExcessiveImports" />
     <exclude name="ExcessiveParameterList" />
     <exclude name="ExcessivePublicCount" />
     <exclude name="NcssCount" />
     <exclude name="TooManyMethods" />
+    <exclude name="UselessOverridingMethod" />
+  </rule>
+
+  <rule ref="category/java/design.xml/AvoidCatchingGenericException">
+    <properties>
+      <!-- Suppress this inspection for tests -->
+      <property name="violationSuppressXPath"
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/design.xml/ExcessiveImports">
+    <properties>
+      <!-- Suppress this inspection for tests -->
+      <property name="violationSuppressXPath"
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+    </properties>
   </rule>
 
   <rule ref="category/java/design.xml/ExcessiveParameterList">
@@ -154,12 +182,24 @@
     <properties>
       <!-- 50 non-comment lines per method sounds good. -->
       <property name="methodReportLevel" value="50" />
+
+      <!-- Suppress this inspection for tests -->
+      <property name="violationSuppressXPath"
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
   <rule ref="category/java/design.xml/TooManyMethods">
     <properties>
       <property name="maxmethods" value="30" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/design.xml/UselessOverridingMethod">
+    <properties>
+      <!-- Suppress this inspection for tests -->
+      <property name="violationSuppressXPath"
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -187,15 +227,19 @@
         than to document every internal field, since we should not be thinking
         of classes as data objects.
         -->
-      <property name="fieldCommentRequirement" value="Ignored"/>
-      <property name="accessorCommentRequirement" value="Required"/>
+      <property name="fieldCommentRequirement" value="Ignored" />
+      <property name="accessorCommentRequirement" value="Required" />
+
+      <!-- Suppress this inspection for tests -->
+      <property name="violationSuppressXPath"
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
   <rule ref="category/java/documentation.xml/CommentSize">
     <properties>
-      <property name="maxLines" value="100"/>
-      <property name="maxLineLength" value="100"/>
+      <property name="maxLines" value="100" />
+      <property name="maxLineLength" value="100" />
     </properties>
   </rule>
 
@@ -218,8 +262,11 @@
 
     <!-- Customized below -->
     <exclude name="AssignmentInOperand" />
+    <exclude name="AvoidCatchingNPE" />
     <exclude name="AvoidDuplicateLiterals" />
     <exclude name="AvoidLiteralsInIfCondition" />
+    <exclude name="EmptyCatchBlock" />
+    <exclude name="NonStaticInitializer" />
     <exclude name="ProperLogger" />
   </rule>
 
@@ -229,16 +276,44 @@
     </properties>
   </rule>
 
+  <rule ref="category/java/errorprone.xml/AvoidCatchingNPE">
+    <properties>
+      <!-- Suppress this inspection for tests -->
+      <property name="violationSuppressXPath"
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+    </properties>
+  </rule>
+
   <rule ref="category/java/errorprone.xml/AvoidDuplicateLiterals">
     <properties>
       <!-- Ignore, for example, values like "unchecked" in @SuppressWarnings("unchecked") -->
       <property name="skipAnnotations" value="true" />
+
+      <!-- Suppress this inspection for tests -->
+      <property name="violationSuppressXPath"
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
   <rule ref="category/java/errorprone.xml/AvoidLiteralsInIfCondition">
     <properties>
       <property name="ignoreMagicNumbers" value="-1,0,1" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/errorprone.xml/EmptyCatchBlock">
+    <properties>
+      <!-- Suppress this inspection for tests -->
+      <property name="violationSuppressXPath"
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+    </properties>
+  </rule>
+
+  <rule ref="category/java/errorprone.xml/NonStaticInitializer">
+    <properties>
+      <!-- Suppress this inspection for tests -->
+      <property name="violationSuppressXPath"
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 

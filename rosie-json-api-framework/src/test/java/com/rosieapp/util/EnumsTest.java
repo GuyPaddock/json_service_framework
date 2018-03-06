@@ -17,10 +17,6 @@ import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
 @RunWith(Spectrum.class)
-@SuppressWarnings({
-  "PMD.TooManyStaticImports",
-  "PMD.NonStaticInitializer"
-})
 public class EnumsTest {
   {
     describe(".findValueOrThrow", () -> {

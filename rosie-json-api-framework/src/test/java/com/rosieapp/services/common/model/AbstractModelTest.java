@@ -27,15 +27,6 @@ import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
 @RunWith(Spectrum.class)
-@SuppressWarnings({
-  "PMD.AvoidCatchingNPE",
-  "PMD.AvoidCatchingGenericException",
-  "PMD.AvoidDuplicateLiterals",
-  "PMD.EmptyCatchBlock",
-  "PMD.NcssCount",
-  "PMD.NonStaticInitializer",
-  "PMD.TooManyStaticImports"
-})
 public class AbstractModelTest {
   {
     beforeAll(JSONTestHelper::configureTestForJackson);
