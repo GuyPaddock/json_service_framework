@@ -137,15 +137,20 @@ public final class JSONUtils {
    * @throws  DocumentSerializationException
    *          If an issue with the document or its contents prevents creating a JSON representation.
    */
+  @SuppressWarnings("unchecked")
   public static String toJsonString(final JSONAPIDocument<?> document,
                                     final ResourceConverter converter)
   throws DocumentSerializationException {
+    final byte[] jsonStringBytes;
 
     if (document.get() instanceof Iterable) {
-      return new String(converter.writeDocumentCollection((JSONAPIDocument<? extends Iterable<?>>) document));
+      jsonStringBytes =
+        converter.writeDocumentCollection((JSONAPIDocument<? extends Iterable<?>>)document);
+    } else {
+      jsonStringBytes = converter.writeDocument(document);
     }
 
-    return new String(converter.writeDocument(document));
+    return new String(jsonStringBytes);
   }
 
   /**
