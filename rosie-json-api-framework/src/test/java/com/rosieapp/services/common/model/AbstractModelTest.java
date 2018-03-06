@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 @RunWith(Spectrum.class)
 @SuppressWarnings({
   "PMD.AvoidDuplicateLiterals",
+  "PMD.NcssCount",
   "PMD.NonStaticInitializer",
   "PMD.TooManyStaticImports"
 })
