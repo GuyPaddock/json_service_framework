@@ -105,8 +105,11 @@ public abstract class ServiceClientBuilder<T> {
   /**
    * Sets the pre-shared token that is used to authenticate with the Service.
    *
-   * @param authToken The authentication token to use for the next client instance this builder creates.
-   * @return This object, for chaining builder calls.
+   * @param   authToken
+   *          The authentication token to use for the next client instance this builder
+   *          creates.
+   *
+   * @return  This object, for chaining builder calls.
    */
   public ServiceClientBuilder<T> withAuthToken(final String authToken) {
     this.authToken = authToken;
