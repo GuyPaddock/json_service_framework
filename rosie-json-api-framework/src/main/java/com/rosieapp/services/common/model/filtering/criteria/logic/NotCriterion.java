@@ -28,7 +28,7 @@ extends AbstractFilterCriterion<M> {
   public NotCriterion(final FilterCriterion<M> wrappedCriterion) {
     super();
 
-    Objects.requireNonNull(wrappedCriterion, "wrappedCriteria");
+    Objects.requireNonNull(wrappedCriterion, "wrappedCriteria cannot be null");
 
     this.wrappedCriterion = wrappedCriterion;
   }

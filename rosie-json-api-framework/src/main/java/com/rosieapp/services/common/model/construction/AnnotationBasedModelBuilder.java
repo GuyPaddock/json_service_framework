@@ -420,7 +420,7 @@ extends MapBasedModelBuilder<M, B> {
    */
   private void validateFieldName(final String fieldName)
   throws NullPointerException, IllegalArgumentException {
-    Objects.requireNonNull(fieldName, "fieldName must not be null");
+    Objects.requireNonNull(fieldName, "fieldName cannot be null");
 
     if (!this.getTargetFields().containsKey(fieldName)) {
       throw new IllegalArgumentException(

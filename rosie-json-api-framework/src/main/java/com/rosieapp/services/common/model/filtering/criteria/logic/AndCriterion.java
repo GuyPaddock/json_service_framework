@@ -44,7 +44,7 @@ extends AbstractFilterCriterion<M> {
   public AndCriterion(final Collection<FilterCriterion<M>> wrappedCriteria) {
     super();
 
-    Objects.requireNonNull(wrappedCriteria, "wrappedCriteria");
+    Objects.requireNonNull(wrappedCriteria, "wrappedCriteria cannot be null");
 
     this.wrappedCriteria = new LinkedList<>(wrappedCriteria);
   }

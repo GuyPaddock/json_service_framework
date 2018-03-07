@@ -155,8 +155,8 @@ public abstract class ServiceClientBuilder<T> {
    */
   private void validateArguments()
   throws NullPointerException {
-    Objects.requireNonNull(this.baseUrl, "baseUrl must not be null");
-    Objects.requireNonNull(this.authToken, "authToken must not be null");
+    Objects.requireNonNull(this.baseUrl, "baseUrl cannot be null");
+    Objects.requireNonNull(this.authToken, "authToken cannot be null");
   }
 
 
