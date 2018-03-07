@@ -62,6 +62,7 @@ implements Iterable<M> {
                          final int pageLimit) {
     this(requestFunction, 1, pageLimit);
   }
+
   /**
    * Constructor for {@code PagedCollection}.
    *

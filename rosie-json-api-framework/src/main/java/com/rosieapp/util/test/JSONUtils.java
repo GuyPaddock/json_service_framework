@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2017-2018 Rosie Applications, Inc.
  */
+
 package com.rosieapp.util.test;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -11,6 +12,7 @@ import com.github.jasminb.jsonapi.ResourceConverter;
 import com.github.jasminb.jsonapi.SerializationFeature;
 import com.github.jasminb.jsonapi.exceptions.DocumentSerializationException;
 import com.rosieapp.services.common.model.Model;
+
 /**
  * Several convenient utility methods, for working with JSON in service model tests.
  */
