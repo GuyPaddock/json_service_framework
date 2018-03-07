@@ -16,11 +16,11 @@ import com.rosieapp.services.common.model.Model;
 /**
  * Several convenient utility methods, for working with JSON in service model tests.
  */
-public final class JSONUtils {
+public final class JsonUtils {
   /**
    * Private constructor for singleton utility class.
    */
-  private JSONUtils() {
+  private JsonUtils() {
   }
 
   /**
@@ -72,7 +72,7 @@ public final class JSONUtils {
   @SafeVarargs
   public static ResourceConverter createResourceConverterThatIncludesRelationshipsFor(
                                                        final Class<? extends Model>... modelTypes) {
-    final ResourceConverter converter = JSONUtils.createResourceConverterFor(modelTypes);
+    final ResourceConverter converter = JsonUtils.createResourceConverterFor(modelTypes);
 
     converter.enableSerializationOption(SerializationFeature.INCLUDE_RELATIONSHIP_ATTRIBUTES);
 
@@ -95,7 +95,7 @@ public final class JSONUtils {
    */
   public static String toJsonString(final Model model)
   throws DocumentSerializationException {
-    return JSONUtils.toJsonString(model, JSONUtils.createResourceConverterFor(model.getClass()));
+    return JsonUtils.toJsonString(model, JsonUtils.createResourceConverterFor(model.getClass()));
   }
 
   /**
@@ -119,7 +119,7 @@ public final class JSONUtils {
 
     document = new JSONAPIDocument<>(model);
 
-    return JSONUtils.toJsonString(document, converter);
+    return JsonUtils.toJsonString(document, converter);
   }
 
   /**
@@ -170,7 +170,7 @@ public final class JSONUtils {
    */
   public static <T extends Model> T fromJsonString(final String jsonString,
                                                    final Class<T> modelType) {
-    return JSONUtils.fromJsonString(jsonString, modelType, modelType);
+    return JsonUtils.fromJsonString(jsonString, modelType, modelType);
   }
 
   /**
@@ -193,9 +193,9 @@ public final class JSONUtils {
   public static <T extends Model> T fromJsonString(final String jsonString,
                                                    final Class<T> modelType,
                                                    final Class<? extends Model>... modelTypes) {
-    final ResourceConverter converter = JSONUtils.createResourceConverterFor(modelTypes);
+    final ResourceConverter converter = JsonUtils.createResourceConverterFor(modelTypes);
 
-    return JSONUtils.fromJsonString(jsonString, modelType, converter);
+    return JsonUtils.fromJsonString(jsonString, modelType, converter);
   }
 
   /**

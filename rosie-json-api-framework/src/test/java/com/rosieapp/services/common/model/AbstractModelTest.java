@@ -22,7 +22,7 @@ import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import com.rosieapp.services.common.model.identification.NewModelIdentifier;
 import com.rosieapp.services.common.model.identification.StringIdentifier;
 import com.rosieapp.services.common.model.tests.JSONTestHelper;
-import com.rosieapp.util.test.JSONUtils;
+import com.rosieapp.util.test.JsonUtils;
 import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
@@ -479,7 +479,7 @@ public class AbstractModelTest {
           return result;
         });
 
-        final Supplier<String> modelJson = let(() -> JSONUtils.toJsonString(model.get()));
+        final Supplier<String> modelJson = let(() -> JsonUtils.toJsonString(model.get()));
 
         it("can be serialized to JSON-API-compliant JSON", () -> {
           assertThat(modelJson.get())
@@ -510,11 +510,12 @@ public class AbstractModelTest {
         });
 
         final Supplier<ResourceConverter> resourceConverter =
-          let(() -> JSONUtils.createResourceConverterThatIncludesRelationshipsFor(
+          let(() -> JsonUtils.createResourceConverterThatIncludesRelationshipsFor(
             TestModel.class,
             OtherTestModel.class));
 
-        final Supplier<String> modelJson = let(() -> JSONUtils.toJsonString(model2.get(), resourceConverter.get()));
+        final Supplier<String> modelJson = let(() -> JsonUtils
+        .toJsonString(model2.get(), resourceConverter.get()));
 
         it("can be serialized along with its relationships to JSON-API-compliant JSON", () -> {
           assertThat(modelJson.get())
@@ -528,7 +529,7 @@ public class AbstractModelTest {
 
     describe("JSON deserialization behavior", () -> {
       final Supplier<ResourceConverter> converter =
-        let(() -> JSONUtils.createResourceConverterFor(TestModel.class, OtherTestModel.class));
+        let(() -> JsonUtils.createResourceConverterFor(TestModel.class, OtherTestModel.class));
 
       context("JSON-API-compliant JSON that represents a model that has no relationships", () -> {
         final String jsonValue =
@@ -536,7 +537,7 @@ public class AbstractModelTest {
 
         it("can be de-serialized", () -> {
           final TestModel testModel =
-            JSONUtils.fromJsonString(jsonValue, TestModel.class, converter.get());
+            JsonUtils.fromJsonString(jsonValue, TestModel.class, converter.get());
 
           assertThat(testModel).isNotNull();
           assertThat(testModel.getId()).isEqualTo(new LongIdentifier(6));
@@ -555,7 +556,7 @@ public class AbstractModelTest {
           final TestModel      testModel;
 
           otherTestModel =
-            JSONUtils.fromJsonString(jsonValue, OtherTestModel.class, converter.get());
+            JsonUtils.fromJsonString(jsonValue, OtherTestModel.class, converter.get());
 
           assertThat(otherTestModel).isNotNull();
           assertThat(otherTestModel.getId()).isEqualTo(new LongIdentifier(2));
