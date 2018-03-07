@@ -13,6 +13,7 @@ import com.rosieapp.services.common.model.fieldhandling.FieldValueProvider;
 import com.rosieapp.services.common.model.fieldhandling.StrictFieldProvider;
 import com.rosieapp.services.common.model.filtering.ComparisonType;
 import com.rosieapp.services.common.model.filtering.ReflectionBasedFilterBuilder;
+import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -28,8 +29,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-
-import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
