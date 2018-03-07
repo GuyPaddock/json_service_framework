@@ -46,8 +46,8 @@ public abstract class ServiceClientBuilder<T> {
   /**
    * Indicates that the client is being constructed only for performing a
    * health status check, rather than normal calls.
-   * <p>
-   * If the client is constructed for health status checks, it cannot be used to perform other
+   *
+   * <p>If the client is constructed for health status checks, it cannot be used to perform other
    * types of requests, and vice-versa. This is a consequence of the fact that the status check
    * endpoint is not JSON API v1 compliant and therefore requires a special resource converter.
    * This method should be removed if status check responses are made compliant.
@@ -64,8 +64,8 @@ public abstract class ServiceClientBuilder<T> {
   /**
    * Indicates that the client is being constructed for normal calls rather
    * than health status checks.
-   * <p>
-   * If the client is constructed for normal calls, it cannot be used to perform health status
+   *
+   * <p>If the client is constructed for normal calls, it cannot be used to perform health status
    * checks, and vice-versa. This is a consequence of the fact that the status check endpoint is
    * not JSON API v1 compliant and therefore requires a special resource converter. This method
    * should be removed if status check responses are made compliant.

@@ -23,12 +23,12 @@ implements Comparable<LongIdentifier> {
 
 
   /**
-   * Default value for {@code value} used in the default constructor.
-   * <p>
-   * Note: this is an invalid value for an identifier.
+   * A value that signifies an unparseable or unknown long identifier.
    *
+   * <p>By convention, all long identifiers are positive integers, so this value represents an
+   * ID that should never actually appear in a model.
    */
-  public final static long UNKNOWN_VALUE = -1;
+  public static final long UNKNOWN_VALUE = -1;
 
   /**
    * Attempts to parse the provided string as a long integer model identifier.
@@ -77,9 +77,8 @@ implements Comparable<LongIdentifier> {
   /**
    * Default constructor for {@link LongIdentifier}.
    *
-   * Assigns {@code value} with an invalid default value.
-   * <p>
-   * Note: Required by jackson to properly deserialize JSON.
+   * <p>This constructor is required by Jackson to properly initialize the object with a value, so
+   * that the object can be populated while de-serializing JSON.
    *
    */
   private LongIdentifier() {
