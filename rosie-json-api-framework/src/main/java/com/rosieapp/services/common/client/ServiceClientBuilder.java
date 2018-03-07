@@ -118,8 +118,10 @@ public abstract class ServiceClientBuilder<T> {
    * Creates a new service client, using the current values set on this builder.
    *
    * @return The new client instance.
-   * @throws NullPointerException If the {@code baseUrl} or {@code authToken} have not been set on the builder before
-   * calling this method.
+   *
+   * @throws NullPointerException
+   *         If the {@code baseUrl} or {@code authToken} have not been set on the builder before
+   *         calling this method.
    */
   public T build() throws NullPointerException {
     final OkHttpClient client;
