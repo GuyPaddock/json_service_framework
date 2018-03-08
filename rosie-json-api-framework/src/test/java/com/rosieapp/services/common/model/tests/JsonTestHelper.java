@@ -29,12 +29,12 @@ public final class JsonTestHelper {
 
       @Override
       public JsonProvider jsonProvider() {
-        return jsonProvider;
+        return this.jsonProvider;
       }
 
       @Override
       public MappingProvider mappingProvider() {
-        return mappingProvider;
+        return this.mappingProvider;
       }
 
       @Override
