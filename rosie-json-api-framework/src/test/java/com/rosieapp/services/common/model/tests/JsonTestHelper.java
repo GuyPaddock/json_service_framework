@@ -10,11 +10,11 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import java.util.EnumSet;
 import java.util.Set;
 
-public final class JSONTestHelper {
+public final class JsonTestHelper {
   /**
    * Private constructor for singleton utility class.
    */
-  private JSONTestHelper() {
+  private JsonTestHelper() {
   }
 
   /**
