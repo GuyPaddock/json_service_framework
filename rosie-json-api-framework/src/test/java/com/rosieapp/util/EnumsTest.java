@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2017-2018 Rosie Applications, Inc.
  */
+
 package com.rosieapp.util;
 
 import static com.greghaskins.spectrum.dsl.specification.Specification.context;
@@ -29,8 +30,8 @@ public class EnumsTest {
               Enums.findValueOrThrow(enumClass.get(), (value) -> true);
             })
             .withMessage(
-              "No `com.rosieapp.util.EnumsTest.EmptyEnum` was found that matched the specified " +
-              "filter.")
+              "No `com.rosieapp.util.EnumsTest.EmptyEnum` was found that matched the specified "
+              + "filter.")
             .withNoCause();
         });
       });
@@ -47,8 +48,8 @@ public class EnumsTest {
                 Enums.findValueOrThrow(enumClass.get(), predicate.get());
               })
               .withMessage(
-                "No `com.rosieapp.util.EnumsTest.Colors` was found that matched the specified " +
-                "filter.")
+                "No `com.rosieapp.util.EnumsTest.Colors` was found that matched the specified "
+                + "filter.")
               .withNoCause();
           });
         });
@@ -64,8 +65,8 @@ public class EnumsTest {
         });
 
         context("when the predicate matches multiple values", () -> {
-          final Supplier<Predicate<Colors>> predicate = let(() ->
-            (color) -> !Arrays.asList("RED", "WHITE").contains(color.name()));
+          final Supplier<Predicate<Colors>> predicate =
+            let(() -> (color) -> !Arrays.asList("RED", "WHITE").contains(color.name()));
 
           it("returns the first matching value, according to the order within the enum", () -> {
             assertThat(Enums.findValueOrThrow(enumClass.get(), predicate.get()))
@@ -77,7 +78,7 @@ public class EnumsTest {
   }
 
   private enum EmptyEnum {
-  };
+  }
 
   private enum Colors {
     RED,

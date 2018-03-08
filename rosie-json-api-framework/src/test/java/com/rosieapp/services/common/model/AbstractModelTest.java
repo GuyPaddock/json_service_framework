@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2017-2018 Rosie Applications, Inc.
  */
+
 package com.rosieapp.services.common.model;
 
 import static com.greghaskins.spectrum.dsl.specification.Specification.beforeAll;
@@ -69,8 +70,7 @@ public class AbstractModelTest {
           it("does not change the ID of the model", () -> {
             try {
               model.get().assignId(newId.get());
-            }
-            catch (NullPointerException ex) {
+            } catch (NullPointerException ex) {
               // Silence exception
             }
 
@@ -131,8 +131,7 @@ public class AbstractModelTest {
             it("does not change the ID of the model", () -> {
               try {
                 model.get().assignId(newId.get());
-              }
-              catch (NullPointerException ex) {
+              } catch (NullPointerException ex) {
                 // Silence exception
               }
 
@@ -149,16 +148,15 @@ public class AbstractModelTest {
                   model.get().assignId(newId.get());
                 })
                 .withMessage(
-                  "This model already has an existing identifier set. An attempt was made to " +
-                  "change the identifier from `8675309` to `123456`")
+                  "This model already has an existing identifier set. An attempt was made to "
+                  + "change the identifier from `8675309` to `123456`")
                 .withNoCause();
             });
 
             it("does not make any changes to the model's ID", () -> {
               try {
                 model.get().assignId(newId.get());
-              }
-              catch (IllegalStateException ex) {
+              } catch (IllegalStateException ex) {
                 // Silence exception
               }
 
@@ -175,16 +173,15 @@ public class AbstractModelTest {
                   model.get().assignId(newId.get());
                 })
                 .withMessage(
-                  "This model already has an existing identifier set. An attempt was made to " +
-                  "change the identifier from `8675309` to `null`")
+                  "This model already has an existing identifier set. An attempt was made to "
+                  + "change the identifier from `8675309` to `null`")
                 .withNoCause();
             });
 
             it("does not make any changes to the model's ID", () -> {
               try {
                 model.get().assignId(newId.get());
-              }
-              catch (IllegalStateException ex) {
+              } catch (IllegalStateException ex) {
                 // Silence exception
               }
 
