@@ -219,7 +219,8 @@ public class AbstractModelTest {
       });
 
       context("when the model has an ID assigned that is not a placeholder", () -> {
-        final Supplier<ModelIdentifier> identifier = let(() -> new StringIdentifier("yabba-dabba-doo"));
+        final Supplier<ModelIdentifier> identifier =
+          let(() -> new StringIdentifier("yabba-dabba-doo"));
 
         final Supplier<Model> model = let(() -> {
           final Model result = new TestModel();
@@ -259,7 +260,8 @@ public class AbstractModelTest {
       });
 
       context("when the model has an ID assigned that is not a placeholder", () -> {
-        final Supplier<ModelIdentifier> identifier = let(() -> new StringIdentifier("yabba-dabba-doo"));
+        final Supplier<ModelIdentifier> identifier =
+          let(() -> new StringIdentifier("yabba-dabba-doo"));
 
         final Supplier<Model> model = let(() -> {
           final Model result = new TestModel();
@@ -439,7 +441,8 @@ public class AbstractModelTest {
       });
 
       context("when the model is not new", () -> {
-        final Supplier<ModelIdentifier> originalId = let(() -> new StringIdentifier("Existing Model"));
+        final Supplier<ModelIdentifier> originalId =
+          let(() -> new StringIdentifier("Existing Model"));
 
         beforeEach(() -> {
           model.get().assignId(originalId.get());
@@ -520,9 +523,10 @@ public class AbstractModelTest {
         it("can be serialized along with its relationships to JSON-API-compliant JSON", () -> {
           assertThat(modelJson.get())
             .isEqualTo(
-              "{\"data\":{\"type\":\"other_test\",\"id\":\"2\",\"attributes\":{\"test_field2\":\"batman\"},"
-              + "\"relationships\":{\"other_model\":{\"data\":{\"type\":\"test\",\"id\":\"1\"}}}},"
-              + "\"included\":[{\"type\":\"test\",\"id\":\"1\",\"attributes\":{\"test_field\":\"abc123\"}}]}");
+              "{\"data\":{\"type\":\"other_test\",\"id\":\"2\",\"attributes\":{\"test_field2\":"
+              + "\"batman\"},\"relationships\":{\"other_model\":{\"data\":{\"type\":\"test\","
+              + "\"id\":\"1\"}}}},\"included\":[{\"type\":\"test\",\"id\":\"1\",\"attributes\":{"
+              + "\"test_field\":\"abc123\"}}]}");
         });
       });
     });
@@ -547,9 +551,10 @@ public class AbstractModelTest {
 
       context("JSON-API-compliant JSON that represents a model and its relationships", () -> {
         final String jsonValue =
-          "{\"data\":{\"type\":\"other_test\",\"id\":\"2\",\"attributes\":{\"test_field2\":\"batman\"},"
-          + "\"relationships\":{\"other_model\":{\"data\":{\"type\":\"test\",\"id\":\"1\"}}}},"
-          + "\"included\":[{\"type\":\"test\",\"id\":\"1\",\"attributes\":{\"test_field\":\"abc123\"}}]}";
+          "{\"data\":{\"type\":\"other_test\",\"id\":\"2\",\"attributes\":{\"test_field2\":"
+          + "\"batman\"},\"relationships\":{\"other_model\":{\"data\":{\"type\":\"test\","
+          + "\"id\":\"1\"}}}},\"included\":[{\"type\":\"test\",\"id\":\"1\",\"attributes\":"
+          + "{\"test_field\":\"abc123\"}}]}";
 
         it("can be de-serialized", () -> {
           final OtherTestModel otherTestModel;

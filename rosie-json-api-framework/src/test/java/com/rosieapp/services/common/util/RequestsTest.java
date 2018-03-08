@@ -25,14 +25,18 @@ public class RequestsTest {
                 Requests.failureResponseToString("context message", response);
               })
               .withMessage(
-                  "Response did not fail -- it was successful. This method must not be called for " +
-                      "successful responses.")
+                  "Response did not fail -- it was successful. This method must not be called "
+                  + "for successful responses.")
               .withNoCause();
         });
       });
 
       context("when given an error response that has a message and an error body", () -> {
-        final Response<String> response = Response.error(400, ResponseBody.create(MediaType.parse("application/json"),"error_body_string"));
+        final Response<String> response =
+          Response.error(
+            400,
+            ResponseBody.create(MediaType.parse("application/json"), "error_body_string"));
+
         it("returns a string describing the failure", () -> {
           assertThat(Requests.failureResponseToString("context_message",response))
               .isEqualTo("context_message: 400 - Response.error() error_body_string");
@@ -40,13 +44,16 @@ public class RequestsTest {
       });
 
       context("when given an error response that has no message but has an error body", () -> {
-        final Response<String> response = Response.error(ResponseBody.create(MediaType.parse("application/json"),"error_body_string"),
+        final Response<String> response =
+          Response.error(
+            ResponseBody.create(MediaType.parse("application/json"), "error_body_string"),
             (new okhttp3.Response.Builder()).code(400)
                 .message("")
                 .protocol(Protocol.HTTP_1_1)
                 .request((new okhttp3.Request.Builder())
                     .url("http://localhost/").build())
                 .build());
+
         it("returns a string describing the failure without a message", () -> {
           assertThat(Requests.failureResponseToString("context_message",response))
               .isEqualTo("context_message: 400 error_body_string");
@@ -54,7 +61,9 @@ public class RequestsTest {
       });
 
       context("when given an error response that has a message but an empty error body", () -> {
-        final Response<String> response = Response.error(400, ResponseBody.create(MediaType.parse("application/json"),""));
+        final Response<String> response =
+          Response.error(400, ResponseBody.create(MediaType.parse("application/json"), ""));
+
         it("returns a string describing the failure without an error body", () -> {
           assertThat(Requests.failureResponseToString("context_message",response))
               .isEqualTo("context_message: 400 - Response.error()");

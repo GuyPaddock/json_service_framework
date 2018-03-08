@@ -54,10 +54,12 @@ public class EnumsTest {
         });
 
         context("when the predicate matches one of the values", () -> {
-          final Supplier<Predicate<Colors>> predicate = let(() -> (color) -> color.name().equals("WHITE"));
+          final Supplier<Predicate<Colors>> predicate =
+            let(() -> (color) -> color.name().equals("WHITE"));
 
           it("returns the matching value", () -> {
-            assertThat(Enums.findValueOrThrow(enumClass.get(), predicate.get())).isEqualTo(Colors.WHITE);
+            assertThat(Enums.findValueOrThrow(enumClass.get(), predicate.get()))
+              .isEqualTo(Colors.WHITE);
           });
         });
 
@@ -66,7 +68,8 @@ public class EnumsTest {
             (color) -> !Arrays.asList("RED", "WHITE").contains(color.name()));
 
           it("returns the first matching value, according to the order within the enum", () -> {
-            assertThat(Enums.findValueOrThrow(enumClass.get(), predicate.get())).isEqualTo(Colors.BLUE);
+            assertThat(Enums.findValueOrThrow(enumClass.get(), predicate.get()))
+              .isEqualTo(Colors.BLUE);
           });
         });
       });
