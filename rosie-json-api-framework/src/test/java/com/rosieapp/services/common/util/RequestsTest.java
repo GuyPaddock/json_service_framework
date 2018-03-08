@@ -5,12 +5,12 @@ import static com.greghaskins.spectrum.dsl.specification.Specification.context;
 import static com.greghaskins.spectrum.dsl.specification.Specification.it;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
+
 import com.greghaskins.spectrum.Spectrum;
 import okhttp3.MediaType;
 import okhttp3.Protocol;
 import okhttp3.ResponseBody;
 import org.junit.runner.RunWith;
-
 import retrofit2.Response;
 
 @RunWith(Spectrum.class)
