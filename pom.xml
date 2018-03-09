@@ -33,5 +33,6 @@
     <module>rosie-loyalty-client</module>
     <module>openicf-rosie-loyalty-connector</module>
     <module>rosie-ecom-client</module>
+    <module>openicf-rosie-ecom-connector</module>
   </modules>
 </project>
