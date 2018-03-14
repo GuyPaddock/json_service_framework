@@ -1,3 +1,25 @@
+version: "2"
+checks:
+  argument-count:
+    # Handled by PMD
+    enabled: false
+  file-lines:
+    # Handled by PMD
+    enabled: false
+  method-count:
+    # Handled by PMD
+    enabled: false
+  method-lines:
+    # Handled by PMD
+    enabled: false
+  return-statements:
+    # Handled by PMD
+    enabled: false
+  method-complexity:
+    # Overlaps a bit with PMD + Sonar, but is still slightly different than Sonar's Cognitive
+    # Complexity
+    config:
+      threshold: 7
 plugins:
   checkstyle:
     enabled: true

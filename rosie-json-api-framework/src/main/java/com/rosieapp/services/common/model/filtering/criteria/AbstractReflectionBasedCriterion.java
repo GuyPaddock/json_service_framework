@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.filtering.criteria;
 
 import com.rosieapp.services.common.model.Model;
@@ -15,18 +19,20 @@ extends AbstractFilterCriterion<M> {
 
   /**
    * Constructor for {@code AbstractReflectionBasedCriterion}.
-   * <p>
-   * Initializes a criterion that matches against the specified field of the model.
+   *
+   * <p>Initializes a criterion that matches against the specified field of the model.
    *
    * @param targetField
    *        The field in the model that will be checked against this criterion.
    */
   public AbstractReflectionBasedCriterion(final Field targetField) {
+    super();
+
     this.targetField = targetField;
   }
 
   @Override
-  public boolean matches(M model) {
+  public boolean matches(final M model) {
     final Field field = this.targetField;
 
     if (!field.isAccessible()) {
@@ -35,8 +41,8 @@ extends AbstractFilterCriterion<M> {
 
     try {
       return valueMatches(field.get(model), model, field);
-    } catch (IllegalAccessException ex) {
-      throw new RuntimeException(
+    } catch (final IllegalAccessException ex) {
+      throw new UnsupportedOperationException(
         String.format(
           "Unexpectedly failed to access field `%s` on model of type `%s`: %s",
           field.getName(),

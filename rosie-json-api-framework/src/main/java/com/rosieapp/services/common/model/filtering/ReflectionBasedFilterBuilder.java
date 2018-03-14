@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.filtering;
 
 import com.rosieapp.services.common.model.Model;
@@ -18,14 +22,16 @@ import java.util.Map;
  *        The builder class itself. (This must be the same type as the class being defined, to avoid
  *        a {@code ClassCastException}).
  */
-public class ReflectionBasedFilterBuilder<M extends Model, B extends ReflectionBasedFilterBuilder<M, B>>
+@SuppressWarnings("PMD.ExcessivePublicCount") // Fluent interface
+public class ReflectionBasedFilterBuilder<M extends Model,
+                                          B extends ReflectionBasedFilterBuilder<M, B>>
 extends CriteriaBasedFilterBuilder<M, B> {
-  final Map<String, Field> fieldMap;
+  private final Map<String, Field> fieldMap;
 
   /**
    * Constructor for {@code ReflectionBasedFilterBuilder}.
-   * <p>
-   * Initializes a new reflection-based builder with the provided map of fields. This map is
+   *
+   * <p>Initializes a new reflection-based builder with the provided map of fields. This map is
    * typically provided by a corresponding
    * {@link com.rosieapp.services.common.model.construction.MapBasedModelBuilder} instance that has
    * built up its own map of fields using its intimate level of knowledge about the model it builds.
@@ -34,6 +40,8 @@ extends CriteriaBasedFilterBuilder<M, B> {
    *        The map from field names to reflection field objects.
    */
   public ReflectionBasedFilterBuilder(final Map<String, Field> fieldMap) {
+    super();
+
     this.fieldMap = Collections.unmodifiableMap(new HashMap<>(fieldMap));
   }
 
@@ -294,14 +302,18 @@ extends CriteriaBasedFilterBuilder<M, B> {
   /**
    * Adds a criterion to this filter for matching the provided model filter against the model
    * reference field having the specified name.
-   * <p>
-   * The field must be one that was registered in the map that was provided to this builder when
+   *
+   * <p>The field must be one that was registered in the map that was provided to this builder when
    * it was created, or an exception will be raised.
    *
    * @param   fieldName
    *          The name of the target field.
    * @param   modelFilter
    *          The filter to evaluate on the model that the field references.
+   *
+   * @param   <S>
+   *          The sub-model; in other words, the type of model that is being referenced by the
+   *          top-level model.
    *
    * @return  This object, for chaining builder calls.
    *
@@ -323,6 +335,10 @@ extends CriteriaBasedFilterBuilder<M, B> {
    * @param   modelFilter
    *          The filter to evaluate on the model that the field references.
    *
+   * @param   <S>
+   *          The sub-model; in other words, the type of model that is being referenced by the
+   *          top-level model.
+   *
    * @return  This object, for chaining builder calls.
    *
    * @throws  IllegalArgumentException
@@ -339,8 +355,8 @@ extends CriteriaBasedFilterBuilder<M, B> {
   //================================================================================================
   /**
    * Adds a criterion to this filter for matching values against the field with the specified name.
-   * <p>
-   * The field must be one that was registered in the map that was provided to this builder when
+   *
+   * <p>The field must be one that was registered in the map that was provided to this builder when
    * it was created, or an exception will be raised.
    *
    * @param   fieldName

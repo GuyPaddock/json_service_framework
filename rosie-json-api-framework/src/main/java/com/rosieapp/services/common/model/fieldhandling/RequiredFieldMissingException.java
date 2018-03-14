@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.fieldhandling;
 
 /**
@@ -6,7 +10,7 @@ package com.rosieapp.services.common.model.fieldhandling;
  */
 public class RequiredFieldMissingException
 extends RuntimeException {
-  public RequiredFieldMissingException(String fieldName) {
+  public RequiredFieldMissingException(final String fieldName) {
     super(
       String.format(
         "`%s` is a required field that has not been provided with a value.", fieldName));

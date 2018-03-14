@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.util.test;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -8,14 +12,21 @@ import com.github.jasminb.jsonapi.ResourceConverter;
 import com.github.jasminb.jsonapi.SerializationFeature;
 import com.github.jasminb.jsonapi.exceptions.DocumentSerializationException;
 import com.rosieapp.services.common.model.Model;
+
 /**
  * Several convenient utility methods, for working with JSON in service model tests.
  */
-public class JSONUtils {
+public final class JsonUtils {
+  /**
+   * Private constructor for singleton utility class.
+   */
+  private JsonUtils() {
+  }
+
   /**
    * Creates a JSON resource converter suitable for use in tests.
-   * <p>
-   * The resource converter is configured as follows:
+   *
+   * <p>The resource converter is configured as follows:
    * <ul>
    *   <li>Unknown / unmapped properties are ignored during deserialization.</li>
    * </ul>
@@ -26,7 +37,8 @@ public class JSONUtils {
    * @return  The new resource converter.
    */
   @SafeVarargs
-  public static ResourceConverter createResourceConverterFor(Class<? extends Model>... modelTypes) {
+  public static ResourceConverter createResourceConverterFor(
+                                                       final Class<? extends Model>... modelTypes) {
     final ResourceConverter converter;
     final ObjectMapper      mapper = new ObjectMapper();
 
@@ -44,8 +56,8 @@ public class JSONUtils {
 
   /**
    * Creates a JSON resource converter suitable for use in tests.
-   * <p>
-   * The resource converter is configured as follows:
+   *
+   * <p>The resource converter is configured as follows:
    * <ul>
    *   <li>All relationships are automatically included in the {@code included} portion of each JSON
    *       API response.</li>
@@ -60,7 +72,7 @@ public class JSONUtils {
   @SafeVarargs
   public static ResourceConverter createResourceConverterThatIncludesRelationshipsFor(
                                                        final Class<? extends Model>... modelTypes) {
-    final ResourceConverter converter = JSONUtils.createResourceConverterFor(modelTypes);
+    final ResourceConverter converter = JsonUtils.createResourceConverterFor(modelTypes);
 
     converter.enableSerializationOption(SerializationFeature.INCLUDE_RELATIONSHIP_ATTRIBUTES);
 
@@ -69,8 +81,8 @@ public class JSONUtils {
 
   /**
    * Converts the provided model to a string of JSON-API-compliant JSON.
-   * <p>
-   * A resource converter is constructed on-the-fly to handle the operation.
+   *
+   * <p>A resource converter is constructed on-the-fly to handle the operation.
    *
    * @param   model
    *          The model to convert to JSON.
@@ -83,7 +95,7 @@ public class JSONUtils {
    */
   public static String toJsonString(final Model model)
   throws DocumentSerializationException {
-    return JSONUtils.toJsonString(model, JSONUtils.createResourceConverterFor(model.getClass()));
+    return JsonUtils.toJsonString(model, JsonUtils.createResourceConverterFor(model.getClass()));
   }
 
   /**
@@ -107,14 +119,14 @@ public class JSONUtils {
 
     document = new JSONAPIDocument<>(model);
 
-    return JSONUtils.toJsonString(document, converter);
+    return JsonUtils.toJsonString(document, converter);
   }
 
   /**
    * Converts the provided JSON API document to a string of JSON using the provided resource
    * converter.
-   * <p>
-   * This is useful for performing lower-level introspection of a JSON API response (i.e. dumping
+   *
+   * <p>This is useful for performing lower-level introspection of a JSON API response (i.e. dumping
    * a JSON API document that has already been parsed back into JSON format).
    *
    * @param   document
@@ -127,15 +139,20 @@ public class JSONUtils {
    * @throws  DocumentSerializationException
    *          If an issue with the document or its contents prevents creating a JSON representation.
    */
+  @SuppressWarnings("unchecked")
   public static String toJsonString(final JSONAPIDocument<?> document,
                                     final ResourceConverter converter)
   throws DocumentSerializationException {
+    final byte[] jsonStringBytes;
 
     if (document.get() instanceof Iterable) {
-      return new String(converter.writeDocumentCollection((JSONAPIDocument<? extends Iterable<?>>) document));
+      jsonStringBytes =
+        converter.writeDocumentCollection((JSONAPIDocument<? extends Iterable<?>>)document);
+    } else {
+      jsonStringBytes = converter.writeDocument(document);
     }
 
-    return new String(converter.writeDocument(document));
+    return new String(jsonStringBytes);
   }
 
   /**
@@ -153,7 +170,7 @@ public class JSONUtils {
    */
   public static <T extends Model> T fromJsonString(final String jsonString,
                                                    final Class<T> modelType) {
-    return JSONUtils.fromJsonString(jsonString, modelType, modelType);
+    return JsonUtils.fromJsonString(jsonString, modelType, modelType);
   }
 
   /**
@@ -176,9 +193,9 @@ public class JSONUtils {
   public static <T extends Model> T fromJsonString(final String jsonString,
                                                    final Class<T> modelType,
                                                    final Class<? extends Model>... modelTypes) {
-    final ResourceConverter converter = JSONUtils.createResourceConverterFor(modelTypes);
+    final ResourceConverter converter = JsonUtils.createResourceConverterFor(modelTypes);
 
-    return JSONUtils.fromJsonString(jsonString, modelType, converter);
+    return JsonUtils.fromJsonString(jsonString, modelType, converter);
   }
 
   /**

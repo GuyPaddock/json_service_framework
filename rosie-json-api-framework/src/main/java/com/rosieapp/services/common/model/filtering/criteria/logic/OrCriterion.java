@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.filtering.criteria.logic;
 
 import com.rosieapp.services.common.model.Model;
@@ -15,12 +19,12 @@ import java.util.Objects;
  */
 public class OrCriterion<M extends Model>
 extends AbstractFilterCriterion<M> {
-  final List<FilterCriterion<M>> wrappedCriteria;
+  private final List<FilterCriterion<M>> wrappedCriteria;
 
   /**
    * Constructor for {@code OrCriterion}.
-   * <p>
-   * Initializes a new criterion that matches if any of the provided criteria match.
+   *
+   * <p>Initializes a new criterion that matches if any of the provided criteria match.
    *
    * @param wrappedCriteria
    *        The criteria to logically OR together.
@@ -32,14 +36,16 @@ extends AbstractFilterCriterion<M> {
 
   /**
    * Constructor for {@code OrCriterion}.
-   * <p>
-   * Initializes a new criterion that matches if any of the provided criteria match.
+   *
+   * <p>Initializes a new criterion that matches if any of the provided criteria match.
    *
    * @param wrappedCriteria
    *        The criteria to logically OR together.
    */
   public OrCriterion(final Collection<FilterCriterion<M>> wrappedCriteria) {
-    Objects.requireNonNull(wrappedCriteria, "wrappedCriteria");
+    super();
+
+    Objects.requireNonNull(wrappedCriteria, "wrappedCriteria cannot be null");
 
     this.wrappedCriteria = new LinkedList<>(wrappedCriteria);
   }

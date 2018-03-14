@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.filtering;
 
 import com.rosieapp.services.common.model.Model;
@@ -11,11 +15,12 @@ import java.util.function.Function;
 
 /**
  * An enumeration of the possible ways to match the value of a field against a known target.
- * <p>
- * Each enum value can be used to produce a concrete {@link FilterCriterion} for matching the value
- * of a particular field against a known value via either the {@link #buildFor(Function, Object)} or
- * {@link #buildFor(Field, Object)} methods.
+ *
+ * <p>Each enum value can be used to produce a concrete {@link FilterCriterion} for matching the
+ * value of a particular field against a known value via either the
+ * {@link #buildFor(Function, Object)} or {@link #buildFor(Field, Object)} methods.
  */
+@SuppressWarnings("checkstyle:MethodParamPad")
 public enum ComparisonType {
   EQUAL_TO              (Objects::equals),
   LESS_THAN             ((first, second) -> compare(first, second, -1)),
@@ -30,8 +35,8 @@ public enum ComparisonType {
 
   /**
    * Private constructor for {@code ComparisonType}.
-   * <p>
-   * The provided function will be used by the {@link FilterCriterion} object that is returned by
+   *
+   * <p>The provided function will be used by the {@link FilterCriterion} object that is returned by
    * this enum value whenever the criterion needs to compare a field value against a particular
    * value.
    *
@@ -45,12 +50,16 @@ public enum ComparisonType {
   /**
    * Builds a criterion that compares the value of a field returned by the given value provider
    * against the provided target value.
-   * <p>
-   * The nature of the comparison is dictated by the enum value on which this method is being
+   *
+   * <p>The nature of the comparison is dictated by the enum value on which this method is being
    * invoked.
    *
+   * @param   valueProvider
+   *          The function that is expected to return the appropriate field value when given each
+   *          model instance.
    * @param   targetValue
-   *          The value the field must have for the criterion to match.
+   *          The value the field must have for the criterion to match. (This is compared against
+   *          the values returned by {@code valueProvider}.
    *
    * @param   <M>
    *          The type of model that the criterion applies to.
@@ -65,8 +74,8 @@ public enum ComparisonType {
   /**
    * Builds a criterion that compares the value of the specified field against the provided target
    * value.
-   * <p>
-   * The nature of the comparison is dictated by the enum value on which this method is being
+   *
+   * <p>The nature of the comparison is dictated by the enum value on which this method is being
    * invoked.
    *
    * @param   targetField
@@ -88,9 +97,9 @@ public enum ComparisonType {
   /**
    * Compares two objects via their {@code compare()} method, and checks the result against the
    * provided magnitude signs.
-   * <p>
-   * The two objects are considered a match if the signum of comparing the first against the second
-   * matches any of the provided signums. For example, if the result returned by
+   *
+   * <p>The two objects are considered a match if the signum of comparing the first against the
+   * second matches any of the provided signums. For example, if the result returned by
    * {@link Comparable#compareTo(Object)} when comparing {@code first} and {@code second} was
    * {@code -6}, and the {@code targetSignums} included {@code -1}, then the objects are a match
    * because {@code signum(-6) == -1}.
@@ -116,13 +125,13 @@ public enum ComparisonType {
    */
   protected static <T extends Comparable<T>> boolean compare(final Object first,
                                                              final Object second,
-                                                             int... targetSignums) {
+                                                             final int... targetSignums) {
     boolean   matches          = false;
     final T   comparableFirst  = toComparable(first),
               comparableSecond = toComparable(second);
     final int compareResult    = comparableFirst.compareTo(comparableSecond);
 
-    for (int targetSigNum : targetSignums) {
+    for (final int targetSigNum : targetSignums) {
       if (Integer.signum(compareResult) == Integer.signum(targetSigNum)) {
         matches = true;
         break;
@@ -145,7 +154,7 @@ public enum ComparisonType {
    * @return  {@code true} if the string representation of {@code needle} is found in
    *          {@code haystack}; or, {@code false}, otherwise.
    */
-  private static boolean checkContains(Object haystack, Object needle) {
+  private static boolean checkContains(final Object haystack, final Object needle) {
     return Objects.toString(haystack).contains(Objects.toString(needle));
   }
 
@@ -162,7 +171,7 @@ public enum ComparisonType {
    * @return  {@code true} if the string representation of {@code needle} is found at the start of
    *          {@code haystack}; or, {@code false}, otherwise.
    */
-  private static Boolean checkStartsWith(Object haystack, Object needle) {
+  private static Boolean checkStartsWith(final Object haystack, final Object needle) {
     return Objects.toString(haystack).startsWith(Objects.toString(needle));
   }
 
@@ -179,16 +188,16 @@ public enum ComparisonType {
    * @return  {@code true} if the string representation of {@code needle} is found at the end of
    *          {@code haystack}; or, {@code false}, otherwise.
    */
-  private static Boolean checkEndsWith(Object haystack, Object needle) {
+  private static Boolean checkEndsWith(final Object haystack, final Object needle) {
     return Objects.toString(haystack).endsWith(Objects.toString(needle));
   }
 
   /**
    * Uses voodoo and black magic to coerce an object into being an instance of {@code Comparable}.
-   * <p>
-   * The object must already extend from a class that implements the {@link Comparable} interface.
-   * All this method really does is ensure that it's safe to typecast the object for comparison,
-   * throwing an appropriate, helpful error message if it is not safe.
+   *
+   * <p>The object must already extend from a class that implements the {@link Comparable}
+   * interface. All this method really does is ensure that it's safe to typecast the object for
+   * comparison, throwing an appropriate, helpful error message if it is not safe.
    *
    * @param   object
    *          The object to typecast.
@@ -206,8 +215,8 @@ public enum ComparisonType {
     if (!(object instanceof Comparable)) {
       throw new ClassCastException(
         MessageFormat.format(
-          "Provided object is of type {0}, which does not implement Comparable. It must inherit " +
-          "from Comparable to support approximate matching.",
+          "Provided object is of type {0}, which does not implement Comparable. It must inherit "
+          + "from Comparable to support approximate matching.",
           object.getClass().getCanonicalName()));
     }
 

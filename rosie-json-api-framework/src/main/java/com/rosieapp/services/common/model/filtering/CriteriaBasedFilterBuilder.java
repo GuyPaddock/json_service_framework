@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.filtering;
 
 import com.rosieapp.services.common.model.Model;
@@ -15,7 +19,7 @@ import java.util.List;
  */
 public class CriteriaBasedFilterBuilder<M extends Model, B extends CriteriaBasedFilterBuilder<M, B>>
 implements ModelFilterBuilder<M> {
-  final List<FilterCriterion<M>> criteria;
+  private final List<FilterCriterion<M>> criteria;
 
   /**
    * Default constructor for {@code CriteriaBasedFilterBuilder}.
@@ -41,9 +45,9 @@ implements ModelFilterBuilder<M> {
 
   @Override
   public ModelFilter<M> build() throws UnsupportedOperationException {
-    final CriteriaBasedFilter<M>   filter;
+    final CriteriaBasedFilter<M> filter;
 
-    filter = new CriteriaBasedFilter<>(criteria);
+    filter = new CriteriaBasedFilter<>(this.criteria);
 
     return filter;
   }

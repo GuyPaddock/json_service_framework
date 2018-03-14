@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.construction;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
@@ -12,9 +16,9 @@ import java.util.Optional;
 
 /**
  * Optional, abstract parent class provided for use by all model builders in the system.
- * <p>
- * This implementation provides built-in handling for the identifier fields, which require special
- * handling for JSON API serialization and de-serialization.
+ *
+ * <p>This implementation provides built-in handling for the identifier fields, which require
+ * special handling for JSON API serialization and de-serialization.
  *
  * @param <M>
  *        The type of model that the builder builds.
@@ -32,7 +36,7 @@ implements ModelBuilder<M> {
   /**
    * Default constructor for {@link AbstractModelBuilder}.
    *
-   * Initializes the model builder to strictly validate required fields.
+   * <p>Initializes the model builder to strictly validate required fields.
    */
   protected AbstractModelBuilder() {
     this(new StrictFieldProvider());
@@ -51,8 +55,8 @@ implements ModelBuilder<M> {
 
   /**
    * Builder method for constructing a model with an identifier derived by parsing a String value.
-   * <p>
-   * The String must represent either a UUID or a long integer value.
+   *
+   * <p>The String must represent either a UUID or a long integer value.
    *
    * @param   identifier
    *          The string from an identifier will be parsed.
@@ -106,8 +110,8 @@ implements ModelBuilder<M> {
 
   /**
    * Builds a null-safe identifier for the model.
-   * <p>
-   * If an identifier was not provided via {@link #withId(ModelIdentifier)} or its permutations,
+   *
+   * <p>If an identifier was not provided via {@link #withId(ModelIdentifier)} or its permutations,
    * this method will automatically produce a {@link NewModelIdentifier} instead, to ensure that
    * locally-produced objects never have a {@code null} identifier.
    *
@@ -120,13 +124,11 @@ implements ModelBuilder<M> {
   /**
    * Requests, optionally validates, and then returns the value to use when populating the specified
    * required field for a model being constructed by this builder.
-   * <p>
-   * The request is delegated to the field value provider. If this builder has not been provided
+   *
+   * <p>The request is delegated to the field value provider. If this builder has not been provided
    * with a value for the field (i.e. {@code fieldValue} is {@code null}), the field provider may
    * choose to communicate this by raising an {@link IllegalStateException}, or it may simply supply
    * {@code null} (or a different value of its own choosing) in place of the missing value.
-   *
-   * @see     FieldValueProvider
    *
    * @param   fieldValue
    *          The current value this builder has for the field.
@@ -144,6 +146,8 @@ implements ModelBuilder<M> {
    * @throws  IllegalStateException
    *          If the required field value is {@code null} or invalid, and the field value provider
    *          considers this to be an error.
+   *
+   * @see     FieldValueProvider
    */
   protected <F> F getRequiredField(final F fieldValue, final String fieldName)
   throws IllegalStateException {
@@ -153,13 +157,11 @@ implements ModelBuilder<M> {
   /**
    * Returns the value to use when populating the specified optional field for a model being
    * constructed by this builder.
-   * <p>
-   * The request is delegated to the field value provider. If this builder has not been provided
+   *
+   * <p>The request is delegated to the field value provider. If this builder has not been provided
    * with a value for the field (i.e. {@code fieldValue} is {@code null}), then in place of the
    * missing value, the field provider may choose to return the {@code defaultValue} that the
    * builder has requested, or any other value of the provider's choosing.
-   *
-   * @see     FieldValueProvider
    *
    * @param   fieldValue
    *          The current value this builder has for the field.
@@ -172,6 +174,8 @@ implements ModelBuilder<M> {
    *
    * @return  Depending on the field value provider, this will typically be either the value of
    *          the requested field, or the default value if the field did not have a value.
+   *
+   * @see     FieldValueProvider
    */
   protected <F> F getOptionalField(final F fieldValue, final F defaultValue) {
     return this.getValueProvider().getOptionalField(fieldValue, defaultValue);

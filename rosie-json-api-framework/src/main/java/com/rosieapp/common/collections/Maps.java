@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.common.collections;
 
 import java.util.AbstractMap;
@@ -9,7 +13,8 @@ import java.util.stream.Stream;
 /**
  * Re-usable utility methods for dealing with maps (i.e. {@link Map}).
  */
-public class Maps {
+@SuppressWarnings("PMD.ShortClassName")
+public final class Maps {
   /**
    * Private constructor; this is a static class.
    */
@@ -18,8 +23,8 @@ public class Maps {
 
   /**
    * Converts all of the entries of a map to a string.
-   * <p>
-   * The output is formatted more nicely than the default {@link AbstractMap#toString()}
+   *
+   * <p>The output is formatted more nicely than the default {@link AbstractMap#toString()}
    * implementation in the JDK. Keys and values are wrapped in quotes, and the values are presented
    * in alphabetic order by key.
    *
@@ -38,12 +43,12 @@ public class Maps {
 
   /**
    * Converts a stream of map entries to a string.
-   * <p>
-   * This overload is provided for cases in which information from multiple maps is being combined
-   * into the same output.
-   * <p>
-   * Keys and values are wrapped in quotes in the resulting string, and the values are presented in
-   * alphabetic order by key.
+   *
+   * <p>This overload is provided for cases in which information from multiple maps is being
+   * combined into the same output.
+   *
+   * <p>Keys and values are wrapped in quotes in the resulting string, and the values are presented
+   * in alphabetic order by key.
    *
    * @param   entryStream
    *          The stream of map entries to convert to a string.
@@ -54,7 +59,8 @@ public class Maps {
    *
    * @return  The string representation of the map.
    */
-  public static <K extends Comparable<K>, V> String toString(final Stream<Entry<K, V>> entryStream) {
+  public static <K extends Comparable<K>, V> String toString(
+                                                      final Stream<Entry<K, V>> entryStream) {
     final String string =
       entryStream
         .sorted(Map.Entry.comparingByKey())

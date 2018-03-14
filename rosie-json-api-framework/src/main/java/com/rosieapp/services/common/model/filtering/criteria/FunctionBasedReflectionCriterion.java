@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.filtering.criteria;
 
 import com.rosieapp.services.common.model.Model;
@@ -13,13 +17,13 @@ import java.util.function.BiFunction;
  */
 public final class FunctionBasedReflectionCriterion<M extends Model>
 extends AbstractReflectionBasedCriterion<M> {
-  final Object targetValue;
-  final BiFunction<Object, Object, Boolean> comparisonFunction;
+  private final Object targetValue;
+  private final BiFunction<Object, Object, Boolean> comparisonFunction;
 
   /**
    * Constructor for {@code FunctionBasedReflectionCriterion}.
-   * <p>
-   * Initializes an exact match criterion that ensures the specified field of the model matches
+   *
+   * <p>Initializes an exact match criterion that ensures the specified field of the model matches
    * the specified value.
    *
    * @param targetField
@@ -41,7 +45,7 @@ extends AbstractReflectionBasedCriterion<M> {
 
   @Override
   protected boolean valueMatches(final Object currentValue, final M model, final Field field) {
-    return this.comparisonFunction.apply(currentValue, targetValue);
+    return this.comparisonFunction.apply(currentValue, this.targetValue);
   }
 
   @Override

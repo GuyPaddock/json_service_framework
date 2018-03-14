@@ -6,7 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.jasminb.jsonapi.ResourceConverter;
 import com.github.jasminb.jsonapi.SerializationFeature;
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory;
-import com.rosieapp.services.common.annotation.JSONAPIV1Noncompliant;
+import com.rosieapp.services.common.annotation.JsonApiV1Noncompliant;
 import com.rosieapp.services.common.interception.AuthTokenInterceptor;
 import com.rosieapp.services.common.interception.NoncompliantJsonContentTypeInterceptor;
 import com.rosieapp.services.common.model.Model;
@@ -26,12 +26,11 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  * provide the interface for the service. </p>
  */
 public abstract class ServiceClientBuilder<T> {
+  private final Class<? extends T> serviceInterface;
 
   private   String             baseUrl;
   private   String             authToken;
   private   Converter.Factory  converterFactory;
-  private   Class<? extends T> serviceInterface;
-
 
   /**
    * Constructor for {@code ServiceClientBuilder}.
@@ -40,22 +39,22 @@ public abstract class ServiceClientBuilder<T> {
    *
    * @param serviceInterface The service interface for the client being built.
    */
-  public ServiceClientBuilder(Class<? extends T> serviceInterface) {
+  public ServiceClientBuilder(final Class<? extends T> serviceInterface) {
     this.serviceInterface = serviceInterface;
   }
 
   /**
    * Indicates that the client is being constructed only for performing a
    * health status check, rather than normal calls.
-   * <p>
-   * If the client is constructed for health status checks, it cannot be used to perform other
+   *
+   * <p>If the client is constructed for health status checks, it cannot be used to perform other
    * types of requests, and vice-versa. This is a consequence of the fact that the status check
    * endpoint is not JSON API v1 compliant and therefore requires a special resource converter.
    * This method should be removed if status check responses are made compliant.
    *
    * @return This object, for chaining builder calls.
    */
-  @JSONAPIV1Noncompliant(reason = "Status response is not formatted according to JSON API v1.")
+  @JsonApiV1Noncompliant(reason = JsonApiV1Noncompliant.REASON_BAD_RESPONSE_FORMAT)
   public ServiceClientBuilder<T> forHealthCheckRequests() {
     this.converterFactory = ScalarsConverterFactory.create();
 
@@ -65,15 +64,15 @@ public abstract class ServiceClientBuilder<T> {
   /**
    * Indicates that the client is being constructed for normal calls rather
    * than health status checks.
-   * <p>
-   * If the client is constructed for normal calls, it cannot be used to perform health status
+   *
+   * <p>If the client is constructed for normal calls, it cannot be used to perform health status
    * checks, and vice-versa. This is a consequence of the fact that the status check endpoint is
    * not JSON API v1 compliant and therefore requires a special resource converter. This method
    * should be removed if status check responses are made compliant.
    *
    * @return This object, for chaining builder calls.
    */
-  @JSONAPIV1Noncompliant(reason = "Status response is not formatted according to JSON API v1.")
+  @JsonApiV1Noncompliant(reason = JsonApiV1Noncompliant.REASON_BAD_RESPONSE_FORMAT)
   public ServiceClientBuilder<T> forNormalRequests() {
     final ResourceConverter resourceConverter = this.createResourceConverter();
 
@@ -106,8 +105,11 @@ public abstract class ServiceClientBuilder<T> {
   /**
    * Sets the pre-shared token that is used to authenticate with the Service.
    *
-   * @param authToken The authentication token to use for the next client instance this builder creates.
-   * @return This object, for chaining builder calls.
+   * @param   authToken
+   *          The authentication token to use for the next client instance this builder
+   *          creates.
+   *
+   * @return  This object, for chaining builder calls.
    */
   public ServiceClientBuilder<T> withAuthToken(final String authToken) {
     this.authToken = authToken;
@@ -119,8 +121,10 @@ public abstract class ServiceClientBuilder<T> {
    * Creates a new service client, using the current values set on this builder.
    *
    * @return The new client instance.
-   * @throws NullPointerException If the {@code baseUrl} or {@code authToken} have not been set on the builder before
-   * calling this method.
+   *
+   * @throws NullPointerException
+   *         If the {@code baseUrl} or {@code authToken} have not been set on the builder before
+   *         calling this method.
    */
   public T build() throws NullPointerException {
     final OkHttpClient client;
@@ -151,8 +155,8 @@ public abstract class ServiceClientBuilder<T> {
    */
   private void validateArguments()
   throws NullPointerException {
-    Objects.requireNonNull(this.baseUrl, "baseUrl must not be null");
-    Objects.requireNonNull(this.authToken, "authToken must not be null");
+    Objects.requireNonNull(this.baseUrl, "baseUrl cannot be null");
+    Objects.requireNonNull(this.authToken, "authToken cannot be null");
   }
 
 

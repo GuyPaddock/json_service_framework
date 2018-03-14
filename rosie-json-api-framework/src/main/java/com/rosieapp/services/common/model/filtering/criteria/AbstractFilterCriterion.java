@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.filtering.criteria;
 
 import com.rosieapp.services.common.model.Model;
@@ -13,8 +17,8 @@ public abstract class AbstractFilterCriterion<M extends Model>
 implements FilterCriterion<M> {
   /**
    * Get a representation of this criterion as a string.
-   * <p>
-   * All criteria must implement this method.
+   *
+   * <p>All criteria must implement this method.
    *
    * @return The string representation of this criterion.
    */

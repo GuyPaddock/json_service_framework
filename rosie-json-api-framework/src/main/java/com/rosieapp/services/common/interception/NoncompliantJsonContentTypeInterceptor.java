@@ -1,6 +1,10 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.interception;
 
-import com.rosieapp.services.common.annotation.JSONAPIV1Noncompliant;
+import com.rosieapp.services.common.annotation.JsonApiV1Noncompliant;
 import java.io.IOException;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
@@ -11,17 +15,17 @@ import okio.Buffer;
 
 /**
  * An interceptor that modifies the content type on an outgoing JSON API request.
- * <p>
- * The content type is changed to a non-standard value of {@code application/json} instead of the
+ *
+ * <p>The content type is changed to a non-standard value of {@code application/json} instead of the
  * JSON-API-standard-compliant value of {@code application/vnd.api+json}. This works around
  * limitations in Rosie's legacy Rails services that do not handle the
  * {@code application/vnd.api+json} content type properly.
  */
-@JSONAPIV1Noncompliant(reason = "Content type for requests is required to be application/vnd.api+json")
+@JsonApiV1Noncompliant(reason = JsonApiV1Noncompliant.REASON_BAD_CONTENT_TYPE)
 public class NoncompliantJsonContentTypeInterceptor
 implements Interceptor {
   @Override
-  public Response intercept(Chain chain)
+  public Response intercept(final Chain chain)
   throws IOException {
     final Request     originalRequest = chain.request(),
                       newRequest;
@@ -30,8 +34,7 @@ implements Interceptor {
     // GET requests don't have a body.
     if (originalBody == null) {
       newRequest = originalRequest;
-    }
-    else {
+    } else {
       newRequest = rebuildRequest(originalRequest);
     }
 

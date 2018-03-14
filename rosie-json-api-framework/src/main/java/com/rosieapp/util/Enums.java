@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.util;
 
 import java.text.MessageFormat;
@@ -7,16 +11,23 @@ import java.util.function.Predicate;
 /**
  * Common utility methods for dealing with enumerated types ("enums").
  */
-public class Enums {
+public final class Enums {
+  /**
+   * Private constructor for singleton utility class.
+   */
+  private Enums() {
+  }
+
   /**
    * Applies a filter to a set of enum values to locate one that matches, or throwing an exception
    * if none of the values match.
-   * <p>
-   * This implementation is best for cases in which the enum that corresponds to a value is always
-   * expected to be present, and it is an error if it is not. In such cases, when this method throws
-   * an {@link IllegalArgumentException}, that signifies a defect in code that must be corrected.
-   * <p>
-   * For efficiency, the first value that matches the filter is returned immediately, and the
+   *
+   * <p>This implementation is best for cases in which the enum that corresponds to a value is
+   * always expected to be present, and it is an error if it is not. In such cases, when this method
+   * throws an {@link IllegalArgumentException}, that signifies a defect in code that must be
+   * corrected.
+   *
+   * <p>For efficiency, the first value that matches the filter is returned immediately, and the
    * remaining values are not evaluated. The caller must guarantee either that the filter only
    * uniquely matches one value in the enum; or that the order values have been declared in the enum
    * will ensure the first of several matching values will cause the desired value to be returned

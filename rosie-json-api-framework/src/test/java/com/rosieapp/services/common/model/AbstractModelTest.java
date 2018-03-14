@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model;
 
 import static com.greghaskins.spectrum.dsl.specification.Specification.beforeAll;
@@ -18,15 +22,15 @@ import com.rosieapp.services.common.model.identification.LongIdentifier;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import com.rosieapp.services.common.model.identification.NewModelIdentifier;
 import com.rosieapp.services.common.model.identification.StringIdentifier;
-import com.rosieapp.services.common.model.tests.JSONTestHelper;
-import com.rosieapp.util.test.JSONUtils;
+import com.rosieapp.services.common.model.tests.JsonTestHelper;
+import com.rosieapp.util.test.JsonUtils;
 import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
 @RunWith(Spectrum.class)
 public class AbstractModelTest {
   {
-    beforeAll(JSONTestHelper::configureTestForJackson);
+    beforeAll(JsonTestHelper::configureTestForJackson);
 
     describe("#assignId", () -> {
       context("when the model does not already have an ID assigned", () -> {
@@ -66,8 +70,7 @@ public class AbstractModelTest {
           it("does not change the ID of the model", () -> {
             try {
               model.get().assignId(newId.get());
-            }
-            catch (Exception ex) {
+            } catch (NullPointerException ex) {
               // Silence exception
             }
 
@@ -128,8 +131,7 @@ public class AbstractModelTest {
             it("does not change the ID of the model", () -> {
               try {
                 model.get().assignId(newId.get());
-              }
-              catch (Exception ex) {
+              } catch (NullPointerException ex) {
                 // Silence exception
               }
 
@@ -146,16 +148,15 @@ public class AbstractModelTest {
                   model.get().assignId(newId.get());
                 })
                 .withMessage(
-                  "This model already has an existing identifier set. An attempt was made to " +
-                  "change the identifier from `8675309` to `123456`")
+                  "This model already has an existing identifier set. An attempt was made to "
+                  + "change the identifier from `8675309` to `123456`")
                 .withNoCause();
             });
 
             it("does not make any changes to the model's ID", () -> {
               try {
                 model.get().assignId(newId.get());
-              }
-              catch (Exception ex) {
+              } catch (IllegalStateException ex) {
                 // Silence exception
               }
 
@@ -172,16 +173,15 @@ public class AbstractModelTest {
                   model.get().assignId(newId.get());
                 })
                 .withMessage(
-                  "This model already has an existing identifier set. An attempt was made to " +
-                  "change the identifier from `8675309` to `null`")
+                  "This model already has an existing identifier set. An attempt was made to "
+                  + "change the identifier from `8675309` to `null`")
                 .withNoCause();
             });
 
             it("does not make any changes to the model's ID", () -> {
               try {
                 model.get().assignId(newId.get());
-              }
-              catch (Exception ex) {
+              } catch (IllegalStateException ex) {
                 // Silence exception
               }
 
@@ -216,7 +216,8 @@ public class AbstractModelTest {
       });
 
       context("when the model has an ID assigned that is not a placeholder", () -> {
-        final Supplier<ModelIdentifier> identifier = let(() -> new StringIdentifier("yabba-dabba-doo"));
+        final Supplier<ModelIdentifier> identifier =
+          let(() -> new StringIdentifier("yabba-dabba-doo"));
 
         final Supplier<Model> model = let(() -> {
           final Model result = new TestModel();
@@ -256,7 +257,8 @@ public class AbstractModelTest {
       });
 
       context("when the model has an ID assigned that is not a placeholder", () -> {
-        final Supplier<ModelIdentifier> identifier = let(() -> new StringIdentifier("yabba-dabba-doo"));
+        final Supplier<ModelIdentifier> identifier =
+          let(() -> new StringIdentifier("yabba-dabba-doo"));
 
         final Supplier<Model> model = let(() -> {
           final Model result = new TestModel();
@@ -436,7 +438,8 @@ public class AbstractModelTest {
       });
 
       context("when the model is not new", () -> {
-        final Supplier<ModelIdentifier> originalId = let(() -> new StringIdentifier("Existing Model"));
+        final Supplier<ModelIdentifier> originalId =
+          let(() -> new StringIdentifier("Existing Model"));
 
         beforeEach(() -> {
           model.get().assignId(originalId.get());
@@ -476,7 +479,7 @@ public class AbstractModelTest {
           return result;
         });
 
-        final Supplier<String> modelJson = let(() -> JSONUtils.toJsonString(model.get()));
+        final Supplier<String> modelJson = let(() -> JsonUtils.toJsonString(model.get()));
 
         it("can be serialized to JSON-API-compliant JSON", () -> {
           assertThat(modelJson.get())
@@ -507,25 +510,27 @@ public class AbstractModelTest {
         });
 
         final Supplier<ResourceConverter> resourceConverter =
-          let(() -> JSONUtils.createResourceConverterThatIncludesRelationshipsFor(
+          let(() -> JsonUtils.createResourceConverterThatIncludesRelationshipsFor(
             TestModel.class,
             OtherTestModel.class));
 
-        final Supplier<String> modelJson = let(() -> JSONUtils.toJsonString(model2.get(), resourceConverter.get()));
+        final Supplier<String> modelJson = let(() -> JsonUtils
+        .toJsonString(model2.get(), resourceConverter.get()));
 
         it("can be serialized along with its relationships to JSON-API-compliant JSON", () -> {
           assertThat(modelJson.get())
             .isEqualTo(
-              "{\"data\":{\"type\":\"other_test\",\"id\":\"2\",\"attributes\":{\"test_field2\":\"batman\"},"
-              + "\"relationships\":{\"other_model\":{\"data\":{\"type\":\"test\",\"id\":\"1\"}}}},"
-              + "\"included\":[{\"type\":\"test\",\"id\":\"1\",\"attributes\":{\"test_field\":\"abc123\"}}]}");
+              "{\"data\":{\"type\":\"other_test\",\"id\":\"2\",\"attributes\":{\"test_field2\":"
+              + "\"batman\"},\"relationships\":{\"other_model\":{\"data\":{\"type\":\"test\","
+              + "\"id\":\"1\"}}}},\"included\":[{\"type\":\"test\",\"id\":\"1\",\"attributes\":{"
+              + "\"test_field\":\"abc123\"}}]}");
         });
       });
     });
 
     describe("JSON deserialization behavior", () -> {
       final Supplier<ResourceConverter> converter =
-        let(() -> JSONUtils.createResourceConverterFor(TestModel.class, OtherTestModel.class));
+        let(() -> JsonUtils.createResourceConverterFor(TestModel.class, OtherTestModel.class));
 
       context("JSON-API-compliant JSON that represents a model that has no relationships", () -> {
         final String jsonValue =
@@ -533,7 +538,7 @@ public class AbstractModelTest {
 
         it("can be de-serialized", () -> {
           final TestModel testModel =
-            JSONUtils.fromJsonString(jsonValue, TestModel.class, converter.get());
+            JsonUtils.fromJsonString(jsonValue, TestModel.class, converter.get());
 
           assertThat(testModel).isNotNull();
           assertThat(testModel.getId()).isEqualTo(new LongIdentifier(6));
@@ -543,16 +548,17 @@ public class AbstractModelTest {
 
       context("JSON-API-compliant JSON that represents a model and its relationships", () -> {
         final String jsonValue =
-          "{\"data\":{\"type\":\"other_test\",\"id\":\"2\",\"attributes\":{\"test_field2\":\"batman\"},"
-          + "\"relationships\":{\"other_model\":{\"data\":{\"type\":\"test\",\"id\":\"1\"}}}},"
-          + "\"included\":[{\"type\":\"test\",\"id\":\"1\",\"attributes\":{\"test_field\":\"abc123\"}}]}";
+          "{\"data\":{\"type\":\"other_test\",\"id\":\"2\",\"attributes\":{\"test_field2\":"
+          + "\"batman\"},\"relationships\":{\"other_model\":{\"data\":{\"type\":\"test\","
+          + "\"id\":\"1\"}}}},\"included\":[{\"type\":\"test\",\"id\":\"1\",\"attributes\":"
+          + "{\"test_field\":\"abc123\"}}]}";
 
         it("can be de-serialized", () -> {
           final OtherTestModel otherTestModel;
           final TestModel      testModel;
 
           otherTestModel =
-            JSONUtils.fromJsonString(jsonValue, OtherTestModel.class, converter.get());
+            JsonUtils.fromJsonString(jsonValue, OtherTestModel.class, converter.get());
 
           assertThat(otherTestModel).isNotNull();
           assertThat(otherTestModel.getId()).isEqualTo(new LongIdentifier(2));
@@ -575,8 +581,8 @@ public class AbstractModelTest {
     public String testField;
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
-      return super.clone();
+    public TestModel clone() throws CloneNotSupportedException {
+      return (TestModel)super.clone();
     }
   }
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.identification;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -19,17 +23,17 @@ implements Comparable<LongIdentifier> {
 
 
   /**
-   * Default value for {@code value} used in the default constructor.
-   * <p>
-   * Note: this is an invalid value for an identifier.
+   * A value that signifies an unparseable or unknown long identifier.
    *
+   * <p>By convention, all long identifiers are positive integers, so this value represents an
+   * ID that should never actually appear in a model.
    */
-  public final static long UNKNOWN_VALUE = -1;
+  public static final long UNKNOWN_VALUE = -1;
 
   /**
    * Attempts to parse the provided string as a long integer model identifier.
-   * <p>
-   * If the string cannot be parsed, an empty {@link Optional} is returned.
+   *
+   * <p>If the string cannot be parsed, an empty {@link Optional} is returned.
    *
    * @param   value
    *          The string to attempt to parse as a model identifier.
@@ -42,10 +46,10 @@ implements Comparable<LongIdentifier> {
     final Optional<ModelIdentifier> result;
     final long                      numberValue = NumberUtils.toLong(value, UNKNOWN_VALUE);
 
-    if (numberValue != UNKNOWN_VALUE) {
-      result = Optional.of(new LongIdentifier(numberValue));
-    } else {
+    if (numberValue == UNKNOWN_VALUE) {
       result = Optional.empty();
+    } else {
+      result = Optional.of(new LongIdentifier(numberValue));
     }
 
     return result;
@@ -54,29 +58,32 @@ implements Comparable<LongIdentifier> {
   /**
    * Constructor for {@link LongIdentifier}.
    *
-   * @see     ModelIdentifierFactory#createIdFrom(String)
-   *
    * @param   value
    *          The long integer value to wrap in the new identifier object.
    *          This value must be greater than {@code 0}.
    *
    * @throws  IllegalArgumentException
    *          If {@code value} is less than or equal to {@code 0}.
+   *
+   * @see     ModelIdentifierFactory#createIdFrom(String)
    */
   public LongIdentifier(final long value)
   throws IllegalArgumentException {
+    super();
+
     this.setValue(value);
   }
 
   /**
    * Default constructor for {@link LongIdentifier}.
    *
-   * Assigns {@code value} with an invalid default value.
-   * <p>
-   * Note: Required by jackson to properly deserialize JSON.
+   * <p>This constructor is required by Jackson to properly initialize the object with a value, so
+   * that the object can be populated while de-serializing JSON.
    *
    */
   private LongIdentifier() {
+    super();
+
     this.value = UNKNOWN_VALUE;
   }
 
@@ -95,17 +102,15 @@ implements Comparable<LongIdentifier> {
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(final Object other) {
     final boolean result;
 
     if (this == other) {
       result = true;
-    }
-    else if ((other == null) || (this.getClass() != other.getClass())) {
+    } else if ((other == null) || (this.getClass() != other.getClass())) {
       result = false;
-    }
-    else {
-      LongIdentifier otherId = (LongIdentifier)other;
+    } else {
+      final LongIdentifier otherId = (LongIdentifier)other;
 
       result = (this.getValue() == otherId.getValue());
     }

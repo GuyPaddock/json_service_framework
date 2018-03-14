@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.filtering.criteria.logic;
 
 import com.rosieapp.services.common.model.Model;
@@ -11,24 +15,26 @@ import java.util.Objects;
  */
 public class NotCriterion<M extends Model>
 extends AbstractFilterCriterion<M> {
-  final FilterCriterion<M> wrappedCriterion;
+  private final FilterCriterion<M> wrappedCriterion;
 
   /**
    * Constructor for {@code NotCriterion}.
-   * <p>
-   * Initializes a new criterion to negate the provided criterion.
+   *
+   * <p>Initializes a new criterion to negate the provided criterion.
    *
    * @param wrappedCriterion
    *        The criterion to negate.
    */
-  public NotCriterion(FilterCriterion<M> wrappedCriterion) {
-    Objects.requireNonNull(wrappedCriterion, "wrappedCriteria");
+  public NotCriterion(final FilterCriterion<M> wrappedCriterion) {
+    super();
+
+    Objects.requireNonNull(wrappedCriterion, "wrappedCriteria cannot be null");
 
     this.wrappedCriterion = wrappedCriterion;
   }
 
   @Override
-  public boolean matches(M model) {
+  public boolean matches(final M model) {
     return !this.wrappedCriterion.matches(model);
   }
 

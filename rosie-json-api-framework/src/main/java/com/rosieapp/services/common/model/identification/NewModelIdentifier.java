@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.identification;
 
 /**
@@ -12,8 +16,8 @@ extends AbstractModelIdentifier {
 
   /**
    * Gets the singleton, flyweight instance of this identifier.
-   * <p>
-   * For efficiency, this is preferred to using the constructor since every instance has no
+   *
+   * <p>For efficiency, this is preferred to using the constructor since every instance has no
    * instance state and behaves exactly the same way.
    *
    * @return The identifier instance.
@@ -24,11 +28,9 @@ extends AbstractModelIdentifier {
 
   /**
    * Constructor for {@link NewModelIdentifier}.
-   *
-   * @deprecated For efficiency, rather than constructing a new identifier, it is preferable to use
-   *             {@link #getInstance()} instead.
    */
-  public NewModelIdentifier() {
+  private NewModelIdentifier() {
+    super();
   }
 
   /**
@@ -53,7 +55,7 @@ extends AbstractModelIdentifier {
 
   @Override
   @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
-  public boolean equals(Object other) {
+  public boolean equals(final Object other) {
     return (this == other);
   }
 

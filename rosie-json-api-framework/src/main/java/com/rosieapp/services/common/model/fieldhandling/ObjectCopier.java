@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.fieldhandling;
 
 import com.google.common.collect.ImmutableMap;
@@ -20,15 +24,15 @@ import javax.naming.directory.BasicAttribute;
 
 /**
  * A utility class for getting a shallow copy of an object, if the object can be duplicated.
- * <p>
- * This is used to provide a defensive, "safe" field value -- a value that is not shared among
+ *
+ * <p>This is used to provide a defensive, "safe" field value -- a value that is not shared among
  * multiple instances of the same model.
  */
 public final class ObjectCopier {
   /**
    * The different strategies employed to copy different types of objects.
    */
-  static final ImmutableMap<Class<?>, Function<Object, Object>> COPY_FUNCTIONS =
+  private static final ImmutableMap<Class<?>, Function<Object, Object>> COPY_FUNCTIONS =
     new ImmutableMap.Builder<Class<?>, Function<Object, Object>>()
       .put(Map.class,         ObjectCopier::copyMap)
       .put(Collection.class,  ObjectCopier::copyCollection)
@@ -38,8 +42,8 @@ public final class ObjectCopier {
 
   /**
    * Obtains a copy of the specified object.
-   * <p>
-   * Different strategies are used for each object type:
+   *
+   * <p>Different strategies are used for each object type:
    * <ul>
    *   <li>Maps and collections are copied to a new instance of the same collection type via the
    *       copy constructor provided by the appropriate object type.</li>
@@ -55,7 +59,7 @@ public final class ObjectCopier {
    *
    * @return  If the object can be copied, a copy of the object; otherwise, the original object.
    */
-  public static <T> T copy(T source) {
+  public static <T> T copy(final T source) {
     return getHandlerFor(source).apply(source);
   }
 
@@ -71,7 +75,7 @@ public final class ObjectCopier {
    * @return  The best function to invoke to obtain a copy of the object.
    */
   @SuppressWarnings("unchecked")
-  private static <T> Function<T, T> getHandlerFor(T source) {
+  private static <T> Function<T, T> getHandlerFor(final T source) {
     Function<Object, Object> typeHandler;
 
     typeHandler =
@@ -130,8 +134,8 @@ public final class ObjectCopier {
   /**
    * Attempts to generates a shallow copy of an object by invoking its "copy constructor" -- a
    * single-argument constructor that takes in an object of the same type or its supertype.
-   * <p>
-   * For example, {@link java.util.LinkedList#LinkedList(Collection)} is a copy constructor for
+   *
+   * <p>For example, {@link java.util.LinkedList#LinkedList(Collection)} is a copy constructor for
    * lists.
    *
    * @param   source
@@ -151,21 +155,19 @@ public final class ObjectCopier {
 
     mapConstructor = findCopyConstructor(sourceType);
 
-    if (mapConstructor != null) {
+    if (mapConstructor == null) {
+      // No copy constructor available.
+      copy = null;
+    } else {
       try {
         copy = mapConstructor.newInstance(source);
-      }
-      catch (InstantiationException|IllegalAccessException|InvocationTargetException ex) {
+      } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
         throw new IllegalStateException(
           MessageFormat.format(
             "Failed to invoke copy constructor on {0}.",
             sourceType.getCanonicalName()),
           ex);
       }
-    }
-    else {
-      // No copy constructor available.
-      copy = null;
     }
 
     return copy;
@@ -191,8 +193,7 @@ public final class ObjectCopier {
 
     try {
       copy = cloneMethod.invoke(source);
-    }
-    catch (IllegalAccessException|InvocationTargetException ex) {
+    } catch (IllegalAccessException | InvocationTargetException ex) {
       throw new IllegalStateException(
         MessageFormat.format(
           "Failed to clone object of type `{0}`.",
@@ -205,9 +206,9 @@ public final class ObjectCopier {
 
   /**
    * Finds the public copy constructor within the specified class.
-   * <p>
-   * If the object does not have a public, single-argument constructor that accepts the same type of
-   * object or its super-type, then {@code null} is returned instead.
+   *
+   * <p>If the object does not have a public, single-argument constructor that accepts the same type
+   * of object or its super-type, then {@code null} is returned instead.
    *
    * @param   objectType
    *          The type of object being cloned.
@@ -230,8 +231,8 @@ public final class ObjectCopier {
   /**
    * Determines whether or not the provided constructor is a copy constructor for its declaring
    * type.
-   * <p>
-   * A constructor is considered a copy constructor if and only if all of the following are true:
+   *
+   * <p>A constructor is considered a copy constructor if and only if all of the following are true:
    * <ul>
    *   <li>The constructor is public.</li>
    *   <li>The constructor takes a single argument.</li>
@@ -250,18 +251,18 @@ public final class ObjectCopier {
     final Class<?>  objectType = constructor.getDeclaringClass();
 
     result =
-      (constructor.getParameterCount() == 1) &&
-        Arrays.stream(constructor.getParameterTypes())
-          .allMatch((param) -> param.isAssignableFrom(objectType));
+      (constructor.getParameterCount() == 1)
+      && Arrays.stream(constructor.getParameterTypes())
+           .allMatch((param) -> param.isAssignableFrom(objectType));
 
     return result;
   }
 
   /**
    * Finds the public {@code clone()} method within the specified class.
-   * <p>
-   * The object must have a public {@link #clone()} method, or an {@link IllegalArgumentException}
-   * will be thrown.
+   *
+   * <p>The object must have a public {@link #clone()} method, or an
+   * {@link IllegalArgumentException} will be thrown.
    *
    * @param   objectType
    *          The type of object being cloned.
@@ -277,8 +278,7 @@ public final class ObjectCopier {
 
     try {
       cloneMethod = objectType.getMethod("clone");
-    }
-    catch (NoSuchMethodException ex) {
+    } catch (NoSuchMethodException ex) {
       throw new IllegalArgumentException(
         MessageFormat.format(
           "Could not find a public clone() method within {0}.",
@@ -296,7 +296,8 @@ public final class ObjectCopier {
   }
 
   // FIXME: Convert this into multiple different unit tests (RJAJ-6)
-  public static void main(String[] args) {
+  @SuppressWarnings("all")
+  public static void main(final String[] args) {
     List<String>        testList1 = Arrays.asList("a", "b", "c"),
                         listCopy1 = ObjectCopier.copy(testList1),
                         testList2 = new LinkedList<>(Arrays.asList("a", "b", "c")),
@@ -340,6 +341,7 @@ public final class ObjectCopier {
       "cloneableObject == cloneableCopy: " + (cloneableObject == cloneableCopy));
 
     System.out.println(
-      "uncloneableObject == uncloneableObjectCopy: " + (uncloneableObject == uncloneableObjectCopy));
+      "uncloneableObject == uncloneableObjectCopy: "
+      + (uncloneableObject == uncloneableObjectCopy));
   }
 }

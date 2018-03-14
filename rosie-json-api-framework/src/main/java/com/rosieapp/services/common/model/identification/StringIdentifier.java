@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.identification;
 
 import java.util.Objects;
@@ -30,8 +34,7 @@ implements Comparable<StringIdentifier> {
 
     if (value == null) {
       result = Optional.empty();
-    }
-    else {
+    } else {
       result = Optional.of(new StringIdentifier(value));
     }
 
@@ -41,17 +44,19 @@ implements Comparable<StringIdentifier> {
   /**
    * Constructor for {@link StringIdentifier}.
    *
-   * @see     ModelIdentifierFactory#createIdFrom(String)
-   *
    * @param   value
    *          The string to wrap in the new identifier object.
    *          This value must not be {@code null}.
    *
    * @throws  NullPointerException
    *          If {@code value} is {@code null}.
+   *
+   * @see     ModelIdentifierFactory#createIdFrom(String)
    */
   public StringIdentifier(final String value)
   throws NullPointerException {
+    super();
+
     this.setValue(value);
   }
 
@@ -70,16 +75,14 @@ implements Comparable<StringIdentifier> {
   }
 
   @Override
-  public boolean equals(Object other) {
+  public boolean equals(final Object other) {
     final boolean result;
 
     if (this == other) {
       result = true;
-    }
-    else if ((other == null) || (this.getClass() != other.getClass())) {
+    } else if ((other == null) || (this.getClass() != other.getClass())) {
       result = false;
-    }
-    else {
+    } else {
       final StringIdentifier otherId = (StringIdentifier)other;
 
       result = Objects.equals(this.getValue(), otherId.getValue());
@@ -111,7 +114,7 @@ implements Comparable<StringIdentifier> {
   }
 
   @Override
-  public int compareTo(StringIdentifier other) {
+  public int compareTo(final StringIdentifier other) {
     return this.getValue().compareTo(other.getValue());
   }
 }

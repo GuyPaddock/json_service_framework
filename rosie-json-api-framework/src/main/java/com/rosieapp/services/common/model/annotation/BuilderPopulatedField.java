@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.annotation;
 
 import com.rosieapp.services.common.model.Model;
@@ -27,11 +31,11 @@ public @interface BuilderPopulatedField {
   /**
    * Controls what processor is invoked to convert a raw value from the model's builder into the
    * value that ends up in a new model instance.
-   * <p>
-   * The default value ensures that, whenever possible, each model instance ends up with a distinct
-   * instance of a field value than other instances of the same model.
-   * <p>
-   * The pre-processor is not invoked when building a filter. It is only applicable to new model
+   *
+   * <p>The default value ensures that, whenever possible, each model instance ends up with a
+   * distinct instance of a field value than other instances of the same model.
+   *
+   * <p>The pre-processor is not invoked when building a filter. It is only applicable to new model
    * instances.
    *
    * @see com.rosieapp.services.common.model.fieldhandling.CloningPreprocessor

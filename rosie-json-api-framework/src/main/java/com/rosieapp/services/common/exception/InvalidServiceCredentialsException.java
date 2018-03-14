@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.exception;
 
 import java.text.MessageFormat;
@@ -9,9 +13,9 @@ public class InvalidServiceCredentialsException
 extends RuntimeException {
   /**
    * Constructor for {@code ServiceUnavailableException}.
-   * <p>
-   * Initializes the exception to indicate that credentials are incorrect for the specified service
-   * at the specified URL.
+   *
+   * <p>Initializes the exception to indicate that credentials are incorrect for the specified
+   * service at the specified URL.
    *
    * @param serviceName
    *        The human-friendly name of the service (e.g. "Loyalty Service", "ECOM', etc).
@@ -24,10 +28,10 @@ extends RuntimeException {
 
   /**
    * Constructor for {@code ServiceUnavailableException}.
-   * <p>
-   * Initializes the exception to indicate that credentials are incorrect for the specified service
-   * at the specified URL, and that the issue with credentials is caused by the specified underlying
-   * cause.
+   *
+   * <p>Initializes the exception to indicate that credentials are incorrect for the specified
+   * service at the specified URL, and that the issue with credentials is caused by the specified
+   * underlying cause.
    *
    * @param serviceName
    *        The human-friendly name of the service (e.g. "Loyalty Service", "ECOM', etc).

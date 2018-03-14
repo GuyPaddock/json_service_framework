@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.model.fieldhandling;
 
 import java.lang.reflect.Field;
@@ -5,8 +9,8 @@ import java.lang.reflect.Field;
 /**
  * Field pre-processors are responsible for making last-minute changes to values being set by
  * model builders.
- * <p>
- * A field pre-processor is typically associated with a field via the
+ *
+ * <p>A field pre-processor is typically associated with a field via the
  * {@link com.rosieapp.services.common.model.annotation.BuilderPopulatedField} annotation on the
  * field.
  */
@@ -22,7 +26,7 @@ public interface FieldValuePreprocessor {
    * @param   <T>
    *          The type of field value.
    *
-   * @return
+   * @return  The result of preprocessing the value.
    */
   <T> T preprocessField(Field field, T fieldValue);
 }

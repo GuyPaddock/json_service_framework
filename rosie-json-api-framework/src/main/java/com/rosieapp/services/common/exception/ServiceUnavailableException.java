@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2017-2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.exception;
 
 import java.text.MessageFormat;
@@ -9,8 +13,8 @@ public class ServiceUnavailableException
 extends Exception {
   /**
    * Constructor for {@code ServiceUnavailableException}.
-   * <p>
-   * Initializes the exception to indicate that the specified service is unavailable at the
+   *
+   * <p>Initializes the exception to indicate that the specified service is unavailable at the
    * specified URL.
    *
    * @param serviceName
@@ -24,8 +28,8 @@ extends Exception {
 
   /**
    * Constructor for {@code ServiceUnavailableException}.
-   * <p>
-   * Initializes the exception to indicate that the specified service is unavailable at the
+   *
+   * <p>Initializes the exception to indicate that the specified service is unavailable at the
    * specified URL, and that the unavailability is caused by the specified underlying cause.
    *
    * @param serviceName
