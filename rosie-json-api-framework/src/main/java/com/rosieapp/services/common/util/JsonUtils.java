@@ -2,7 +2,7 @@
  * Copyright (c) 2017-2018 Rosie Applications, Inc.
  */
 
-package com.rosieapp.util.test;
+package com.rosieapp.services.common.util;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,8 +42,10 @@ public final class JsonUtils {
     final ResourceConverter converter;
     final ObjectMapper      mapper = new ObjectMapper();
 
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     mapper.registerModule(new JavaTimeModule());
+
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
     mapper.configure(
       com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
       false

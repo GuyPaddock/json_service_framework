@@ -23,7 +23,7 @@ import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import com.rosieapp.services.common.model.identification.NewModelIdentifier;
 import com.rosieapp.services.common.model.identification.StringIdentifier;
 import com.rosieapp.services.common.model.tests.JsonTestHelper;
-import com.rosieapp.util.test.JsonUtils;
+import com.rosieapp.services.common.util.JsonUtils;
 import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
