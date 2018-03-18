@@ -22,7 +22,7 @@ import com.rosieapp.services.common.model.identification.LongIdentifier;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import com.rosieapp.services.common.model.identification.NewModelIdentifier;
 import com.rosieapp.services.common.model.identification.StringIdentifier;
-import com.rosieapp.services.common.model.tests.JsonTestHelper;
+import com.rosieapp.services.common.model.tests.JsonTestUtils;
 import com.rosieapp.services.common.util.JsonUtils;
 import java.util.function.Supplier;
 import org.junit.runner.RunWith;
@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
 @RunWith(Spectrum.class)
 public class AbstractModelTest {
   {
-    beforeAll(JsonTestHelper::configureTestForJackson);
+    beforeAll(JsonTestUtils::configureTestForJackson);
 
     describe("#assignId", () -> {
       context("when the model does not already have an ID assigned", () -> {

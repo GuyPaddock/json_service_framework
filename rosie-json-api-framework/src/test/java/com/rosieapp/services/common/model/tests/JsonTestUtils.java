@@ -14,11 +14,11 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import java.util.EnumSet;
 import java.util.Set;
 
-public final class JsonTestHelper {
+public final class JsonTestUtils {
   /**
    * Private constructor for singleton utility class.
    */
-  private JsonTestHelper() {
+  private JsonTestUtils() {
   }
 
   /**
@@ -47,5 +47,4 @@ public final class JsonTestHelper {
       }
     });
   }
-
 }
