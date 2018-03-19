@@ -17,7 +17,7 @@ import org.apache.commons.lang.math.NumberUtils;
  * A model identifier that uses traditional, long integer primary keys -- typically issued by a
  * single source of record -- to unique identify a persisted model.
  */
-@JsonSerialize(using = JsonSerializer.class)
+@JsonSerialize(using = LongIdentifier.JsonSerializer.class)
 public final class LongIdentifier
 extends PersistedModelIdentifier
 implements Comparable<LongIdentifier> {
