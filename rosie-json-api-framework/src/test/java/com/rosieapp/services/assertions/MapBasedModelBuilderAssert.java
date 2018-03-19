@@ -71,11 +71,13 @@ extends AbstractAssert<MapBasedModelBuilderAssert<M, B>, MapBasedModelBuilder<M,
   public MapAssert<String, Object> extractingFieldMap()
   throws IntrospectionError {
     final Map<String, Object> actualValue;
-    final String              extractedMapDescription = extractedDescriptionOf(FIELD_MAP_FIELD_NAME),
+    final String              extractedMapDescription,
                               description;
 
     actualValue = (Map<String, Object>)byName(FIELD_MAP_FIELD_NAME).extract(this.actual);
-    description = mostRelevantDescription(info.description(), extractedMapDescription);
+
+    extractedMapDescription = extractedDescriptionOf(FIELD_MAP_FIELD_NAME);
+    description             = mostRelevantDescription(info.description(), extractedMapDescription);
 
     return new MapAssert<>(actualValue).as(description);
   }

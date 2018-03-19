@@ -10,6 +10,12 @@ package com.rosieapp.services.common.model.fieldhandling;
  */
 public class RequiredFieldMissingException
 extends RuntimeException {
+  /**
+   * Constructor for {@code RequiredFieldMissingException}.
+   *
+   * @param fieldName
+   *        The name of the field that was required but was missing.
+   */
   public RequiredFieldMissingException(final String fieldName) {
     super(
       String.format(

@@ -84,8 +84,8 @@ implements Comparable<LongIdentifier> {
    *
    * <p>This constructor is required by Jackson to properly initialize the object with a value, so
    * that the object can be populated while de-serializing JSON.
-   *
    */
+  @SuppressWarnings("unused")
   private LongIdentifier() {
     super();
 
