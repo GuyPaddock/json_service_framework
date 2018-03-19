@@ -248,7 +248,7 @@ extends MapBasedModelBuilder<M, B> {
    *
    * @return  The shallow model instances.
    */
-  private M instantiateModelWithId() {
+  protected M instantiateModelWithId() {
     final M model = this.instantiateModel();
 
     model.assignId(this.buildId());
@@ -261,7 +261,7 @@ extends MapBasedModelBuilder<M, B> {
    *
    * @return  A new instance of the model this builder creates.
    */
-  private M instantiateModel() {
+  protected M instantiateModel() {
     final M                  model;
     final Class<? extends M> modelClass = this.getModelClass();
 
