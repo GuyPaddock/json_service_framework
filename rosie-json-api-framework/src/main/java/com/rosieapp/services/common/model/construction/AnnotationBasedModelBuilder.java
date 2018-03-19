@@ -446,7 +446,7 @@ extends MapBasedModelBuilder<M, B> {
    *          model type.
    */
   @SuppressWarnings("unchecked")
-  private Class<? extends M> getModelClass()
+  protected Class<? extends M> getModelClass()
   throws IllegalStateException {
     final Class<? extends M>                  modelClass;
     final List<Supplier<Class<? extends M>>>  fetchStrategies;
