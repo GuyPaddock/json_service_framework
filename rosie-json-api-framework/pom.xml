@@ -56,19 +56,18 @@
     </dependency>
 
     <!-- Utilities -->
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-      <version>2.4</version>
-      <!-- Provided by client application -->
-      <scope>provided</scope>
-    </dependency>
 
     <!-- TODO: AUTH-89 - Move to Rosie common POM -->
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>23.5-jre</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.4</version>
       <!-- Provided by client application -->
       <scope>provided</scope>
     </dependency>
