@@ -39,7 +39,7 @@ extends Exception {
    *        Original cause of exception
    */
   public ModelNotFoundException(final Class<? extends Model> modelType,
-      final ModelIdentifier modelId, Throwable cause) {
+      final ModelIdentifier modelId, final Throwable cause) {
     this(modelType.getSimpleName(), modelId, cause);
   }
 
@@ -54,7 +54,7 @@ extends Exception {
    *
    */
   public ModelNotFoundException(final String modelType, final ModelIdentifier modelId) {
-    this(modelType,modelId,null);
+    this(modelType, modelId, null);
   }
 
 
@@ -69,9 +69,9 @@ extends Exception {
    * @param cause
    *        Original cause of exception
    */
-  public ModelNotFoundException(final String modelType, final ModelIdentifier modelId,  Throwable cause) {
+  public ModelNotFoundException(final String modelType, final ModelIdentifier modelId, final Throwable cause) {
     super(
-      MessageFormat.format("No {0} that has an ID of `{1}` could be found", modelType, modelId),cause);
+      MessageFormat.format("No {0} that has an ID of `{1}` could be found", modelType, modelId), cause);
   }
 
 
