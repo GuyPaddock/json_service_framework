@@ -180,6 +180,9 @@ public abstract class ServiceClientBuilder<T> {
     mapper.configure(
       DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false
     );
+    mapper.configure(
+      DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false
+    );
 
     modelTypes = getModelTypes();
 

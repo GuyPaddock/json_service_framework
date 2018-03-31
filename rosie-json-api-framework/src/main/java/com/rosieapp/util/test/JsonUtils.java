@@ -48,6 +48,9 @@ public final class JsonUtils {
       com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
       false
     );
+    mapper.configure(
+      DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false
+    );
 
     converter = new ResourceConverter(mapper, modelTypes);
 
