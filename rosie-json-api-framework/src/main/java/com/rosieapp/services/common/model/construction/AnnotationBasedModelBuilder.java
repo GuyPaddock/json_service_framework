@@ -63,6 +63,16 @@ extends MapBasedModelBuilder<M, B> {
   private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationBasedModelBuilder.class);
 
   /**
+   * A cache that increases the performance of looking up what type of model to create for each
+   * type of builder.
+   *
+   * <p>The cache is configured to store no more than 32 model classes at a time, and evicts entries
+   * after 10 minutes of use. This helps to ensure high throughput on payloads that are processing
+   * the same types of models over and over.
+   */
+  private static final Cache<String, Class<? extends Model>> MODEL_TYPE_CACHE;
+
+  /**
    * A cache that increases the performance of looking up what fields to populate for a given model
    * type.
    *
@@ -72,24 +82,14 @@ extends MapBasedModelBuilder<M, B> {
    */
   private static final Cache<String, List<Field>> MODEL_FIELDS_CACHE;
 
-  /**
-   * A cache that increases the performance of looking up what type of model to create for each
-   * type of builder.
-   *
-   * <p>The cache is configured to store no more than 32 model classes at a time, and evicts entries
-   * after 10 minutes of use. This helps to ensure high throughput on payloads that are processing
-   * the same types of models over and over.
-   */
-  private static final Cache<String, Class<? extends Model>> BUILD_MODEL_TYPE_CACHE;
-
   static {
     final CacheBuilder<Object, Object> cacheBuilder =
       CacheBuilder.newBuilder()
         .maximumSize(32)
         .expireAfterWrite(10, TimeUnit.MINUTES);
 
-    MODEL_FIELDS_CACHE     = cacheBuilder.build();
-    BUILD_MODEL_TYPE_CACHE = cacheBuilder.build();
+    MODEL_TYPE_CACHE    = cacheBuilder.build();
+    MODEL_FIELDS_CACHE  = cacheBuilder.build();
   }
 
   /**
@@ -98,7 +98,7 @@ extends MapBasedModelBuilder<M, B> {
   private Map<String, Field> targetFields;
 
   /**
-   * Default constructor for {@link AnnotationBasedModelBuilder}.
+   * Default constructor for {@code AnnotationBasedModelBuilder}.
    *
    * <p>Initializes the model builder to strictly validate required fields.
    */
@@ -107,7 +107,7 @@ extends MapBasedModelBuilder<M, B> {
   }
 
   /**
-   * Constructor for {@link AnnotationBasedModelBuilder}.
+   * Constructor for {@code AnnotationBasedModelBuilder}.
    *
    * @param valueProvider
    *        A handler for controlling how optional and required fields are treated during object
@@ -156,13 +156,13 @@ extends MapBasedModelBuilder<M, B> {
 
   @Override
   public ReflectionBasedFilterBuilder<M, ?> toFilterBuilder() {
-    final ReflectionBasedFilterBuilder<M, ?> filterBuilder;
-    final ModelIdentifier id = this.getId();
+    final ReflectionBasedFilterBuilder<M, ?>  filterBuilder;
+    final ModelIdentifier                     id            = this.getId();
 
     filterBuilder = this.createFilterBuilder(this.getTargetFields());
 
     if (id != null) {
-      filterBuilder.withId(ComparisonType.EQUAL_TO,id);
+      filterBuilder.withId(ComparisonType.EQUAL_TO, id);
     }
 
     for (final Entry<String, Field> fieldEntry : this.targetFields.entrySet()) {
@@ -233,6 +233,126 @@ extends MapBasedModelBuilder<M, B> {
   }
 
   /**
+   * Determine the type of model that this builder builds.
+   *
+   * <p>The default implementation uses reflection to determine the model type, and can infer the
+   * model type using either of the following two patterns:
+   * <ul>
+   *   <li><strong>Based on the generic type of the builder:</strong>
+   *       Sub-classes typically define the model type as the second generic type parameter when
+   *       extending {@link AnnotationBasedModelBuilder}. This information is available to
+   *       annotation-based builders because this is a special case of Java generic semantics in
+   *       which type information is not erased at compile-time.</li>
+   *   <li><strong>Based on the enclosing class of the builder:</strong>
+   *       Builders are almost always defined as static inner classes within the model they build,
+   *       since the builder objects are intended to take the place of constructors for the model.
+   *       If the class that directly encloses a builder is a model, it is assumed that the builder
+   *       constructs that model type.</li>
+   * </ul>
+   *
+   * <p>Whenever possible, builder sub-classes should follow both of the conventions indicated
+   * above. As a last resort, a sub-class may override this method to handle a special case that
+   * causes it to deviate from these conventions.
+   *
+   * <p>The result of this method is statically cached across all builder instances, keyed according
+   * to the name of the builder class. Builders must take special care to ensure that they only
+   * handle one type of model, and that model type is not shared with other builders, to avoid one
+   * builder poisoning the cache for other builders that work with the same type of model.
+   *
+   * @return  The type of model that this builder constructs.
+   *
+   * @throws  IllegalStateException
+   *          If the model type cannot be determined. This is typically because the builder class
+   *          does not follow either of the conventions indicated above. (It can also happen when
+   *          a builder is being mocked out via PowerMock with CGLIB.)
+   */
+  protected Class<? extends M> identifyModelClass()
+  throws IllegalStateException {
+    final Class<? extends M>                  modelClass;
+    final List<Supplier<Class<? extends M>>>  fetchStrategies;
+
+    fetchStrategies = Arrays.asList(
+      this::identifyModelTypeByGenericType,
+      this::identifyModelTypeByEnclosingClass
+    );
+
+    modelClass =
+      fetchStrategies.stream()
+        .map(Supplier::get)
+        .filter(Objects::nonNull)
+        .findFirst()
+        .orElseThrow(() ->
+          new IllegalStateException(
+            String.format(
+              "The builder is expected either to have a generic parameter that is a sub-class of "
+              + "`%s`, or it is expected to be declared as an inner class of the model it builds.",
+              Model.class.getCanonicalName())));
+
+    return modelClass;
+  }
+
+  /**
+   * Determine the builder-populated fields in the target class and all of its parent classes.
+   *
+   * <p>Sub-classes can override this method if they need to specially handle the list of
+   * builder-populated fields. Most sub-classes will not need to override this method.
+   *
+   * <p>The result of this method is statically cached across all builder instances, keyed by model
+   * class name. Builders must take special care to ensure that they only handle one type of model,
+   * and that model type is not shared with other builders, to avoid one builder poisoning the cache
+   * for other builders that work with the same type of model.
+   *
+   * @param   modelClass
+   *          The type of model for which fields are needed.
+   *
+   * @return  A list of all of the fields that the builder must populate.
+   */
+  protected List<Field> identifyTargetFields(final Class<? extends Model> modelClass) {
+    final List<Field> result        = new LinkedList<>();
+    Class<?>          currentClass  = modelClass;
+
+    while (currentClass != null) {
+      final Class<?> superClass = currentClass.getSuperclass();
+
+      result.addAll(Arrays.asList(currentClass.getDeclaredFields()));
+
+      if (Model.class.isAssignableFrom(superClass)) {
+        currentClass = superClass;
+      } else {
+        currentClass = null;
+      }
+    }
+
+    return result;
+  }
+
+  /**
+   * Invokes the private constructor for the model via reflection.
+   *
+   * <p>Sub-classes can override this method if they have to perform special logic to instantiate
+   * a model or after a model has been instantiated.
+   *
+   * @return  A new instance of the model this builder creates.
+   */
+  protected M instantiateModel() {
+    final M                  model;
+    final Class<? extends M> modelClass = this.getModelClass();
+
+    try {
+      final Constructor<? extends M> constructor = modelClass.getDeclaredConstructor();
+
+      constructor.setAccessible(true);
+
+      model = constructor.newInstance();
+    } catch (ReflectiveOperationException ex) {
+      throw new IllegalStateException(
+        "Could not instantiate an instance of the model: " + ex.getMessage(), ex);
+    }
+
+    return model;
+  }
+
+  /**
    * Gets the list of fields that the builder is expected to populate.
    *
    * <p>The list is cached, for performance reasons.
@@ -257,26 +377,160 @@ extends MapBasedModelBuilder<M, B> {
   }
 
   /**
-   * Invokes the private constructor for the model via reflection.
+   * Obtains the type of model that should be assembled by reflecting on the generic signature
+   * and enclosing type of this builder class, at the time it was declared.
    *
-   * @return  A new instance of the model this builder creates.
+   * <p>This requires that the builder be declared as a static, inner class -- with concrete types
+   * provided for generic parameters. If generics are not bound to concrete types, the class that
+   * encloses the builder is examined as a fallback, and is used only if it is a model type.
+   *
+   * @return  The type of model that this builder creates.
+   *
+   * @throws  IllegalStateException
+   *          If this builder is not declared as a static inner class of the model, with a concrete
+   *          model type.
    */
-  private M instantiateModel() {
-    final M                  model;
-    final Class<? extends M> modelClass = this.getModelClass();
+  @SuppressWarnings("unchecked")
+  private Class<? extends M> getModelClass()
+  throws IllegalStateException {
+    Class<? extends M> modelClass;
 
-    try {
-      final Constructor<? extends M> constructor = modelClass.getDeclaredConstructor();
+    modelClass = this.getCachedModelType();
 
-      constructor.setAccessible(true);
+    if (modelClass == null) {
+      modelClass = this.identifyModelClass();
 
-      model = constructor.newInstance();
-    } catch (ReflectiveOperationException ex) {
-      throw new IllegalStateException(
-        "Could not instantiate an instance of the model: " + ex.getMessage(), ex);
+      this.storeModelInCache(modelClass);
     }
 
-    return model;
+    return modelClass;
+  }
+
+  /**
+   * Attempts to return the cached the model type for this builder, if we have already looked it
+   * up in either this builder instance or another instance of the same builder.
+   *
+   * @return  Either the cached model type, if it has previously been resolved; or, {@code null} if
+   *          it is not cached.
+   */
+  @SuppressWarnings("unchecked")
+  private Class<? extends M> getCachedModelType() {
+    final Class<?>            builderClass      = this.getClass();
+    final String              builderClassName  = builderClass.getCanonicalName();
+    final Class<? extends M>  modelType;
+
+    modelType = (Class<? extends M>) MODEL_TYPE_CACHE.getIfPresent(builderClassName);
+
+    if (LOGGER.isTraceEnabled()) {
+      if (modelType == null) {
+        LOGGER.trace(
+          "No cached model type for builder type `{1}`.", builderClassName);
+      } else {
+        LOGGER.trace(
+          "Resolved model type `{0}` for builder type `{1}` using cache.",
+          modelType.getCanonicalName(),
+          builderClassName);
+      }
+    }
+
+    return modelType;
+  }
+
+  /**
+   * Updates the builder-to-model class cache with the given model type for this
+   * builder.
+   *
+   * @param modelClass
+   *        The class that is being cached as the type of model this builder
+   *        produces.
+   */
+  private void storeModelInCache(final Class<? extends M> modelClass) {
+    final Class<?>  builderClass      = this.getClass();
+    final String    builderClassName  = builderClass.getCanonicalName();
+
+    if (LOGGER.isTraceEnabled()) {
+      LOGGER.trace(
+        "Storing model type `{0}` in cache for builder type `{1}`.",
+        modelClass.getCanonicalName(),
+        builderClassName);
+    }
+
+    MODEL_TYPE_CACHE.put(builderClassName, modelClass);
+  }
+
+  /**
+   * Attempts to determine the type of model that was passed into the generic signature of this
+   * builder class at the time it was declared.
+   *
+   * <p>This requires that the builder be declared as a static, inner class -- with concrete types
+   * provided for the model type generic parameter. Otherwise, Java normally uses Type erasure when
+   * dealing with generic parameters.
+   *
+   * @return  The type of model type that was inferred from the generic type parameter on the
+   *          builder; or, {@code null} if the type could not be inferred (typically because the
+   *          builder uses additional, unbound type parameters to allow sub-classes to provide
+   *          concrete types).
+   */
+  @SuppressWarnings("unchecked")
+  private Class<? extends M> identifyModelTypeByGenericType() {
+    Class<? extends M> modelType        = null;
+    final Class<?>     builderClass     = this.getClass();
+    final Type         currentClassType = builderClass.getGenericSuperclass();
+
+    if (currentClassType instanceof ParameterizedType) {
+      final ParameterizedType parameterizedCurrentClass;
+      final Type              modelTypeParam;
+
+      parameterizedCurrentClass = (ParameterizedType)currentClassType;
+
+      modelTypeParam =
+        Arrays.stream(parameterizedCurrentClass.getActualTypeArguments()).findFirst().orElse(null);
+
+      if ((modelTypeParam != null)
+          && (modelTypeParam instanceof Class)
+          && (Model.class.isAssignableFrom((Class)modelTypeParam))) {
+        modelType = (Class<? extends M>)modelTypeParam;
+
+        if (LOGGER.isTraceEnabled()) {
+          LOGGER.trace(
+            "Resolved model type `{0}` for builder type `{1}` using annotation on builder.",
+            modelType.getCanonicalName(),
+            builderClass.getCanonicalName());
+        }
+      }
+    }
+
+    return modelType;
+  }
+
+  /**
+   * Attempts to determine the type of model to create based on the class that encloses the builder.
+   *
+   * <p>By convention, all builders should be static inner classes of the models they build.
+   *
+   * @return  The type of model type that was inferred from the enclosing class of the builder; or,
+   *          {@code null} if there is no enclosing class, or it is not a type of model.
+   */
+  @SuppressWarnings("unchecked")
+  private Class<? extends M> identifyModelTypeByEnclosingClass() {
+    final Class<? extends M>  modelType;
+    final Class<?>            builderClass   = this.getClass(),
+                              enclosingClass = builderClass.getEnclosingClass();
+
+    if ((enclosingClass != null) && (Model.class.isAssignableFrom(enclosingClass))) {
+      modelType = (Class<? extends M>)enclosingClass;
+
+      if (LOGGER.isTraceEnabled()) {
+        LOGGER.trace(
+          "Resolved model type `{0}` for builder type `{1}` using class that encloses builder.",
+          modelType.getCanonicalName(),
+          builderClass.getCanonicalName());
+      }
+    } else {
+      modelType = null;
+    }
+
+    return modelType;
   }
 
   /**
@@ -326,38 +580,17 @@ extends MapBasedModelBuilder<M, B> {
 
     fields = MODEL_FIELDS_CACHE.getIfPresent(modelClass.getCanonicalName());
 
-    if ((fields != null) && LOGGER.isTraceEnabled()) {
-      LOGGER.trace("Resolved fields for model type `{0}` using cache.", modelClass.getName());
-    }
-
-    return fields;
-  }
-
-  /**
-   * Identifies the builder-populated fields in the target class and all of its parent classes.
-   *
-   * @param   modelClass
-   *          The type of model for which fields are needed.
-   *
-   * @return  A list of all of the fields that the builder must populate.
-   */
-  private List<Field> identifyTargetFields(final Class<? extends Model> modelClass) {
-    final List<Field> result        = new LinkedList<>();
-    Class<?>          currentClass  = modelClass;
-
-    while (currentClass != null) {
-      final Class<?> superClass = currentClass.getSuperclass();
-
-      result.addAll(Arrays.asList(currentClass.getDeclaredFields()));
-
-      if (Model.class.isAssignableFrom(superClass)) {
-        currentClass = superClass;
+    if (LOGGER.isTraceEnabled()) {
+      if (fields == null) {
+        LOGGER.trace("No cached fields for model type `{0}`.", modelClass.getCanonicalName());
       } else {
-        currentClass = null;
+        LOGGER.trace(
+          "Resolved fields for model type `{0}` using cache.",
+          modelClass.getCanonicalName());
       }
     }
 
-    return result;
+    return fields;
   }
 
   /**
@@ -426,152 +659,9 @@ extends MapBasedModelBuilder<M, B> {
       throw new IllegalArgumentException(
         String.format(
           "No field within `%s` named `%s` and annotated with BuilderPopulatedField was found.",
-          this.getModelClass().getName(),
+          this.getModelClass().getCanonicalName(),
           fieldName));
     }
-  }
-
-  /**
-   * Obtains the type of model that should be assembled by reflecting on the generic signature
-   * and enclosing type of this builder class, at the time it was declared.
-   *
-   * <p>This requires that the builder be declared as a static, inner class -- with concrete types
-   * provided for generic parameters. If generics are not bound to concrete types, the class that
-   * encloses the builder is examined as a fallback, and is used only if it is a model type.
-   *
-   * @return  The type of model that this builder creates.
-   *
-   * @throws  IllegalStateException
-   *          If this builder is not declared as a static inner class of the model, with a concrete
-   *          model type.
-   */
-  @SuppressWarnings("unchecked")
-  private Class<? extends M> getModelClass()
-  throws IllegalStateException {
-    final Class<? extends M>                  modelClass;
-    final List<Supplier<Class<? extends M>>>  fetchStrategies;
-
-    // TODO: Move this strategy list to a class constant.
-    fetchStrategies = Arrays.asList(
-      this::determineModelTypeUsingCache,
-      this::determineModelTypeByGenericType,
-      this::determineModelTypeByEnclosingClass
-    );
-
-    modelClass =
-      fetchStrategies.stream()
-        .map(Supplier::get)
-        .filter(Objects::nonNull)
-        .findFirst()
-        .orElseThrow(() ->
-          new IllegalStateException(
-            String.format(
-              "The builder is expected either to have a generic parameter that is a sub-class of "
-              + "`%s`, or it is expected to be declared as an inner class of the model it builds.",
-              Model.class.getName())));
-
-    BUILD_MODEL_TYPE_CACHE.put(this.getClass().getName(), modelClass);
-
-    return modelClass;
-  }
-
-  /**
-   * Attempts to return the cached the model type for this builder, if we have already looked it
-   * up in either this builder instance or another instance of the same builder.
-   *
-   * @return  Either the cached model type, if it has previously been resolved; or, {@code null} if
-   *          it is not cached.
-   */
-  @SuppressWarnings("unchecked")
-  private Class<? extends M> determineModelTypeUsingCache() {
-    final Class<?>            builderClass = this.getClass();
-    final Class<? extends M>  modelType;
-
-    modelType = (Class<? extends M>) BUILD_MODEL_TYPE_CACHE.getIfPresent(builderClass.getName());
-
-    if ((modelType != null) && LOGGER.isTraceEnabled()) {
-      LOGGER.trace(
-        "Resolved model type `{0}` for builder type `{1}` using cache.",
-        modelType.getName(),
-        builderClass.getName());
-    }
-
-    return modelType;
-  }
-
-  /**
-   * Attempts to determine the type of model that was passed into the generic signature of this
-   * builder class at the time it was declared.
-   *
-   * <p>This requires that the builder be declared as a static, inner class -- with concrete types
-   * provided for the model type generic parameter. Otherwise, Java normally uses Type erasure when
-   * dealing with generic parameters.
-   *
-   * @return  The type of model type that was inferred from the generic type parameter on the
-   *          builder; or, {@code null} if the type could not be inferred (typically because the
-   *          builder uses additional, unbound type parameters to allow sub-classes to provide
-   *          concrete types).
-   */
-  @SuppressWarnings("unchecked")
-  private Class<? extends M> determineModelTypeByGenericType() {
-    Class<? extends M> modelType        = null;
-    final Class<?>     builderClass     = this.getClass();
-    final Type         currentClassType = builderClass.getGenericSuperclass();
-
-    if (currentClassType instanceof ParameterizedType) {
-      final ParameterizedType parameterizedCurrentClass;
-      final Type              modelTypeParam;
-
-      parameterizedCurrentClass = (ParameterizedType)currentClassType;
-
-      modelTypeParam =
-        Arrays.stream(parameterizedCurrentClass.getActualTypeArguments()).findFirst().orElse(null);
-
-      if ((modelTypeParam != null)
-          && (modelTypeParam instanceof Class)
-          && (Model.class.isAssignableFrom((Class)modelTypeParam))) {
-        modelType = (Class<? extends M>)modelTypeParam;
-
-        if (LOGGER.isTraceEnabled()) {
-          LOGGER.trace(
-            "Resolved model type `{0}` for builder type `{1}` using annotation on builder.",
-            modelType.getName(),
-            builderClass.getName());
-        }
-      }
-    }
-
-    return modelType;
-  }
-
-  /**
-   * Attempts to determine the type of model to create based on the class that encloses the builder.
-   *
-   * <p>By convention, all builders should be static inner classes of the models they build.
-   *
-   * @return  The type of model type that was inferred from the enclosing class of the builder; or,
-   *          {@code null} if there is no enclosing class, or it is not a type of model.
-   */
-  @SuppressWarnings("unchecked")
-  private Class<? extends M> determineModelTypeByEnclosingClass() {
-    final Class<? extends M>  modelType;
-    final Class<?>            builderClass   = this.getClass(),
-                              enclosingClass = builderClass.getEnclosingClass();
-
-    if ((enclosingClass != null) && (Model.class.isAssignableFrom(enclosingClass))) {
-      modelType = (Class<? extends M>)enclosingClass;
-
-      if (LOGGER.isTraceEnabled()) {
-        LOGGER.trace(
-          "Resolved model type `{0}` for builder type `{1}` using class that encloses builder.",
-          modelType.getName(),
-          builderClass.getName());
-      }
-    } else {
-      modelType = null;
-    }
-
-    return modelType;
   }
 
   /**
@@ -594,9 +684,9 @@ extends MapBasedModelBuilder<M, B> {
    *          If the provided field pre-processor is improperly coded and cannot be instantiated.
    */
   protected <T> T invokePreprocessor(
-                                    final Class<? extends FieldValuePreprocessor> fieldPreprocessor,
-                                    final Field field,
-                                    final T rawFieldValue)
+                                  final Class<? extends FieldValuePreprocessor> fieldPreprocessor,
+                                  final Field field,
+                                  final T rawFieldValue)
   throws IllegalArgumentException {
     final T processedValue;
 
