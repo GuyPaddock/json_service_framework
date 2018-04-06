@@ -2,7 +2,7 @@
  * Copyright (c) 2017-2018 Rosie Applications, Inc.
  */
 
-package com.rosieapp.common.collections;
+package com.rosieapp.util;
 
 import java.util.AbstractMap;
 import java.util.Map;

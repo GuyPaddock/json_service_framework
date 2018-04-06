@@ -4,7 +4,7 @@
 
 package com.rosieapp.services.common.model.construction;
 
-import com.rosieapp.common.collections.Maps;
+import com.rosieapp.util.Maps;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.fieldhandling.FieldDependencyHandler;
 import com.rosieapp.services.common.model.fieldhandling.StrictFieldDependencyHandler;

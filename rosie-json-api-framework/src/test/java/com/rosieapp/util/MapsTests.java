@@ -1,4 +1,4 @@
-package com.rosieapp.common.collections;
+package com.rosieapp.util;
 
 import static com.greghaskins.spectrum.dsl.specification.Specification.context;
 import static com.greghaskins.spectrum.dsl.specification.Specification.describe;
