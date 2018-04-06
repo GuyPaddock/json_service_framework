@@ -24,6 +24,12 @@
         <enabled>true</enabled>
       </snapshots>
     </repository>
+
+    <repository>
+      <id>rosie-artifactory-java</id>
+      <name>Rosie Artifactory for Java Libraries</name>
+      <url>s3://rosie-artifactory/lib/java</url>
+    </repository>
   </repositories>
    
   <dependencies>
@@ -85,7 +91,7 @@
     <dependency>
       <groupId>com.greghaskins</groupId>
       <artifactId>spectrum</artifactId>
-      <version>1.2.0</version>
+      <version>1.2.0-rosie1</version>
       <scope>test</scope>
     </dependency>
 
