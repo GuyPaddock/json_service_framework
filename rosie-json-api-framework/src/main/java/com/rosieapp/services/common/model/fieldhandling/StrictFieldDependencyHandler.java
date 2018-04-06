@@ -31,6 +31,7 @@ extends AbstractFieldDependencyHandler {
   public <F> F handleRequiredField(final F fieldValue, final String fieldName)
   throws RequiredFieldMissingException {
     return Optional.ofNullable(fieldValue)
-      .orElseThrow(() -> new RequiredFieldMissingException(fieldName));
+      .orElseThrow(
+        () -> new RequiredFieldMissingException(fieldName));
   }
 }
