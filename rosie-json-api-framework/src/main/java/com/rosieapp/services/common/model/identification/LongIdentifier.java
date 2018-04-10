@@ -8,7 +8,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.rosieapp.services.common.model.identification.LongIdentifier.JsonSerializer;
 import java.io.IOException;
 import java.util.Optional;
 import org.apache.commons.lang.math.NumberUtils;
