@@ -24,7 +24,7 @@ extends Exception {
    */
   public ModelNotFoundException(final Class<? extends Model> modelType,
                                 final ModelIdentifier modelId) {
-    this(modelType.getSimpleName(), modelId);
+    this(modelType.getSimpleName(), modelId, null);
   }
 
   /**
@@ -35,11 +35,48 @@ extends Exception {
    *        The type of model being located.
    * @param modelId
    *        The unique identifier for the target model.
+   * @param cause
+   *        Original cause of exception
+   */
+  public ModelNotFoundException(final Class<? extends Model> modelType,
+      final ModelIdentifier modelId, final Throwable cause) {
+    this(modelType.getSimpleName(), modelId, cause);
+  }
+
+  /**
+   * Initializes the exception to indicate that a model with the specified type and ID was not
+   * found.
+   *
+   * @param modelType
+   *        The type of model being located.
+   * @param modelId
+   *        The unique identifier for the target model.
+   *
    */
   public ModelNotFoundException(final String modelType, final ModelIdentifier modelId) {
-    super(
-      MessageFormat.format("No {0} that has an ID of `{1}` could be found", modelType, modelId));
+    this(modelType, modelId, null);
   }
+
+
+  /**
+   * Initializes the exception to indicate that a model with the specified type and ID was not
+   * found.
+   *
+   * @param modelType
+   *        The type of model being located.
+   * @param modelId
+   *        The unique identifier for the target model.
+   * @param cause
+   *        Original cause of exception
+   */
+  public ModelNotFoundException(final String modelType,
+                                final ModelIdentifier modelId,
+                                final Throwable cause) {
+    super(
+      MessageFormat.format(
+          "No {0} that has an ID of `{1}` could be found", modelType, modelId), cause);
+  }
+
 
   /**
    * Initializes the exception to indicate that a sub-model of the model with the specified type and
