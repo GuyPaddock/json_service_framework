@@ -4,16 +4,14 @@
 
 package com.rosieapp.services.common.client;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.jasminb.jsonapi.ResourceConverter;
-import com.github.jasminb.jsonapi.SerializationFeature;
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory;
+import com.google.common.collect.Iterables;
 import com.rosieapp.services.common.annotation.JsonApiV1Noncompliant;
 import com.rosieapp.services.common.interception.AuthTokenInterceptor;
 import com.rosieapp.services.common.interception.NoncompliantJsonContentTypeInterceptor;
 import com.rosieapp.services.common.model.Model;
+import com.rosieapp.services.common.util.JsonUtils;
 import java.util.List;
 import java.util.Objects;
 import okhttp3.OkHttpClient;
@@ -170,33 +168,14 @@ public abstract class ServiceClientBuilder<T> {
    *
    * @return  The resource converter to use for serialization.
    */
+  @SuppressWarnings("unchecked")
   private ResourceConverter createResourceConverter() {
-    final ObjectMapper mapper = new ObjectMapper();
-    final ResourceConverter converter;
-    final List<Class<? extends Model>> modelTypes;
-
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    mapper.registerModule(new JavaTimeModule());
-    mapper.configure(
-      com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
-      false
-    );
-    mapper.configure(
-      DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false
-    );
-    mapper.configure(
-      DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false
-    );
-
-    modelTypes = getModelTypes();
+    final ResourceConverter             converter;
+    final List<Class<? extends Model>>  modelTypes = this.getModelTypes();
 
     converter =
-      new ResourceConverter(
-        mapper,
-        getModelTypes().toArray(new Class[modelTypes.size()])
-      );
-
-    converter.enableSerializationOption(SerializationFeature.INCLUDE_RELATIONSHIP_ATTRIBUTES);
+      JsonUtils.createResourceConverterThatIncludesRelationshipsFor(
+        Iterables.toArray(modelTypes, Class.class));
 
     return converter;
   }
