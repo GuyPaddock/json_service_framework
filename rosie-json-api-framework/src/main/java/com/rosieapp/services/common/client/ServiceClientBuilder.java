@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 Rosie Applications, Inc.
+ */
+
 package com.rosieapp.services.common.client;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -176,6 +180,12 @@ public abstract class ServiceClientBuilder<T> {
     mapper.configure(
       com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,
       false
+    );
+    mapper.configure(
+      DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false
+    );
+    mapper.configure(
+      DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false
     );
 
     modelTypes = getModelTypes();

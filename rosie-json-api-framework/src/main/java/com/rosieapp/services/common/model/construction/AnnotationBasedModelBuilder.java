@@ -19,8 +19,6 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * An optional base class for model builders that wish to use annotations on fields to control
@@ -50,8 +48,6 @@ import org.slf4j.LoggerFactory;
 public abstract class AnnotationBasedModelBuilder<M extends Model,
                                                   B extends AnnotationBasedModelBuilder<M, B>>
 extends MapBasedModelBuilder<M, B> {
-  private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationBasedModelBuilder.class);
-
   /**
    * This map of fields that this builder will populate on the model.
    */
@@ -205,7 +201,23 @@ extends MapBasedModelBuilder<M, B> {
   }
 
   /**
-   * Builds a new instancec of the model type via its private constructor.
+   * Builds a new, shallow instance of the model, and then assigns it an ID.
+   *
+   * <p>Sub-classes can override this method if they have to perform special logic to instantiate
+   * a model with an ID, or after a model has been instantiated with an ID.
+   *
+   * @return  The shallow model instances.
+   */
+  protected M instantiateModelWithId() {
+    final M model = this.instantiateModel();
+
+    model.assignId(this.buildId());
+
+    return model;
+  }
+
+  /**
+   * Builds a new instance of the model type via its private constructor.
    *
    * <p>Sub-classes can override this method if they have to perform special logic to instantiate
    * a model or after a model has been instantiated.
@@ -217,6 +229,32 @@ extends MapBasedModelBuilder<M, B> {
     final ModelTypeReflector<M> reflector  = new ModelTypeReflector<>(modelClass);
 
     return reflector.instantiateModel();
+  }
+
+  /**
+   * Obtains the type of model that this builder builds.
+   *
+   * <p>This is typically determined automatically by the builder by reflecting on the generic
+   * signature and enclosing type of this builder class, based on how the builder class was
+   * declared.
+   *
+   * <p>This requires that the builder be declared as a static, inner class -- with concrete types
+   * provided for generic parameters. If generics are not bound to concrete types, the class that
+   * encloses the builder is examined as a fallback, and is used only if it is a model type.
+   * See {@link BuilderTypeReflector#getModelClass()} for more information on how this works.
+   *
+   * <p>Whenever possible, builder sub-classes should follow both of the conventions described
+   * above. As a last resort, a sub-class may override this method to handle a special case that
+   * causes it to deviate from these conventions.
+   *
+   * @return  The type of model that this builder creates.
+   *
+   * @throws  IllegalStateException
+   *          If the model type cannot be inferred from the way that the builder was declared
+   *          (typically because the builder is not following the standard conventions).
+   */
+  protected Class<? extends M> getModelClass() {
+    return this.builderTypeReflector.getModelClass();
   }
 
   /**
@@ -249,45 +287,6 @@ extends MapBasedModelBuilder<M, B> {
    */
   private void populateTargetFields() {
     this.targetFields = this.modelTypeReflector.getAllBuilderPopulatedFields();
-  }
-
-  /**
-   * Builds a new, shallow instance of the model, and then assigns it an ID.
-   *
-   * @return  The shallow model instances.
-   */
-  private M instantiateModelWithId() {
-    final M model = this.instantiateModel();
-
-    model.assignId(this.buildId());
-
-    return model;
-  }
-
-  /**
-   * Obtains the type of model that this builder builds.
-   *
-   * <p>This is typically determined automatically by the builder by reflecting on the generic
-   * signature and enclosing type of this builder class, based on how the builder class was
-   * declared.
-   *
-   * <p>This requires that the builder be declared as a static, inner class -- with concrete types
-   * provided for generic parameters. If generics are not bound to concrete types, the class that
-   * encloses the builder is examined as a fallback, and is used only if it is a model type.
-   * See {@link BuilderTypeReflector#getModelClass()} for more information on how this works.
-   *
-   * <p>Whenever possible, builder sub-classes should follow both of the conventions described
-   * above. As a last resort, a sub-class may override this method to handle a special case that
-   * causes it to deviate from these conventions.
-   *
-   * @return  The type of model that this builder creates.
-   *
-   * @throws  IllegalStateException
-   *          If the model type cannot be inferred from the way that the builder was declared
-   *          (typically because the builder is not following the standard conventions).
-   */
-  private Class<? extends M> getModelClass() {
-    return this.builderTypeReflector.getModelClass();
   }
 
   /**

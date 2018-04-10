@@ -1,4 +1,8 @@
-package com.rosieapp.services.common.model.tests;
+/*
+ * Copyright (c) 2018 Rosie Applications, Inc.
+ */
+
+package com.rosieapp.services.common.util;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.Option;
@@ -10,11 +14,14 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 import java.util.EnumSet;
 import java.util.Set;
 
-public final class JsonTestHelper {
+/**
+ * A class that contains commonly-needed utility functions for JSON-related tests.
+ */
+public final class JsonTestUtils {
   /**
    * Private constructor for singleton utility class.
    */
-  private JsonTestHelper() {
+  private JsonTestUtils() {
   }
 
   /**
@@ -43,5 +50,4 @@ public final class JsonTestHelper {
       }
     });
   }
-
 }

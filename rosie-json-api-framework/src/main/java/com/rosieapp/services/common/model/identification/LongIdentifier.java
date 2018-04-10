@@ -4,7 +4,11 @@
 
 package com.rosieapp.services.common.model.identification;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import java.io.IOException;
 import java.util.Optional;
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -12,7 +16,7 @@ import org.apache.commons.lang.math.NumberUtils;
  * A model identifier that uses traditional, long integer primary keys -- typically issued by a
  * single source of record -- to unique identify a persisted model.
  */
-@JsonSerialize(using = LongIdentifierSerializer.class)
+@JsonSerialize(using = LongIdentifier.JsonSerializer.class)
 public final class LongIdentifier
 extends PersistedModelIdentifier
 implements Comparable<LongIdentifier> {
@@ -79,8 +83,8 @@ implements Comparable<LongIdentifier> {
    *
    * <p>This constructor is required by Jackson to properly initialize the object with a value, so
    * that the object can be populated while de-serializing JSON.
-   *
    */
+  @SuppressWarnings("unused")
   private LongIdentifier() {
     super();
 
@@ -145,5 +149,43 @@ implements Comparable<LongIdentifier> {
   @Override
   public int compareTo(final LongIdentifier other) {
     return Long.compare(this.getValue(), other.getValue());
+  }
+
+  /**
+   * Custom Serializer for Jackson to serialize a {@code LongIdentifier} to and from a {@code long}
+   * value.
+   *
+   * <p>Use the {@code @JsonSerialize(using = LongIdentifierSerializer.class)} annotation on fields
+   * or classes that are.
+   */
+  public static class JsonSerializer
+  extends StdSerializer<LongIdentifier> {
+    /**
+     * Constructor for {@code JsonSerializer}.
+     */
+    @SuppressWarnings("unused")
+    public JsonSerializer() {
+      this(null);
+    }
+
+    /**
+     * Constructor for {@code JsonSerializer}.
+     *
+     * @param identifierType
+     *        The type for which this serializer is being instantiated.
+     */
+    public JsonSerializer(final Class<LongIdentifier> identifierType) {
+      super(identifierType);
+    }
+
+    /**
+     * Custom JsonSerializer for Jackson to serialize a {@code LongIdentifier} to and from a
+     * {@code long} value.
+     */
+    @Override
+    public void serialize(final LongIdentifier longIdentifier, final JsonGenerator jsonGenerator,
+                          final SerializerProvider serializerProvider) throws IOException {
+      jsonGenerator.writeNumber(longIdentifier.getValue());
+    }
   }
 }

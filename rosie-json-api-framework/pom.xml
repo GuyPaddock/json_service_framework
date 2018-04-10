@@ -2,7 +2,7 @@
 <!--
   Copyright 2017 Rosie Applications, Inc. All rights reserved.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -31,7 +31,7 @@
       <url>s3://rosie-artifactory/lib/java</url>
     </repository>
   </repositories>
-   
+
   <dependencies>
     <!-- JSON API Converter -->
     <dependency>
@@ -59,6 +59,12 @@
       <version>2.7.1</version>
       <!-- Provided by client application -->
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+      <version>2.7.1</version>
     </dependency>
 
     <!-- Utilities -->
@@ -125,12 +131,6 @@
       <artifactId>assertj-json</artifactId>
       <version>1.1.0</version>
       <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.datatype</groupId>
-      <artifactId>jackson-datatype-jsr310</artifactId>
-      <version>2.7.1</version>
     </dependency>
 
     <!-- TODO: AUTH-89 - Move to Rosie common POM -->
@@ -208,5 +208,13 @@
         </executions>
       </plugin>
     </plugins>
+
+    <extensions>
+      <extension>
+        <groupId>org.springframework.build</groupId>
+        <artifactId>aws-maven</artifactId>
+        <version>5.0.0.RELEASE</version>
+      </extension>
+    </extensions>
   </build>
 </project>
