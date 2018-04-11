@@ -4,6 +4,8 @@
 
 package com.rosieapp.services.common.model.construction;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.fieldhandling.FieldDependencyHandler;
 import com.rosieapp.services.common.model.fieldhandling.StrictFieldDependencyHandler;
@@ -25,6 +27,9 @@ import java.util.Optional;
  *        The builder class itself. (This must be the same type as the class being defined, to avoid
  *        a {@code ClassCastException}).
  */
+// The following annotation is IMPORTANT. It is needed for deserialization to work properly with
+// camel-cased fields, since Jackson will examine methods on the builder to identify fields.
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public abstract class AbstractModelBuilder<M extends Model, B extends AbstractModelBuilder<M, B>>
 implements ModelBuilder<M> {
   private final FieldDependencyHandler fieldDependencyHandler;
