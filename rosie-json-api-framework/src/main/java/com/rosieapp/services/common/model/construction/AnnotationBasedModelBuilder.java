@@ -386,6 +386,8 @@ extends MapBasedModelBuilder<M, B> {
   throws IllegalArgumentException {
     final T processedValue;
 
+    // Do not bother with pre-processing if we don't have a pre-processor or we have no field value
+    // to pre-process
     if ((rawFieldValue == null) || (fieldPreprocessor == null)) {
       processedValue = rawFieldValue;
     } else {

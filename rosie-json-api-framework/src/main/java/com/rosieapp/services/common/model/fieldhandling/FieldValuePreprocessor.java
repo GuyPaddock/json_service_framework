@@ -13,6 +13,10 @@ import java.lang.reflect.Field;
  * <p>A field pre-processor is typically associated with a field via the
  * {@link com.rosieapp.services.common.model.annotation.BuilderPopulatedField} annotation on the
  * field.
+ *
+ * <p>Pre-processors are typically not invoked for fields without a value (i.e. pre-processors
+ * aren't invoked when the field value is {@code null}). However, pre-processors are expected to
+ * gracefully handle receiving a {@code null} value should this convention change in the future.
  */
 public interface FieldValuePreprocessor {
   /**
@@ -21,7 +25,7 @@ public interface FieldValuePreprocessor {
    * @param   field
    *          The model object field being populated.
    * @param   fieldValue
-   *          The value being pre-processed.
+   *          The value being pre-processed. Can be {@code null}.
    *
    * @param   <T>
    *          The type of field value.

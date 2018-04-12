@@ -16,7 +16,7 @@ import java.lang.reflect.Field;
  * also takes advantage of the {@link #clone()} method on all field values that support cloning.
  *
  * <p>Not all field values are cloned or copied; scalar values that do not implement
- * {@code Cloneable} are passed through, as-is, without additional processing. Model implementers
+ * {@code Cloneable} are passed through as-is without additional processing. Model implementers
  * should take special care when working with such field values, as the same instances could
  * potentially, unintentionally be shared by several different model instances.
  */

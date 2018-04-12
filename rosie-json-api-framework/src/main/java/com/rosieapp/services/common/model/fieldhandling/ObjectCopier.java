@@ -18,6 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.function.Function;
 import javax.naming.directory.Attribute;
 import javax.naming.directory.BasicAttribute;
@@ -52,15 +53,25 @@ public final class ObjectCopier {
    * </ul>
    *
    * @param   source
-   *          The object to copy.
+   *          The object to copy. Can be {@code null}.
    *
    * @param   <T>
    *          The type of object.
    *
-   * @return  If the object can be copied, a copy of the object; otherwise, the original object.
+   * @return  - If the object can be copied, a copy of the object
+   *          - If the object is {@code null}, then {@code null}.
+   *          - Otherwise, {@code null}.
    */
   public static <T> T copy(final T source) {
-    return getHandlerFor(source).apply(source);
+    final T result;
+
+    result =
+      Optional
+        .ofNullable(source)
+        .map((nonNullSource) -> getHandlerFor(nonNullSource).apply(nonNullSource))
+        .orElse(null);
+
+    return result;
   }
 
   /**
