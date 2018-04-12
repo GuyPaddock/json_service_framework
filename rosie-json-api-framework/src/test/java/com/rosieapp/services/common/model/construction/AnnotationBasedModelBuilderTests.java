@@ -29,7 +29,8 @@ import org.junit.runner.RunWith;
   "Convert2MethodRef",
   "CodeBlock2Expr",
   "ClassInitializerMayBeStatic",
-  "Duplicates"})
+  "Duplicates"
+})
 public class AnnotationBasedModelBuilderTests {
   {
     describe("constructors", () -> {
