@@ -16,12 +16,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
-/**
- * These tests only cover the pre-processor itself, which delegates most of the logic to
- * {@link ObjectCopier}.
- *
- * @see ObjectCopierTest
- */
 @RunWith(Spectrum.class)
 @SuppressWarnings({
   "Convert2MethodRef",
@@ -29,14 +23,14 @@ import org.junit.runner.RunWith;
   "ClassInitializerMayBeStatic",
   "Duplicates"
 })
-public class CloningPreprocessorTest {
+public class PassthroughPreprocessorTest {
   {
     describe("#preprocessField", () -> {
       final Variable<Object> fieldValue = new Variable<>();
 
       final Supplier<Field> field = let(() -> mock(Field.class));
 
-      final Supplier<FieldValuePreprocessor> subject = let(() -> new CloningPreprocessor());
+      final Supplier<FieldValuePreprocessor> subject = let(() -> new PassthroughPreprocessor());
 
       final Supplier<Object> result =
         let(() -> subject.get().preprocessField(field.get(), fieldValue.get()));
@@ -71,9 +65,8 @@ public class CloningPreprocessorTest {
           fieldValue.set(object.get());
         });
 
-        it("returns a shallow copy of the instance it was given", () -> {
-          assertThat(result.get()).isNotSameAs(object.get());
-          assertThat(result.get()).isEqualTo(object.get());
+        it("returns the same instance it was given", () -> {
+          assertThat(result.get()).isSameAs(object.get());
         });
       });
     });
