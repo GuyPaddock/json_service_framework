@@ -237,8 +237,7 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
       modelTypeParam =
         Arrays.stream(parameterizedCurrentClass.getActualTypeArguments()).findFirst().orElse(null);
 
-      if ((modelTypeParam != null)
-          && (modelTypeParam instanceof Class)
+      if ((modelTypeParam instanceof Class)
           && (Model.class.isAssignableFrom((Class)modelTypeParam))) {
         modelType = (Class<M>)modelTypeParam;
 
