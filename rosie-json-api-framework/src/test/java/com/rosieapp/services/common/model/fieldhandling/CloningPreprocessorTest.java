@@ -18,9 +18,9 @@ import org.junit.runner.RunWith;
 
 /**
  * These tests only cover the pre-processor itself, which delegates most of the logic to
- * {@link ObjectCopier}.
+ * {@link com.rosieapp.util.ObjectCopier}.
  *
- * @see ObjectCopierTest
+ * @see com.rosieapp.util.ObjectCopierTest
  */
 @RunWith(Spectrum.class)
 @SuppressWarnings({

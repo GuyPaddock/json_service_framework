@@ -2,7 +2,7 @@
  * Copyright (c) 2017-2018 Rosie Applications, Inc.
  */
 
-package com.rosieapp.services.common.model.fieldhandling;
+package com.rosieapp.util;
 
 import com.google.common.collect.ImmutableMap;
 import java.lang.reflect.Constructor;
@@ -26,8 +26,8 @@ import javax.naming.directory.BasicAttribute;
 /**
  * A utility class for getting a shallow copy of an object, if the object can be duplicated.
  *
- * <p>This is used to provide a defensive, "safe" field value -- a value that is not shared among
- * multiple instances of the same model.
+ * <p>This can be used to perform defensive, "safe" copies in setters and builders -- to ensure
+ * that there is no way to manipulate the internal state of an object from outside that object.
  */
 public final class ObjectCopier {
   /**

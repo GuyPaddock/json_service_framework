@@ -4,6 +4,7 @@
 
 package com.rosieapp.services.common.model.fieldhandling;
 
+import com.rosieapp.util.ObjectCopier;
 import java.lang.reflect.Field;
 
 /**
