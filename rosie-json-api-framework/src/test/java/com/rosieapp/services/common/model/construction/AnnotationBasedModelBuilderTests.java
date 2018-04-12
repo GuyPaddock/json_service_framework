@@ -2,7 +2,6 @@ package com.rosieapp.services.common.model.construction;
 
 import static com.greghaskins.spectrum.dsl.specification.Specification.context;
 import static com.greghaskins.spectrum.dsl.specification.Specification.describe;
-import static com.greghaskins.spectrum.dsl.specification.Specification.fcontext;
 import static com.greghaskins.spectrum.dsl.specification.Specification.it;
 import static com.greghaskins.spectrum.dsl.specification.Specification.let;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,11 +16,13 @@ import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
 import com.rosieapp.services.common.model.fieldhandling.FieldDependencyHandler;
 import com.rosieapp.services.common.model.fieldhandling.FieldValuePreprocessor;
 import com.rosieapp.services.common.model.fieldhandling.RequiredFieldMissingException;
-import com.rosieapp.services.common.model.fieldhandling.StrictFieldDependencyHandler;
 import com.rosieapp.services.common.model.filtering.ModelFilter;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import com.rosieapp.services.common.model.identification.ModelIdentifierFactory;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import org.junit.runner.RunWith;
 
 @RunWith(Spectrum.class)
@@ -332,48 +333,51 @@ public class AnnotationBasedModelBuilderTests {
 
           filter = builder.get().toFilterBuilder().build();
 
-          assertThat(filter.matches(shallowModel1.get()));
-          assertThat(filter.matches(shallowModel2.get()));
-          assertThat(filter.matches(populatedModel.get()));
+          assertThat(filter.matches(shallowModel1.get())).isTrue();
+          assertThat(filter.matches(shallowModel2.get())).isTrue();
+          assertThat(filter.matches(populatedModel.get())).isTrue();
         });
       });
 
       context("when the model builder has an ID in the context", () -> {
-        final Supplier<ModelThatExtendsAnotherModel.Builder> builder1 = let(() -> {
-          final ModelThatExtendsAnotherModel.Builder result;
-
-          result =
+        final Supplier<List<ModelThatExtendsAnotherModel.Builder>> builders = let(() -> {
+          return Arrays.asList(
             ModelThatExtendsAnotherModel
               .getBuilder()
-              .withId("shallowModel1");
+              .withId("shallowModel1"),
 
-          return result;
-        });
-
-        final Supplier<ModelThatExtendsAnotherModel.Builder> builder2 = let(() -> {
-          final ModelThatExtendsAnotherModel.Builder result;
-
-          result =
             ModelThatExtendsAnotherModel
               .getBuilder()
-              .withId("shallowModel2");
+              .withId("shallowModel2"),
 
-          return result;
+            ModelThatExtendsAnotherModel
+              .getBuilder()
+              .withId("populatedModel")
+          );
         });
+
+        final Supplier<List<ModelFilter<ModelThatExtendsAnotherModel>>> filters = let(() -> {
+          return builders
+            .get()
+            .stream()
+            .map((builder) -> builder.toFilterBuilder().build())
+            .collect(Collectors.toList());
+        });
+
         it("constructs a filter builder that has ID equality in its context", () -> {
-          final ModelFilter<ModelThatExtendsAnotherModel> filter1,
-                                                          filter2;
+          final List<ModelFilter<ModelThatExtendsAnotherModel>> localFilters = filters.get();
 
-          filter1 = builder1.get().toFilterBuilder().build();
-          filter2 = builder2.get().toFilterBuilder().build();
+          assertThat(localFilters.get(0).matches(shallowModel1.get())).isTrue();
+          assertThat(localFilters.get(0).matches(shallowModel2.get())).isFalse();
+          assertThat(localFilters.get(0).matches(populatedModel.get())).isFalse();
 
-          assertThat(filter1.matches(shallowModel1.get()));
-          assertThat(!filter1.matches(shallowModel2.get()));
-          assertThat(!filter1.matches(populatedModel.get()));
+          assertThat(localFilters.get(1).matches(shallowModel1.get())).isFalse();
+          assertThat(localFilters.get(1).matches(shallowModel2.get())).isTrue();
+          assertThat(localFilters.get(1).matches(populatedModel.get())).isFalse();
 
-          assertThat(!filter1.matches(shallowModel1.get()));
-          assertThat(filter2.matches(shallowModel2.get()));
-          assertThat(!filter1.matches(populatedModel.get()));
+          assertThat(localFilters.get(2).matches(shallowModel1.get())).isFalse();
+          assertThat(localFilters.get(2).matches(shallowModel2.get())).isFalse();
+          assertThat(localFilters.get(2).matches(populatedModel.get())).isTrue();
         });
       });
 
@@ -394,9 +398,9 @@ public class AnnotationBasedModelBuilderTests {
 
           filter = builder.get().toFilterBuilder().build();
 
-          assertThat(!filter.matches(shallowModel1.get()));
-          assertThat(!filter.matches(shallowModel2.get()));
-          assertThat(filter.matches(populatedModel.get()));
+          assertThat(filter.matches(shallowModel1.get())).isFalse();
+          assertThat(filter.matches(shallowModel2.get())).isFalse();
+          assertThat(filter.matches(populatedModel.get())).isTrue();
         });
       });
     });
@@ -611,6 +615,7 @@ public class AnnotationBasedModelBuilderTests {
     }
   }
 
+  @SuppressWarnings("unused")
   public static class ModelWithMisconfiguredBuilder
   extends AbstractModel {
     @BuilderPopulatedField(preprocessor = FieldValuePreprocessor.class)
