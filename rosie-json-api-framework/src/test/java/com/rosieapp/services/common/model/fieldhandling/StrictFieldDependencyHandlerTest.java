@@ -6,13 +6,12 @@ import static com.greghaskins.spectrum.dsl.specification.Specification.describe;
 import static com.greghaskins.spectrum.dsl.specification.Specification.it;
 import static com.greghaskins.spectrum.dsl.specification.Specification.let;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.greghaskins.spectrum.Spectrum;
 import com.greghaskins.spectrum.Variable;
 import java.util.function.Supplier;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 @RunWith(Spectrum.class)
 @SuppressWarnings({
@@ -21,10 +20,9 @@ import org.mockito.Mockito;
   "ClassInitializerMayBeStatic",
   "Duplicates"
 })
-public class AbstractFieldDependencyHandlerTest {
+public class StrictFieldDependencyHandlerTest {
   {
-    final Supplier<FieldDependencyHandler> subject =
-      let(() -> mock(AbstractFieldDependencyHandler.class, Mockito.CALLS_REAL_METHODS));
+    final Supplier<FieldDependencyHandler> subject = let(() -> new StrictFieldDependencyHandler());
 
     describe("#handleOptionalField", () -> {
       final Variable<String> fieldValue   = new Variable<>();
@@ -83,6 +81,38 @@ public class AbstractFieldDependencyHandlerTest {
           it("returns the field value", () -> {
             assertThat(result.get()).isEqualTo("field value");
           });
+        });
+      });
+    });
+
+    describe("#handleRequiredField", () -> {
+      final Variable<String> fieldValue = new Variable<>();
+
+      final Supplier<String> result =
+        let(() -> subject.get().handleRequiredField(fieldValue.get(), "testField"));
+
+      context("when the field value is `null`", () -> {
+        beforeEach(() -> {
+          fieldValue.set(null);
+        });
+
+        it("throws a `RequiredFieldMissingException`", () -> {
+          assertThatExceptionOfType(RequiredFieldMissingException.class)
+            .isThrownBy(() -> {
+              result.get();
+            })
+            .withMessage("`testField` is a required field that has not been provided with a value")
+            .withNoCause();
+        });
+      });
+
+      context("when the field value is not `null`", () -> {
+        beforeEach(() -> {
+          fieldValue.set("field value");
+        });
+
+        it("returns the field value", () -> {
+          assertThat(result.get()).isEqualTo("field value");
         });
       });
     });

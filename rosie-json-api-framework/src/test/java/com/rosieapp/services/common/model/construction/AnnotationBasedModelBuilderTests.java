@@ -159,7 +159,7 @@ public class AnnotationBasedModelBuilderTests {
               .build();
           })
           .withMessage(
-            "`requiredCast` is a required field that has not been provided with a value.")
+            "`requiredCast` is a required field that has not been provided with a value")
           .withNoCause();
         });
 
@@ -171,7 +171,7 @@ public class AnnotationBasedModelBuilderTests {
               .withOptionalCast("Malory Archer")
               .build();
           }).withMessage(
-            "`additionalCast` is a required field that has not been provided with a value.");
+            "`additionalCast` is a required field that has not been provided with a value");
         });
       });
 
