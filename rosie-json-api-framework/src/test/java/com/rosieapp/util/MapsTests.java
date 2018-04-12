@@ -18,6 +18,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 import org.junit.runner.RunWith;
 
+@SuppressWarnings({"CodeBlock2Expr", "ClassInitializerMayBeStatic"})
 @RunWith(Spectrum.class)
 public class MapsTests {
   {
@@ -42,8 +43,8 @@ public class MapsTests {
         context("when the map maintains a sort order", () -> {
           final Supplier<Map<String, String>> map = let(MapsTests::createTreeMap);
 
-          it("returns a comma-separated string of entries, in the order they appear in the " +
-             "map", () -> {
+          it("returns a comma-separated string of entries, in the order they appear in the "
+             + "map", () -> {
             assertThat(Maps.toString(map.get()))
               .isEqualTo("\"key1\": \"value2\", \"key2\": \"value1\"");
           });
@@ -52,8 +53,8 @@ public class MapsTests {
         context("when the map orders entries by hash code", () -> {
           final Supplier<Map<String, String>> map = let(MapsTests::createHashMap);
 
-          it("returns a comma-separated string of entries, in whatever order the map returns " +
-             "them", () -> {
+          it("returns a comma-separated string of entries, in whatever order the map returns "
+             + "them", () -> {
             assertThat(Maps.toString(map.get()))
               .isEqualTo("\"key1\": \"value3\", \"key2\": \"value2\", \"id\": \"value1\"");
           });
@@ -91,8 +92,8 @@ public class MapsTests {
         context("when the map orders entries by hash code", () -> {
           final Supplier<Map<String, String>> map = let(MapsTests::createHashMap);
 
-          it("returns a comma-separated string of entries, in whatever order the map returns " +
-             "them", () -> {
+          it("returns a comma-separated string of entries, in whatever order the map returns "
+             + "them", () -> {
             assertThat(Maps.toStringSorted(map.get()))
               .isEqualTo("\"id\": \"value1\", \"key1\": \"value3\", \"key2\": \"value2\"");
           });
@@ -125,8 +126,8 @@ public class MapsTests {
               new SimpleEntry<>("key2", "value2"),
               new SimpleEntry<>("key1", "value1")));
 
-        it("returns a comma-separated string of entries, in whatever order the stream returns " +
-           "them", () -> {
+        it("returns a comma-separated string of entries, in whatever order the stream returns "
+           + "them", () -> {
           assertThat(Maps.toString(stream.get()))
             .isEqualTo("\"key2\": \"value2\", \"key1\": \"value1\"");
         });
