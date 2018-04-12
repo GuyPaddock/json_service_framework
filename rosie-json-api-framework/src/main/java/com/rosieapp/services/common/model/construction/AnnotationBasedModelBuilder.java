@@ -6,14 +6,14 @@ package com.rosieapp.services.common.model.construction;
 
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
-import com.rosieapp.services.common.model.construction.reflection.BuilderTypeReflector;
-import com.rosieapp.services.common.model.construction.reflection.ModelTypeReflector;
 import com.rosieapp.services.common.model.fieldhandling.FieldDependencyHandler;
 import com.rosieapp.services.common.model.fieldhandling.FieldValuePreprocessor;
 import com.rosieapp.services.common.model.fieldhandling.StrictFieldDependencyHandler;
 import com.rosieapp.services.common.model.filtering.ComparisonType;
 import com.rosieapp.services.common.model.filtering.ReflectionBasedFilterBuilder;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
+import com.rosieapp.services.common.model.reflection.BuilderTypeReflector;
+import com.rosieapp.services.common.model.reflection.ModelTypeReflector;
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.Map;

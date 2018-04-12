@@ -1,4 +1,4 @@
-package com.rosieapp.services.common.model.construction.reflection;
+package com.rosieapp.services.common.model.reflection;
 
 import com.google.common.cache.Cache;
 import com.rosieapp.services.common.model.Model;
