@@ -14,7 +14,13 @@ import java.util.stream.Collector;
  *
  * <p>This expands on functionality provided by {@link java.util.stream.Collectors}.
  */
-public class Collectors {
+public final class Collectors {
+  /**
+   * Private constructor for singleton utility class.
+   */
+  private Collectors() {
+  }
+
   /**
    * Returns a {@code Collector} that accumulates elements into a {@code LinkedHashMap} whose keys
    * and values are the result of applying the provided mapping functions to the input elements.
@@ -43,6 +49,7 @@ public class Collectors {
    * @throws  IllegalStateException
    *          If two input elements map to the same key.
    */
+  @SuppressWarnings("squid:S1452") // Have to follow contract of java.util.stream.Collectors.toMap()
   public static <T, K, U>
   Collector<T, ?, Map<K, U>> toLinkedMap(final Function<? super T, ? extends K> keyMapper,
                                          final Function<? super T, ? extends U> valueMapper)

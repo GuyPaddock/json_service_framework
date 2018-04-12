@@ -133,9 +133,9 @@ implements ModelBuilder<M> {
   /**
    * Processes a request for a field that is required in a model being constructed by this builder.
    *
-   * <p>The request is delegated to the field dependency handler. If this builder has not been provided
-   * with a value for the field (i.e. {@code fieldValue} is {@code null}), the handler may choose to
-   * communicate this by raising an {@link IllegalStateException}, or it may simply supply
+   * <p>The request is delegated to the field dependency handler. If this builder has not been
+   * provided with a value for the field (i.e. {@code fieldValue} is {@code null}), the handler may
+   * choose to communicate this by raising an {@link IllegalStateException}, or it may simply supply
    * {@code null} (or a different value of its own choosing) in place of the missing value.
    *
    * @param   fieldValue
@@ -152,8 +152,8 @@ implements ModelBuilder<M> {
    *          all required fields are populated.
    *
    * @throws  IllegalStateException
-   *          If the required field value is {@code null} or invalid, and the field dependency handler
-   *          considers this to be an error.
+   *          If the required field value is {@code null} or invalid, and the field dependency
+   *          handler considers this to be an error.
    *
    * @see     FieldDependencyHandler
    */
@@ -165,10 +165,10 @@ implements ModelBuilder<M> {
   /**
    * Processes a request for a field that is optional in a model being constructed by this builder.
    *
-   * <p>The request is delegated to the field dependency handler. If this builder has not been provided
-   * with a value for the field (i.e. {@code fieldValue} is {@code null}), then in place of the
-   * missing value, the handler may choose to return the {@code defaultValue} that the builder has
-   * requested, or any other value of the handler's choosing.
+   * <p>The request is delegated to the field dependency handler. If this builder has not been
+   * provided with a value for the field (i.e. {@code fieldValue} is {@code null}), then in place of
+   * the missing value, the handler may choose to return the {@code defaultValue} that the builder
+   * has requested, or any other value of the handler's choosing.
    *
    * @param   fieldValue
    *          The current value this builder has for the field.
@@ -187,8 +187,10 @@ implements ModelBuilder<M> {
    *
    * @see     FieldDependencyHandler
    */
-  protected <F> F supplyOptionalFieldValue(final F fieldValue, final String fieldName, final F defaultValue) {
-    return this.getFieldDependencyHandler().handleOptionalField(fieldValue, fieldName, defaultValue);
+  protected <F> F supplyOptionalFieldValue(final F fieldValue, final String fieldName,
+                                           final F defaultValue) {
+    return this.getFieldDependencyHandler()
+               .handleOptionalField(fieldValue, fieldName, defaultValue);
   }
 
   /**

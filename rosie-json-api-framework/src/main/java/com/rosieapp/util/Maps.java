@@ -42,26 +42,6 @@ public final class Maps {
   }
 
   /**
-   * Converts all of the entries of a map to a string, sorted by key.
-   * <p>
-   * The output is formatted more nicely than the default {@link AbstractMap#toString()}
-   * implementation in the JDK. Keys and values are wrapped in quotes, and the values are presented
-   * in alphabetic order by key.
-   *
-   * @param   map
-   *          The map to convert to a string.
-   * @param   <K>
-   *          The type of key being used in the map.
-   * @param   <V>
-   *          The type of value being used in the map.
-   *
-   * @return  The string representation of the map.
-   */
-  public static <K extends Comparable<K>, V> String toStringSorted(final Map<K, V> map) {
-    return toString(map.entrySet().stream().sorted(Map.Entry.comparingByKey()));
-  }
-
-  /**
    * Converts a stream of map entries to a string.
    *
    * <p>This overload is provided for cases in which information from multiple maps is being
@@ -79,6 +59,7 @@ public final class Maps {
    *
    * @return  The string representation of the map.
    */
+  @SuppressWarnings("UnnecessaryLocalVariable")
   public static <K extends Comparable<K>, V> String toString(
                                                       final Stream<Entry<K, V>> entryStream) {
     final String string =
@@ -88,5 +69,25 @@ public final class Maps {
         .collect(Collectors.joining(", "));
 
     return string;
+  }
+
+  /**
+   * Converts all of the entries of a map to a string, sorted by key.
+   *
+   * <p>The output is formatted more nicely than the default {@link AbstractMap#toString()}
+   * implementation in the JDK. Keys and values are wrapped in quotes, and the values are presented
+   * in alphabetic order by key.
+   *
+   * @param   map
+   *          The map to convert to a string.
+   * @param   <K>
+   *          The type of key being used in the map.
+   * @param   <V>
+   *          The type of value being used in the map.
+   *
+   * @return  The string representation of the map.
+   */
+  public static <K extends Comparable<K>, V> String toStringSorted(final Map<K, V> map) {
+    return toString(map.entrySet().stream().sorted(Map.Entry.comparingByKey()));
   }
 }

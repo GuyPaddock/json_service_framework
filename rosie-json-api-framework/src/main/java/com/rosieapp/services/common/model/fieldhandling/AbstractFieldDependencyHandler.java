@@ -15,7 +15,8 @@ import java.util.Optional;
 public abstract class AbstractFieldDependencyHandler
 implements FieldDependencyHandler {
   @Override
-  public <T> T handleOptionalField(final T fieldValue, final String fieldName, T defaultValue) {
+  public <T> T handleOptionalField(final T fieldValue, final String fieldName,
+                                   final T defaultValue) {
     return Optional.ofNullable(fieldValue).orElse(defaultValue);
   }
 }

@@ -1,10 +1,10 @@
 package com.rosieapp.services.common.model.construction.reflection;
 
 import com.google.common.cache.Cache;
-import com.rosieapp.util.CacheFactory;
-import com.rosieapp.util.stream.Collectors;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
+import com.rosieapp.util.CacheFactory;
+import com.rosieapp.util.stream.Collectors;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -39,7 +39,7 @@ public class ModelTypeReflector<M> {
    */
   private static final Cache<String, Map<String, Field>> MODEL_FIELDS_CACHE;
 
-  private Class<? extends M> modelType;
+  private final Class<? extends M> modelType;
 
   static {
     MODEL_FIELDS_CACHE = CacheFactory.createSmallShortTermCache();

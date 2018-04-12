@@ -4,10 +4,10 @@
 
 package com.rosieapp.services.common.model.construction;
 
-import com.rosieapp.util.Maps;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.fieldhandling.FieldDependencyHandler;
 import com.rosieapp.services.common.model.fieldhandling.StrictFieldDependencyHandler;
+import com.rosieapp.util.Maps;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -124,8 +124,8 @@ extends AbstractModelBuilder<M, B> {
    *          all required fields are populated.
    *
    * @throws  IllegalStateException
-   *          If the required field value is {@code null} or invalid, and the field dependency handler
-   *          considers this to be an error.
+   *          If the required field value is {@code null} or invalid, and the field dependency
+   *          handler considers this to be an error.
    *
    * @see     FieldDependencyHandler
    */

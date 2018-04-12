@@ -14,7 +14,6 @@ package com.rosieapp.services.common.model.fieldhandling;
  *   <li>Lax field dependency handlers substitute a value when a required field lacks a value (i.e.
  *       the field is treated as if it were optional).</li>
  * </ul>
- * </ul>
  *
  * <p>However, this interface imposes no requirements on how a field dependency handler actually
  * interprets requests for field values, nor on how it retrieves or validates the values it
