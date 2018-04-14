@@ -14,14 +14,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.BasicAttribute;
 
 /**
  * A utility class for getting a shallow copy of an object, if the object can be duplicated.
@@ -31,14 +30,61 @@ import javax.naming.directory.BasicAttribute;
  */
 public final class ObjectCopier {
   /**
+   * A reference to the unique class that is returned by {@code Arrays.asList()}.
+   *
+   * <p>The class is private, so there is otherwise no other way to get a reference to it.
+   *
+   * @see Arrays.ArrayList
+   * @see Arrays#asList(Object[])
+   */
+  @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+  private static final Class<?> ARRAYS_AS_LIST_TYPE = Arrays.asList().getClass();
+
+  /**
+   * A reference to the unique class that is returned by {@code Collections.singletonList()}.
+   *
+   * <p>The class is private, so there is otherwise no other way to get a reference to it.
+   *
+   * @see Collections.SingletonList
+   * @see Collections#singletonList(Object)
+   */
+  private static final Class<?> SINGLETON_LIST_TYPE = Collections.singletonList(null).getClass();
+
+  /**
+   * A reference to the unique class that is returned by {@code Collections.singleton()}.
+   *
+   * <p>The class is private, so there is otherwise no other way to get a reference to it.
+   *
+   * @see Collections.SingletonSet
+   * @see Collections#singleton(Object)
+   */
+  private static final Class<?> SINGLETON_SET_TYPE = Collections.singleton(null).getClass();
+
+  /**
+   * A reference to the unique class that is returned by {@code Collections.singletonMap()}.
+   *
+   * <p>The class is private, so there is otherwise no other way to get a reference to it.
+   *
+   * @see Collections.SingletonMap
+   * @see Collections#singletonMap(Object, Object)
+   */
+  private static final Class<?> SINGLETON_MAP_TYPE =
+    Collections.singletonMap(null, null).getClass();
+
+  /**
    * The different strategies employed to copy different types of objects.
    */
   private static final ImmutableMap<Class<?>, Function<Object, Object>> COPY_FUNCTIONS =
     new ImmutableMap.Builder<Class<?>, Function<Object, Object>>()
-      .put(Map.class,         ObjectCopier::copyMap)
-      .put(Collection.class,  ObjectCopier::copyCollection)
-      .put(Cloneable.class,   ObjectCopier::cloneObject)
-      .put(Object.class,      Function.identity())
+      .put(ARRAYS_AS_LIST_TYPE, ObjectCopier::copyArraysAsList)
+      .put(SINGLETON_LIST_TYPE, ObjectCopier::copySingletonList)
+      .put(SINGLETON_SET_TYPE,  ObjectCopier::copySingletonSet)
+      .put(Set.class,           ObjectCopier::copySet)
+      .put(SINGLETON_MAP_TYPE,  ObjectCopier::copySingletonMap)
+      .put(Map.class,           ObjectCopier::copyMap)
+      .put(Collection.class,    ObjectCopier::copyCollection)
+      .put(Cloneable.class,     ObjectCopier::cloneObject)
+      .put(Object.class,        Function.identity())
       .build();
 
   /**
@@ -46,8 +92,11 @@ public final class ObjectCopier {
    *
    * <p>Different strategies are used for each object type:
    * <ul>
-   *   <li>Maps and collections are copied to a new instance of the same collection type via the
-   *       copy constructor provided by the appropriate object type.</li>
+   *   <li>Normal maps and collections are copied to a new instance of the same collection type via
+   *       the copy constructor provided by the appropriate object type.</li>
+   *   <li>Static collections (e.g. as returned by {@link Arrays#asList(Object[])} or
+   *       {@link java.util.Collections#singletonList(Object)} are cloned via
+   *       {@link Arrays#asList}.</li>
    *   <li>Objects that implement {@link Cloneable} are cloned.</li>
    *   <li>Objects that do not implement {@link Cloneable} are used in-place, as is.</li>
    * </ul>
@@ -97,26 +146,102 @@ public final class ObjectCopier {
         .orElseThrow(
           () -> new IllegalStateException(
             MessageFormat.format(
-              "No copy function found for object of type `{0}`.",
+              "No copy function found for object of type `{0}`",
               source.getClass().getCanonicalName())));
 
     return (Function<T, T>)typeHandler;
   }
 
   /**
-   * Attempts to copy a map using either a copy constructor or wrapping it in a {@code HashMap}.
+   * Attempts to copy a list that was previously produced via {@code Arrays.asList()}.
+   *
+   * @see Arrays.ArrayList
+   * @see Arrays#asList(Object[])
    *
    * @param   source
-   *          The source map to copy.
+   *          The source list to copy.
    *
-   * @return  A copy of the map.
+   * @return  A copy of the list.
    */
   @SuppressWarnings("unchecked")
-  private static Object copyMap(final Object source) {
+  private static Object copyArraysAsList(final Object source) {
+    final List<Object>  sourceList = (List<Object>)source,
+                        copy;
+    final int           listLength = sourceList.size();
+
+    copy = Arrays.asList(sourceList.toArray(new Object[listLength]));
+
+    return copy;
+  }
+
+  /**
+   * Attempts to copy a list that was previously produced via {@code Collections.singletonList()}.
+   *
+   * @see Collections.SingletonList
+   * @see Collections#singletonList(Object)
+   *
+   * @param   source
+   *          The source list to copy.
+   *
+   * @return  A copy of the list.
+   */
+  @SuppressWarnings("unchecked")
+  private static Object copySingletonList(final Object source) {
+    final List<Object> sourceList = (List<Object>)source;
+    final Object       item;
+
+    item =
+      sourceList
+        .stream()
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Singleton lists cannot be empty"));
+
+    return Collections.singletonList(item);
+  }
+
+  /**
+   * Attempts to copy a set that was previously produced via {@code Collections.singleton()}.
+   *
+   * @see Collections.SingletonSet
+   * @see Collections#singleton(Object)
+   *
+   * @param   source
+   *          The source set to copy.
+   *
+   * @return  A copy of the set.
+   */
+  @SuppressWarnings("unchecked")
+  private static Object copySingletonSet(final Object source) {
+    final Set<Object> sourceList = (Set<Object>)source;
+    final Object      item;
+
+    item =
+      sourceList
+        .stream()
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Singleton sets cannot be empty"));
+
+    return Collections.singleton(item);
+  }
+
+  /**
+   * Attempts to copy a set using either a copy constructor or wrapping it in a {@code HashSet}.
+   *
+   * <p>The "copy constructor" is the constructor on a given {@link Set} type that accepts another
+   * set as its only argument.
+   *
+   * @param   source
+   *          The source set to copy.
+   *
+   * @return  A copy of the set.
+   */
+  @SuppressWarnings("unchecked")
+  private static Object copySet(final Object source) {
     Object copy = invokeCopyConstructor(source);
 
     if (copy == null) {
-      copy = new HashMap<>((Map<Object, Object>)source);
+      // Fallback for the absence of a copy constructor
+      copy = new HashSet<>((Set<Object>)source);
     }
 
     return copy;
@@ -125,6 +250,9 @@ public final class ObjectCopier {
   /**
    * Attempts to copy a collection using either a copy constructor or wrapping it in an
    * {@code ArrayList}.
+   *
+   * <p>The "copy constructor" is the constructor on a given {@link Collection} type that accepts
+   * another collection as its only argument.
    *
    * @param   source
    *          The source collection to copy.
@@ -136,7 +264,57 @@ public final class ObjectCopier {
     Object copy = invokeCopyConstructor(source);
 
     if (copy == null) {
+      // Fallback for the absence of a copy constructor
       copy = new ArrayList<>((Collection<Object>)source);
+    }
+
+    return copy;
+  }
+
+  /**
+   * Attempts to copy a map that was previously produced via {@code Collections.singletonMap()}.
+   *
+   * @see Collections.SingletonMap
+   * @see Collections#singletonMap(Object, Object)
+   *
+   * @param   source
+   *          The source map to copy.
+   *
+   * @return  A copy of the map.
+   */
+  @SuppressWarnings("unchecked")
+  private static Object copySingletonMap(final Object source) {
+    final Map<Object, Object>   sourceMap = (Map<Object, Object>)source;
+    final Entry<Object, Object> item;
+
+    item =
+      sourceMap
+        .entrySet()
+        .stream()
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Singleton maps cannot be empty"));
+
+    return Collections.singletonMap(item.getKey(), item.getValue());
+  }
+
+  /**
+   * Attempts to copy a map using either a copy constructor or wrapping it in a {@code HashMap}.
+   *
+   * <p>The "copy constructor" is the constructor on a given {@link Map} type that accepts another
+   * map as its only argument.
+   *
+   * @param   source
+   *          The source map to copy.
+   *
+   * @return  A copy of the map.
+   */
+  @SuppressWarnings("unchecked")
+  private static Object copyMap(final Object source) {
+    Object copy = invokeCopyConstructor(source);
+
+    if (copy == null) {
+      // Fallback for the absence of a copy constructor
+      copy = new HashMap<>((Map<Object, Object>)source);
     }
 
     return copy;
@@ -162,20 +340,20 @@ public final class ObjectCopier {
   throws IllegalStateException {
     final Object          copy;
     final Class<?>        sourceType       = source.getClass();
-    final Constructor<?>  mapConstructor;
+    final Constructor<?>  copyConstructor;
 
-    mapConstructor = findCopyConstructor(sourceType);
+    copyConstructor = findCopyConstructor(sourceType);
 
-    if (mapConstructor == null) {
+    if (copyConstructor == null) {
       // No copy constructor available.
       copy = null;
     } else {
       try {
-        copy = mapConstructor.newInstance(source);
+        copy = copyConstructor.newInstance(source);
       } catch (InstantiationException | IllegalAccessException | InvocationTargetException ex) {
         throw new IllegalStateException(
           MessageFormat.format(
-            "Failed to invoke copy constructor on {0}.",
+            "Failed to invoke copy constructor on `{0}`",
             sourceType.getCanonicalName()),
           ex);
       }
@@ -205,9 +383,9 @@ public final class ObjectCopier {
     try {
       copy = cloneMethod.invoke(source);
     } catch (IllegalAccessException | InvocationTargetException ex) {
-      throw new IllegalStateException(
+      throw new IllegalArgumentException(
         MessageFormat.format(
-          "Failed to clone object of type `{0}`.",
+          "Failed to clone object of type `{0}`",
           sourceType.getCanonicalName()),
         ex);
     }
@@ -292,7 +470,7 @@ public final class ObjectCopier {
     } catch (NoSuchMethodException ex) {
       throw new IllegalArgumentException(
         MessageFormat.format(
-          "Could not find a public clone() method within {0}.",
+          "Could not find a public clone() method within `{0}`",
           objectType.getCanonicalName()),
         ex);
     }
@@ -304,55 +482,5 @@ public final class ObjectCopier {
    * Private constructor for singleton class.
    */
   private ObjectCopier() {
-  }
-
-  // FIXME: Convert this into multiple different unit tests (RJAJ-6)
-  @SuppressWarnings("all")
-  public static void main(final String[] args) {
-    List<String>        testList1 = Arrays.asList("a", "b", "c"),
-                        listCopy1 = ObjectCopier.copy(testList1),
-                        testList2 = new LinkedList<>(Arrays.asList("a", "b", "c")),
-                        listCopy2 = ObjectCopier.copy(testList2),
-                        testList3 = Collections.singletonList("a"),
-                        listCopy3 = ObjectCopier.copy(testList3);
-    Map<String, String> testMap  = new HashMap<>(),
-                        mapCopy;
-    Attribute           cloneableObject       = new BasicAttribute("Test", true),
-                        cloneableCopy         = ObjectCopier.copy(cloneableObject);
-    Object              uncloneableObject     = "Some string",
-                        uncloneableObjectCopy = ObjectCopier.copy(uncloneableObject);
-
-    testMap.put("1", "A");
-    testMap.put("2", "B");
-    testMap.put("3", "C");
-
-    mapCopy = ObjectCopier.copy(testMap);
-
-    System.out.println(
-      "testList1 == listCopy1: " + (testList1 == listCopy1));
-    System.out.println(
-      "testList1.get(0) == listCopy1.get(0): " + (testList1.get(0) == listCopy1.get(0)));
-
-    System.out.println(
-      "testList2 == listCopy2: " + (testList2 == listCopy2));
-    System.out.println(
-      "testList2.get(0) == listCopy2.get(0): " + (testList2.get(0) == listCopy2.get(0)));
-
-    System.out.println(
-      "testList3 == listCopy3: " + (testList3 == listCopy3));
-    System.out.println(
-      "testList3.get(0) == listCopy3.get(0): " + (testList3.get(0) == listCopy3.get(0)));
-
-    System.out.println(
-      "testMap == mapCopy: " + (testMap == mapCopy));
-    System.out.println(
-      "testMap.get(\"1\") == mapCopy.get(\"1\"): " + (testMap.get("1") == mapCopy.get("1")));
-
-    System.out.println(
-      "cloneableObject == cloneableCopy: " + (cloneableObject == cloneableCopy));
-
-    System.out.println(
-      "uncloneableObject == uncloneableObjectCopy: "
-      + (uncloneableObject == uncloneableObjectCopy));
   }
 }
