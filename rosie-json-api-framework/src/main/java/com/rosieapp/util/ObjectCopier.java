@@ -165,13 +165,9 @@ public final class ObjectCopier {
    */
   @SuppressWarnings("unchecked")
   private static Object copyArraysAsList(final Object source) {
-    final List<Object>  sourceList = (List<Object>)source,
-                        copy;
-    final int           listLength = sourceList.size();
+    final List<Object>  sourceList  = (List<Object>)source;
 
-    copy = Arrays.asList(sourceList.toArray(new Object[listLength]));
-
-    return copy;
+    return Arrays.asList(sourceList.toArray(new Object[0]));
   }
 
   /**
@@ -237,14 +233,8 @@ public final class ObjectCopier {
    */
   @SuppressWarnings("unchecked")
   private static Object copySet(final Object source) {
-    Object copy = invokeCopyConstructor(source);
-
-    if (copy == null) {
-      // Fallback for the absence of a copy constructor
-      copy = new HashSet<>((Set<Object>)source);
-    }
-
-    return copy;
+    return invokeCopyConstructorOrFallback(
+      source, (object) -> new HashSet<>((Set<Object>)source));
   }
 
   /**
@@ -261,14 +251,8 @@ public final class ObjectCopier {
    */
   @SuppressWarnings("unchecked")
   private static Object copyCollection(final Object source) {
-    Object copy = invokeCopyConstructor(source);
-
-    if (copy == null) {
-      // Fallback for the absence of a copy constructor
-      copy = new ArrayList<>((Collection<Object>)source);
-    }
-
-    return copy;
+    return invokeCopyConstructorOrFallback(
+      source, (object) -> new ArrayList<>((Collection<Object>)source));
   }
 
   /**
@@ -310,11 +294,37 @@ public final class ObjectCopier {
    */
   @SuppressWarnings("unchecked")
   private static Object copyMap(final Object source) {
+    return invokeCopyConstructorOrFallback(
+      source, (object) -> new HashMap<>((Map<Object, Object>)source));
+  }
+
+  /**
+   * Attempts to locate and apply a copy constructor for the given object, resorting to the provided
+   * fallback to generate a default copy if a copy constructor cannot be invoked.
+   *
+   * <p>Fallbacks almost always provide a copy that is a generic substitute rather than the same
+   * type of class as the source. For example, the generic fallback this class uses for Collection
+   * types is {@link ArrayList}, which would used for any collection type that lacks a copy
+   * constructor (e.g. the Guava ImmutableList). The resulting copy has all the same elements but
+   * is not the same type, nor does it behave the same as the original (immutable vs writable).
+   * For this reason, a copy constructor is more desirable because it can guarantee that the copy
+   * is of the same type as the source object.
+   *
+   * @param   source
+   *          The object to copy.
+   * @param   fallback
+   *          A function that receives the object and returns a default copy of it. This is only
+   *          invoked if the object's class does not provide a copy constructor.
+   *
+   * @return  A copy of the source object, obtained either via a copy constructor or the fallback.
+   */
+  private static Object invokeCopyConstructorOrFallback(final Object source,
+                                                        final Function<Object, Object> fallback) {
     Object copy = invokeCopyConstructor(source);
 
     if (copy == null) {
       // Fallback for the absence of a copy constructor
-      copy = new HashMap<>((Map<Object, Object>)source);
+      copy = fallback.apply(source);
     }
 
     return copy;
