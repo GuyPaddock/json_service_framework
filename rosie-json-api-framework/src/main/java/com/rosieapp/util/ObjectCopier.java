@@ -124,6 +124,19 @@ public final class ObjectCopier {
   }
 
   /**
+   * Gets each of the different strategies employed to copy different types of objects.
+   *
+   * <p>Strategies are ordered from most specific to least specific. The last handler is for
+   * {@link Object}, to ensure that there is always a handler for every type of object provided.
+   *
+   * @return  An ordered map, where each key is an assignable class type, and the value is the
+   *          method to call to handle that type of object.
+   */
+  private static Map<Class<?>, Function<Object, Object>> getCopyFunctions() {
+    return COPY_FUNCTIONS;
+  }
+
+  /**
    * Finds the appropriate way to copy the specified object.
    *
    * @param   source
@@ -139,11 +152,16 @@ public final class ObjectCopier {
     Function<Object, Object> typeHandler;
 
     typeHandler =
-      COPY_FUNCTIONS.entrySet().stream()
-        .filter((entry) -> entry.getKey().isInstance(source))
+      getCopyFunctions()
+        .entrySet()
+        .stream()
+        .filter(
+          (entry) -> entry.getKey().isInstance(source))
         .map(Entry::getValue)
         .findFirst()
         .orElseThrow(
+          // Should never happen -- the highest-level fallback in the functions list is for the
+          // Object class.
           () -> new IllegalStateException(
             MessageFormat.format(
               "No copy function found for object of type `{0}`",
@@ -165,7 +183,7 @@ public final class ObjectCopier {
    */
   @SuppressWarnings("unchecked")
   private static Object copyArraysAsList(final Object source) {
-    final List<Object>  sourceList  = (List<Object>)source;
+    final List<Object> sourceList = (List<Object>)source;
 
     return Arrays.asList(sourceList.toArray(new Object[0]));
   }

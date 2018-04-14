@@ -1,6 +1,5 @@
 package com.rosieapp.util;
 
-import static com.greghaskins.spectrum.dsl.specification.Specification.afterEach;
 import static com.greghaskins.spectrum.dsl.specification.Specification.beforeEach;
 import static com.greghaskins.spectrum.dsl.specification.Specification.context;
 import static com.greghaskins.spectrum.dsl.specification.Specification.describe;
@@ -10,6 +9,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.entry;
+import static org.mockito.Mockito.mock;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.replace;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -39,7 +41,10 @@ import org.powermock.reflect.Whitebox;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(Spectrum.class)
-@PrepareForTest(ObjectCopier.class)
+@PrepareForTest({
+  ObjectCopier.class,
+  Collections.class
+})
 @SuppressWarnings({
   "Convert2MethodRef",
   "CodeBlock2Expr",
@@ -340,22 +345,12 @@ public class ObjectCopierTest {
       });
 
       context("when there is no copy function for the object type (should never happen)", () -> {
-        final Variable<ImmutableMap<Class<?>, Function<Object, Object>>> originalFunctions =
-          new Variable<>();
-
         beforeEach(() -> {
-          originalFunctions.set(Whitebox.getInternalState(ObjectCopier.class, "COPY_FUNCTIONS"));
-
-          Whitebox.setInternalState(
-            ObjectCopier.class,
-            "COPY_FUNCTIONS",
-            ImmutableMap.of(Boolean.class, Function.identity()));
-        });
-
-        afterEach(() -> {
-          // FIXME: If there is a cleaner way to reset this, I'm all ears. This is kind of ugly.
-          // It's not a big enough deal that I think we need a ticket about it, though.
-          Whitebox.setInternalState(ObjectCopier.class, "COPY_FUNCTIONS", originalFunctions.get());
+          // Force the copy functions to be mis-configured
+          replace(method(ObjectCopier.class, "getCopyFunctions"))
+            .with((builder, method, arguments) -> {
+              return ImmutableMap.of(Boolean.class, Function.identity());
+            });
         });
 
         it("throws an `IllegalStateException`", () -> {
@@ -406,6 +401,47 @@ public class ObjectCopierTest {
             .withCauseInstanceOf(InvocationTargetException.class);
         });
       });
+
+      context("when given an empty singleton list (should never happen)", () -> {
+        @SuppressWarnings("unchecked")
+        final Supplier<List<String>> badSingletonList = let(() -> mock(List.class));
+
+        beforeEach(() -> {
+          final Map<Class<?>, Function<Object, Object>> originalCopyFunctions;
+          final Class<?>                                mockType;
+          final Function<Object, Object>                copyFunction;
+
+          originalCopyFunctions = Whitebox.invokeMethod(ObjectCopier.class, "getCopyFunctions");
+
+          mockType     = badSingletonList.get().getClass();
+          copyFunction = originalCopyFunctions.get(Collections.singletonList(null).getClass());
+
+          // Map the mock type to the copy function for singleton lists.
+          replace(method(ObjectCopier.class, "getCopyFunctions"))
+            .with((builder, method, arguments) -> {
+              return ImmutableMap.of(mockType, copyFunction);
+            });
+        });
+
+        it("throws an `IllegalArgumentException`", () -> {
+          assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> {
+              ObjectCopier.copy(badSingletonList.get());
+            })
+            .withMessageMatching("A `List\\$MockitoMock\\$[0-9]*` cannot be empty")
+            .withNoCause();
+        });
+      });
+
+      context("when given an un-cloneable object", () -> {
+        beforeEach(() -> {
+          input.set("Some string");
+        });
+
+        it("returns a new shallow copy of the same type", () -> {
+          assertThat(result.get()).isSameAs(input.get());
+        });
+      });
     });
   }
 
@@ -415,6 +451,7 @@ public class ObjectCopierTest {
       super();
     }
 
+    @SuppressWarnings("unused")
     public CollectionWithBadCopyConstructor(CollectionWithBadCopyConstructor other) {
       throw new UnsupportedOperationException();
     }
