@@ -184,13 +184,7 @@ public final class ObjectCopier {
   @SuppressWarnings("unchecked")
   private static Object copySingletonList(final Object source) {
     final List<Object> sourceList = (List<Object>)source;
-    final Object       item;
-
-    item =
-      sourceList
-        .stream()
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Singleton lists cannot be empty"));
+    final Object       item       = extractSingletonItem(sourceList);
 
     return Collections.singletonList(item);
   }
@@ -208,14 +202,8 @@ public final class ObjectCopier {
    */
   @SuppressWarnings("unchecked")
   private static Object copySingletonSet(final Object source) {
-    final Set<Object> sourceList = (Set<Object>)source;
-    final Object      item;
-
-    item =
-      sourceList
-        .stream()
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Singleton sets cannot be empty"));
+    final Set<Object> sourceList  = (Set<Object>)source;
+    final Object      item        = extractSingletonItem(sourceList);
 
     return Collections.singleton(item);
   }
@@ -269,14 +257,7 @@ public final class ObjectCopier {
   @SuppressWarnings("unchecked")
   private static Object copySingletonMap(final Object source) {
     final Map<Object, Object>   sourceMap = (Map<Object, Object>)source;
-    final Entry<Object, Object> item;
-
-    item =
-      sourceMap
-        .entrySet()
-        .stream()
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Singleton maps cannot be empty"));
+    final Entry<Object, Object> item      = extractSingletonItem(sourceMap.entrySet());
 
     return Collections.singletonMap(item.getKey(), item.getValue());
   }
@@ -486,6 +467,37 @@ public final class ObjectCopier {
     }
 
     return cloneMethod;
+  }
+
+  /**
+   * Fetches and returns the sole item of a singleton collection.
+   *
+   * @param   collection
+   *          The singleton collection from which a value is desired.
+   * @param   <T>
+   *          The type of elements in the collection.
+   *
+   * @return  The singleton value.
+   *
+   * @throws  IllegalArgumentException
+   *          If the singleton collection has no elements (should not happen).
+   */
+  private static <T> T extractSingletonItem(final Collection<T> collection)
+  throws IllegalArgumentException {
+    final T result;
+
+    result =
+      collection
+        .stream()
+        .findFirst()
+        .orElseThrow(
+          // Should never happen -- singletons, by definition, CANNOT be empty.
+          () -> new IllegalArgumentException(
+            MessageFormat.format(
+              "A `{0}` cannot be empty",
+              collection.getClass().getSimpleName())));
+
+    return result;
   }
 
   /**
