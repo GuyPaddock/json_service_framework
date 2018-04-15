@@ -2,6 +2,7 @@ package com.rosieapp.services.common.model.construction;
 
 import static com.greghaskins.spectrum.dsl.specification.Specification.context;
 import static com.greghaskins.spectrum.dsl.specification.Specification.describe;
+import static com.greghaskins.spectrum.dsl.specification.Specification.eagerLet;
 import static com.greghaskins.spectrum.dsl.specification.Specification.it;
 import static com.greghaskins.spectrum.dsl.specification.Specification.let;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -12,9 +13,11 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 
 import com.greghaskins.spectrum.Spectrum;
 import com.rosieapp.services.common.model.AbstractModel;
+import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
 import com.rosieapp.services.common.model.fieldhandling.FieldDependencyHandler;
 import com.rosieapp.services.common.model.fieldhandling.FieldValuePreprocessor;
+import com.rosieapp.services.common.model.fieldhandling.PassthroughPreprocessor;
 import com.rosieapp.services.common.model.fieldhandling.RequiredFieldMissingException;
 import com.rosieapp.services.common.model.filtering.ModelFilter;
 import com.rosieapp.services.common.model.identification.ModelIdentifier;
@@ -86,171 +89,240 @@ public class AnnotationBasedModelBuilderTest {
     });
 
     describe("#build()", () -> {
-      context("when the model has no fields", () -> {
-        it("builds the model without having to populate any fields", () -> {
-          assertThat(ModelWithNoFields.getBuilder().build()).isInstanceOf(ModelWithNoFields.class);
+      describe("field population", () -> {
+        context("when the model has no fields", () -> {
+          final Supplier<Model> model = let(() -> ModelWithNoFields.getBuilder().build());
+
+          it("builds the model without having to populate any fields", () -> {
+            assertThat(model.get()).isInstanceOf(ModelWithNoFields.class);
+          });
+        });
+
+        context("when the model has fields but none are builder-populated", () -> {
+          final Supplier<ModelWithNoBuilderFields> model =
+            let(() -> ModelWithNoBuilderFields.getBuilder().build());
+
+          it("builds the model without populating any fields", () -> {
+            assertThat(model.get().nonBuilderFields).isEqualTo("some value");
+          });
+        });
+
+        context("when the model has only fields that are builder-populated", () -> {
+          final Supplier<ModelWithOnlyBuilderFields> model = let(() -> {
+            final ModelWithOnlyBuilderFields result;
+
+            result =
+              ModelWithOnlyBuilderFields
+                .getBuilder()
+                .withRequiredCast("Sterling Archer")
+                .withOptionalCast("Malory Archer")
+                .build();
+
+            return result;
+          });
+
+          it("builds the model and populates all fields", () -> {
+            assertThat(model.get().requiredCast).isEqualTo("Sterling Archer");
+            assertThat(model.get().optionalCast).isEqualTo("Malory Archer");
+          });
+        });
+
+        context("when the model has some builder-populated fields and some regular fields", () -> {
+          final Supplier<ModelWithBuilderAndNonBuilderFields> model = let(() -> {
+            final ModelWithBuilderAndNonBuilderFields result;
+
+            result =
+              ModelWithBuilderAndNonBuilderFields
+                .getBuilder()
+                .withRequiredCast("Sterling Archer")
+                .withOptionalCast("Malory Archer")
+                .build();
+
+            return result;
+          });
+
+          it("builds the model and populates just the builder-populated fields", () -> {
+            assertThat(model.get().requiredCast).isEqualTo("Sterling Archer");
+            assertThat(model.get().optionalCast).isEqualTo("Malory Archer");
+            assertThat(model.get().internalSupportingCast).isEqualTo("Woodhouse");
+          });
+        });
+
+        context("when the model extends another model and both have builder-populated "
+                + "fields", () -> {
+          final Supplier<ModelThatExtendsAnotherModel> model = let(() -> {
+            final ModelThatExtendsAnotherModel result;
+
+            result =
+              ModelThatExtendsAnotherModel
+                .getBuilder()
+                .withRequiredCast("Sterling Archer")
+                .withOptionalCast("Malory Archer")
+                .withAdditionalCast("Cyril Figgis")
+                .build();
+
+            return result;
+          });
+
+          it("builds the model and populates builder-populated fields from both classes", () -> {
+            assertThat(model.get().requiredCast).isEqualTo("Sterling Archer");
+            assertThat(model.get().optionalCast).isEqualTo("Malory Archer");
+            assertThat(model.get().additionalCast).isEqualTo("Cyril Figgis");
+          });
+
+          it("ensures that required fields in the parent class are filled out", () -> {
+            assertThatExceptionOfType(RequiredFieldMissingException.class).isThrownBy(() -> {
+              ModelThatExtendsAnotherModel
+                .getBuilder()
+                .withOptionalCast("Malory Archer")
+                .withAdditionalCast("Cyril Figgis")
+                .build();
+            })
+            .withMessage(
+              "`requiredCast` is a required field that has not been provided with a value")
+            .withNoCause();
+          });
+
+          it("ensures that required fields in the sub-class are filled out", () -> {
+            assertThatExceptionOfType(RequiredFieldMissingException.class).isThrownBy(() -> {
+              ModelThatExtendsAnotherModel
+                .getBuilder()
+                .withRequiredCast("Sterling Archer")
+                .withOptionalCast("Malory Archer")
+                .build();
+            }).withMessage(
+              "`additionalCast` is a required field that has not been provided with a value");
+          });
+        });
+
+        context("when a builder has the wrong data type for a field it populates", () -> {
+          Supplier<Throwable> expectedCause = let(() -> {
+            return new IllegalArgumentException(
+              "Can not set java.lang.String field com.rosieapp.services.common.model.construction."
+              + "AnnotationBasedModelBuilderTest$ModelWithMisconfiguredBuilder.stringField to "
+              + "java.lang.Boolean");
+          });
+
+          it("throws an `IllegalStateException`", () -> {
+            assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
+              ModelWithMisconfiguredBuilder
+                .getBuilder()
+                .withStringField(false)
+                .build();
+            })
+            .withMessage(
+              "Could not populate the field `stringField` on model type "
+              + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest"
+              + ".ModelWithMisconfiguredBuilder`")
+            .withCause(expectedCause.get());
+          });
+        });
+
+        context("when a builder attempts to populate a field that is not builder-populated", () -> {
+          it("throws an `IllegalArgumentException`", () -> {
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+              ModelWithMisconfiguredBuilder
+                .getBuilder()
+                .withNonBuilderPopulatedField("test")
+                .build();
+            })
+            .withMessage(
+              "No field within "
+              + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest"
+              + ".ModelWithMisconfiguredBuilder` named `nonBuilderPopulatedField` and annotated "
+              + "with BuilderPopulatedField was found.")
+            .withNoCause();
+          });
+        });
+
+        context("when a builder attempts to populate a field that does not exist", () -> {
+          it("throws an `IllegalArgumentException`", () -> {
+            assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+              ModelWithMisconfiguredBuilder
+                .getBuilder()
+                .withNonExistentField("test")
+                .build();
+            })
+            .withMessage(
+              "No field within "
+              + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest"
+              + ".ModelWithMisconfiguredBuilder` named `nonExistentField` and annotated with "
+              + "BuilderPopulatedField was found.")
+            .withNoCause();
+          });
         });
       });
 
-      context("when the model has fields but none are builder-populated", () -> {
-        it("builds the model without populating any fields", () -> {
-          final ModelWithNoBuilderFields model = ModelWithNoBuilderFields.getBuilder().build();
+      describe("field pre-processing", () -> {
+        final Supplier<List<String>> copiedList = let(() -> Arrays.asList("a", "b", "c"));
 
-          assertThat(model.nonBuilderFields).isEqualTo("some value");
-        });
-      });
+        final Supplier<List<String>> passthroughList = let(() -> Arrays.asList("1", "2", "3"));
 
-      context("when the model has only fields that are builder-populated", () -> {
-        it("builds the model and populates all fields", () -> {
-          final ModelWithOnlyBuilderFields model;
+        final Supplier<ModelWithFieldPreprocessors.Builder> builder = let(() -> {
+          final ModelWithFieldPreprocessors.Builder result;
 
-          model =
-            ModelWithOnlyBuilderFields
+          result =
+            ModelWithFieldPreprocessors
               .getBuilder()
-              .withRequiredCast("Sterling Archer")
-              .withOptionalCast("Malory Archer")
-              .build();
+              .withCopiedField(copiedList.get())
+              .withPassedThroughField(passthroughList.get());
 
-          assertThat(model.requiredCast).isEqualTo("Sterling Archer");
-          assertThat(model.optionalCast).isEqualTo("Malory Archer");
-        });
-      });
-
-      context("when the model has some builder-populated fields and some regular fields", () -> {
-        it("builds the model and populates just the builder-populated fields", () -> {
-          final ModelWithBuilderAndNonBuilderFields model;
-
-          model =
-            ModelWithBuilderAndNonBuilderFields
-              .getBuilder()
-              .withRequiredCast("Sterling Archer")
-              .withOptionalCast("Malory Archer")
-              .build();
-
-          assertThat(model.requiredCast).isEqualTo("Sterling Archer");
-          assertThat(model.optionalCast).isEqualTo("Malory Archer");
-          assertThat(model.internalSupportingCast).isEqualTo("Woodhouse");
-        });
-      });
-
-      context("when the model extends another model and both have builder-populated fields", () -> {
-        it("builds the model and populates builder-populated fields from both classes", () -> {
-          final ModelThatExtendsAnotherModel model;
-
-          model =
-            ModelThatExtendsAnotherModel
-              .getBuilder()
-              .withRequiredCast("Sterling Archer")
-              .withOptionalCast("Malory Archer")
-              .withAdditionalCast("Cyril Figgis")
-              .build();
-
-          assertThat(model.requiredCast).isEqualTo("Sterling Archer");
-          assertThat(model.optionalCast).isEqualTo("Malory Archer");
-          assertThat(model.additionalCast).isEqualTo("Cyril Figgis");
+          return result;
         });
 
-        it("ensures that required fields in the parent class are filled out", () -> {
-          assertThatExceptionOfType(RequiredFieldMissingException.class).isThrownBy(() -> {
-            ModelThatExtendsAnotherModel
-              .getBuilder()
-              .withOptionalCast("Malory Archer")
-              .withAdditionalCast("Cyril Figgis")
-              .build();
-          })
-          .withMessage(
-            "`requiredCast` is a required field that has not been provided with a value")
-          .withNoCause();
+        final Supplier<ModelWithFieldPreprocessors> model1 = eagerLet(() -> builder.get().build());
+
+        final Supplier<ModelWithFieldPreprocessors> model2 = eagerLet(() -> builder.get().build());
+
+        context("when a field uses the default pre-processor (`CloningPreprocessor`)", () -> {
+          it("populates that field in the new model with a copy of the value from the builder "
+             + "context", () -> {
+            assertThat(model1.get().copiedField).isEqualTo(copiedList.get());
+            assertThat(model1.get().copiedField).isNotSameAs(copiedList.get());
+
+            assertThat(model2.get().copiedField).isEqualTo(copiedList.get());
+            assertThat(model2.get().copiedField).isNotSameAs(copiedList.get());
+          });
+
+          it("uses a different copy for each model instance if the same builder is used to produce "
+             + "multiple model instances", () -> {
+            assertThat(model1.get().copiedField).isNotSameAs(model2.get().copiedField);
+          });
         });
 
-        it("ensures that required fields in the sub-class are filled out", () -> {
-          assertThatExceptionOfType(RequiredFieldMissingException.class).isThrownBy(() -> {
-            ModelThatExtendsAnotherModel
-              .getBuilder()
-              .withRequiredCast("Sterling Archer")
-              .withOptionalCast("Malory Archer")
-              .build();
-          }).withMessage(
-            "`additionalCast` is a required field that has not been provided with a value");
-        });
-      });
+        context("when a field uses the `PassthroughPreprocessor", () -> {
+          it("populates that field in the new model with the same value contained in the builder "
+             + "context", () -> {
+            assertThat(model1.get().passedThroughField).isSameAs(passthroughList.get());
+            assertThat(model2.get().passedThroughField).isSameAs(passthroughList.get());
+          });
 
-      context("when a builder has the wrong data type for a field it populates", () -> {
-        Supplier<Throwable> expectedCause = let(() -> {
-          return new IllegalArgumentException(
-            "Can not set java.lang.String field com.rosieapp.services.common.model.construction."
-            + "AnnotationBasedModelBuilderTest$ModelWithMisconfiguredBuilder.stringField to "
-            + "java.lang.Boolean");
+          it("populates every new instance with the same value if the same builder is used to "
+             + "produce multiple model instances", () -> {
+            assertThat(model1.get().passedThroughField).isSameAs(model2.get().passedThroughField);
+          });
         });
 
-        it("throws an `IllegalStateException`", () -> {
-          assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            ModelWithMisconfiguredBuilder
-              .getBuilder()
-              .withStringField(false)
-              .build();
-          })
-          .withMessage(
-            "Could not populate the field `stringField` on model type "
-            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest"
-            + ".ModelWithMisconfiguredBuilder`")
-          .withCause(expectedCause.get());
-        });
-      });
+        context("when a builder has a bad field pre-processor", () -> {
+          Supplier<Throwable> expectedCause = let(() -> {
+            return new IllegalArgumentException(
+              "Invalid field pre-processor provided -- `com.rosieapp.services.common.model"
+              + ".fieldhandling.FieldValuePreprocessor` cannot be instantiated.");
+          });
 
-      context("when a builder attempts to populate a field that is not builder-populated", () -> {
-        it("throws an `IllegalArgumentException`", () -> {
-          assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
-            ModelWithMisconfiguredBuilder
-              .getBuilder()
-              .withNonBuilderPopulatedField("test")
-              .build();
-          })
-          .withMessage(
-            "No field within "
-            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest"
-            + ".ModelWithMisconfiguredBuilder` named `nonBuilderPopulatedField` and annotated with "
-            + "BuilderPopulatedField was found.")
-          .withNoCause();
-        });
-      });
-
-      context("when a builder attempts to populate a field that does not exist", () -> {
-        it("throws an `IllegalArgumentException`", () -> {
-          assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
-            ModelWithMisconfiguredBuilder
-              .getBuilder()
-              .withNonExistentField("test")
-              .build();
-          })
-          .withMessage(
-            "No field within "
-            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest"
-            + ".ModelWithMisconfiguredBuilder` named `nonExistentField` and annotated with "
-            + "BuilderPopulatedField was found.")
-          .withNoCause();
-        });
-      });
-
-      context("when a builder has a bad field pre-processor", () -> {
-        Supplier<Throwable> expectedCause = let(() -> {
-          return new IllegalArgumentException(
-            "Invalid field pre-processor provided -- `com.rosieapp.services.common.model"
-            + ".fieldhandling.FieldValuePreprocessor` cannot be instantiated.");
-        });
-
-        it("throws an `IllegalStateException`", () -> {
-          assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            ModelWithMisconfiguredBuilder
-              .getBuilder()
-              .withFieldThatHasBadPreprocessor("test")
-              .build();
-          })
-          .withMessage(
-            "Could not populate the field `fieldThatHasBadPreprocessor` on model type "
-            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest."
-            + "ModelWithMisconfiguredBuilder`")
-          .withCause(expectedCause.get());
+          it("throws an `IllegalStateException`", () -> {
+            assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
+              ModelWithMisconfiguredBuilder
+                .getBuilder()
+                .withFieldThatHasBadPreprocessor("test")
+                .build();
+            })
+            .withMessage(
+              "Could not populate the field `fieldThatHasBadPreprocessor` on model type "
+              + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest."
+              + "ModelWithMisconfiguredBuilder`")
+            .withCause(expectedCause.get());
+          });
         });
       });
     });
@@ -609,6 +681,52 @@ public class AnnotationBasedModelBuilderTest {
       @SuppressWarnings("CheckStyle")
       public Builder withOptionalCast(final String optionalCast) {
         this.putFieldValue("optionalCast", optionalCast);
+
+        return this;
+      }
+    }
+  }
+
+  @SuppressWarnings("unused")
+  public static class ModelWithFieldPreprocessors
+  extends AbstractModel {
+    @BuilderPopulatedField(required = true)
+    public List<String> copiedField;
+
+    @BuilderPopulatedField(required = true, preprocessor = PassthroughPreprocessor.class)
+    public List<String> passedThroughField;
+
+    public static Builder getBuilder() {
+      return new Builder();
+    }
+
+    /**
+     * Private constructor for builder-instantiated model.
+     */
+    private ModelWithFieldPreprocessors() {
+      super();
+    }
+
+    public static class Builder
+      extends AnnotationBasedModelBuilder<ModelWithFieldPreprocessors, Builder> {
+      public Builder() {
+        super();
+      }
+
+      public Builder(final FieldDependencyHandler valueProvider) {
+        super(valueProvider);
+      }
+
+      @SuppressWarnings("CheckStyle")
+      public Builder withCopiedField(final List<String> copiedField) {
+        this.putFieldValue("copiedField", copiedField);
+
+        return this;
+      }
+
+      @SuppressWarnings("CheckStyle")
+      public Builder withPassedThroughField(final List<String> passedThroughField) {
+        this.putFieldValue("passedThroughField", passedThroughField);
 
         return this;
       }
