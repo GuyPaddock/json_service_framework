@@ -24,7 +24,7 @@ public final class Classes {
    * @throws  IllegalArgumentException
    *          If the class lacks a canonical name.
    */
-  public static void requireCanonicalName(Class<?> target)
+  public static void requireCanonicalName(final Class<?> target)
   throws IllegalArgumentException {
     final String canonicalName;
 
