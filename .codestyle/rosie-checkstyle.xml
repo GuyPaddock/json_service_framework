@@ -36,6 +36,15 @@
         <property name="lineSeparator" value="lf" />
     </module>
 
+    <module name="RegexpHeader">
+        <!--* Copyright (c) 2018 Rosie Applications Inc.-->
+        <property
+          name="header"
+          value="\A\/\*\n \* Copyright \(c\) (\d\d\d\d-)?\d\d\d\d Rosie Applications Inc\. All rights reserved\.\n\ \*\/\z"/>
+
+        <property name="fileExtensions" value="java" />
+    </module>
+
     <!-- Allow warnings to be suppressed on a case-by-case basis-->
     <module name="SuppressWarningsFilter"/>
 

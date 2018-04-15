@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018 Rosie Applications, Inc.
+ * Copyright (c) 2018 Rosie Applications Inc. All rights reserved.
  */
 
 package com.rosieapp.services.common.client;

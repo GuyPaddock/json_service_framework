@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2018 Rosie Applications Inc. All rights reserved.
+ */
+
 package com.rosieapp.util.stream;
 
 import static com.greghaskins.spectrum.dsl.specification.Specification.describe;
