@@ -179,7 +179,7 @@ public class AnnotationBasedModelBuilderTest {
         Supplier<Throwable> expectedCause = let(() -> {
           return new IllegalArgumentException(
             "Can not set java.lang.String field com.rosieapp.services.common.model.construction."
-            + "AnnotationBasedModelBuilderTests$ModelWithMisconfiguredBuilder.stringField to "
+            + "AnnotationBasedModelBuilderTest$ModelWithMisconfiguredBuilder.stringField to "
             + "java.lang.Boolean");
         });
 
@@ -192,8 +192,8 @@ public class AnnotationBasedModelBuilderTest {
           })
           .withMessage(
             "Could not populate the field `stringField` on model type "
-            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTests"
-            + ".ModelWithMisconfiguredBuilder`.")
+            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest"
+            + ".ModelWithMisconfiguredBuilder`")
           .withCause(expectedCause.get());
         });
       });
@@ -208,7 +208,7 @@ public class AnnotationBasedModelBuilderTest {
           })
           .withMessage(
             "No field within "
-            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTests"
+            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest"
             + ".ModelWithMisconfiguredBuilder` named `nonBuilderPopulatedField` and annotated with "
             + "BuilderPopulatedField was found.")
           .withNoCause();
@@ -225,7 +225,7 @@ public class AnnotationBasedModelBuilderTest {
           })
           .withMessage(
             "No field within "
-            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTests"
+            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest"
             + ".ModelWithMisconfiguredBuilder` named `nonExistentField` and annotated with "
             + "BuilderPopulatedField was found.")
           .withNoCause();
@@ -248,8 +248,8 @@ public class AnnotationBasedModelBuilderTest {
           })
           .withMessage(
             "Could not populate the field `fieldThatHasBadPreprocessor` on model type "
-            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTests."
-            + "ModelWithMisconfiguredBuilder`.")
+            + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest."
+            + "ModelWithMisconfiguredBuilder`")
           .withCause(expectedCause.get());
         });
       });

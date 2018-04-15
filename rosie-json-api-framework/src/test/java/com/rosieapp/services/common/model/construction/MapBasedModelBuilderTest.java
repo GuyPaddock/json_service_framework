@@ -19,6 +19,12 @@ import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
 @RunWith(Spectrum.class)
+@SuppressWarnings({
+  "Convert2MethodRef",
+  "CodeBlock2Expr",
+  "ClassInitializerMayBeStatic",
+  "Duplicates"
+})
 public class MapBasedModelBuilderTest {
   {
     //noinspection Duplicates
@@ -79,8 +85,8 @@ public class MapBasedModelBuilderTest {
         it("returns `ClassName{\"id\": \"null\"}`", () -> {
           assertThat(modelBuilder.get().toString())
             .isEqualTo(
-              "com.rosieapp.services.common.model.construction.MapBasedModelBuilderTests." +
-              "TestModelBuilder{\"id\": \"null\"}");
+              "com.rosieapp.services.common.model.construction.MapBasedModelBuilderTest."
+              + "TestModelBuilder{\"id\": \"null\"}");
         });
       });
 
@@ -96,11 +102,11 @@ public class MapBasedModelBuilderTest {
         it("returns `ClassName{\"id\": \"null\", \"field1\": \"value1\"}`", () -> {
           assertThat(modelBuilder.get().toString())
             .isEqualTo(
-              "com.rosieapp.services.common.model.construction.MapBasedModelBuilderTests." +
-              "TestModelBuilder{" +
-              "\"id\": \"null\", " +
-              "\"field1\": \"value1\"" +
-              "}");
+              "com.rosieapp.services.common.model.construction.MapBasedModelBuilderTest."
+              + "TestModelBuilder{"
+                + "\"id\": \"null\", "
+                + "\"field1\": \"value1\""
+              + "}");
         });
       });
 
@@ -114,16 +120,16 @@ public class MapBasedModelBuilderTest {
           return result;
         });
 
-        it("returns `ClassName{\"id\": \"null\", \"field1\": \"value1\", " +
-                              "\"field2\":\"value2\"}`", () -> {
+        it("returns `ClassName{\"id\": \"null\", \"field1\": \"value1\", "
+           + "\"field2\":\"value2\"}`", () -> {
           assertThat(modelBuilder.get().toString())
             .isEqualTo(
-              "com.rosieapp.services.common.model.construction.MapBasedModelBuilderTests." +
-              "TestModelBuilder{" +
-              "\"id\": \"null\", " +
-              "\"field1\": \"value1\", " +
-              "\"field2\": \"value2\"" +
-              "}");
+              "com.rosieapp.services.common.model.construction.MapBasedModelBuilderTest."
+              + "TestModelBuilder{"
+                + "\"id\": \"null\", "
+                + "\"field1\": \"value1\", "
+                + "\"field2\": \"value2\""
+              + "}");
         });
       });
     });
