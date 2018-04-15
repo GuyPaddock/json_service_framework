@@ -76,10 +76,10 @@ public class BuilderTypeReflectorTest {
                 new BuilderTypeReflector<>(BuilderWithoutCanonicalName.class);
             })
             .withMessage(
-              "The provided builder class (`com.rosieapp.services.common.model.reflection"
-                + ".BuilderTypeReflectorTest$1BuilderWithoutCanonicalName`) does not have a "
-                + "canonical name. This typically indicates that the provided builder type has "
-                + "been declared as an anonymous inner class, which is not supported.")
+              "The provided class (`com.rosieapp.services.common.model.reflection"
+              + ".BuilderTypeReflectorTest$1BuilderWithoutCanonicalName`) does not have a "
+              + "canonical name. This typically indicates that the class has been declared as an "
+              + "anonymous inner class, which is not supported.")
             .withNoCause();
         });
       });

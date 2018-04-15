@@ -3,10 +3,10 @@ package com.rosieapp.services.common.model.reflection;
 import com.google.common.cache.Cache;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilder;
+import com.rosieapp.services.common.util.Classes;
 import com.rosieapp.util.CacheFactory;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -92,19 +92,8 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
    *          class has been declared as an anonymous inner class.
    */
   private void setBuilderType(final Class<B> builderType) {
-    final String canonicalBuilderName;
-
     Objects.requireNonNull(builderType, "builderType cannot be null");
-
-    canonicalBuilderName = builderType.getCanonicalName();
-
-    if (canonicalBuilderName == null) {
-      throw new IllegalArgumentException(
-        MessageFormat.format(
-          "The provided builder class (`{0}`) does not have a canonical name. This typically "
-          + "indicates that the provided builder type has been declared as an anonymous inner "
-          + "class, which is not supported.", builderType.getName()));
-    }
+    Classes.requireCanonicalName(builderType);
 
     this.builderType = builderType;
   }
@@ -180,13 +169,8 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
    * having to call {@code this.getBuilderType().getCanonicalName()} throughout this class.
    *
    * @return  The canonical name for the builder type.
-   *
-   * @throws  IllegalArgumentException
-   *          If the builder class lacks a canonical name. This is typically because the builder
-   *          class has been declared as an anonymous inner class.
    */
-  private String getUniqueBuilderClassName()
-  throws IllegalArgumentException {
+  private String getUniqueBuilderClassName() {
     return this.getBuilderType().getCanonicalName();
   }
 
