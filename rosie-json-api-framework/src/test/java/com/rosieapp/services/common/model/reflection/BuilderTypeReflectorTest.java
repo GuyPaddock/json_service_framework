@@ -15,6 +15,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.validateMockitoUsage;
 import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.verifyPrivate;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -26,12 +28,14 @@ import com.greghaskins.spectrum.Spectrum;
 import com.rosieapp.services.common.model.AbstractModel;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilder;
-import com.rosieapp.util.CacheFactory;
 import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.powermock.reflect.Whitebox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(Spectrum.class)
@@ -43,10 +47,22 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 })
 @PrepareForTest({
   BuilderTypeReflector.class,
-  Cache.class
+  Cache.class,
+  LoggerFactory.class,
+  Logger.class
 })
 public class BuilderTypeReflectorTest {
   {
+    final Supplier<Logger> testLogger = eagerLet(() -> mock(Logger.class));
+
+    beforeEach(() -> {
+      mockStatic(LoggerFactory.class);
+
+      // Stub out logging at TRACE level
+      when(LoggerFactory.getLogger(BuilderTypeReflector.class)).thenReturn(testLogger.get());
+      when(testLogger.get().isTraceEnabled()).thenReturn(true);
+    });
+
     afterEach(() -> {
       validateMockitoUsage();
     });
@@ -56,7 +72,7 @@ public class BuilderTypeReflectorTest {
         it("throws a `NullPointerException`", () -> {
           assertThatExceptionOfType(NullPointerException.class)
             .isThrownBy(() -> {
-              new BuilderTypeReflector<TestModel, TestModel.Builder>(null);
+              new BuilderTypeReflector<TestModel, TestModel.BuilderWithModelAsGenericParam>(null);
             })
             .withMessage("builderType cannot be null")
             .withNoCause();
@@ -86,78 +102,149 @@ public class BuilderTypeReflectorTest {
     });
 
     describe("#getModelClass", () -> {
-      final Supplier<Cache<String, Class<? extends Model>>> cache = eagerLet(() -> {
-        final Cache<String, Class<? extends Model>> realCache,
-                                                    spyCache;
+      final Supplier<Cache<String, Class<? extends Model>>> cache =
+        eagerLet(() -> {
+          final Cache<String, Class<? extends Model>> realCache,
+                                                      spyCache;
 
-        realCache = CacheFactory.createSmallShortTermCache();
-        spyCache  = spy(realCache);
+          realCache = Whitebox.invokeMethod(BuilderTypeReflector.class, "getModelTypeCache");
+          spyCache  = spy(realCache);
 
-        return spyCache;
-      });
+          return spyCache;
+        });
 
       beforeEach(() -> {
         replace(method(BuilderTypeReflector.class, "getModelTypeCache"))
-          .with((builder, method, arguments) -> {
+          .with((_reflector, _method, _arguments) -> {
             return cache.get();
           });
       });
 
       describe("normal cases", () -> {
-        final String testModelBuilderName =
-          "com.rosieapp.services.common.model.reflection.BuilderTypeReflectorTest.TestModel"
-          + ".Builder";
+        context("when the builder specifies the model type via generics", () -> {
+          final String testModelBuilderName =
+            "com.rosieapp.services.common.model.reflection.BuilderTypeReflectorTest.TestModel"
+            + ".BuilderWithModelAsGenericParam";
 
-        final Supplier<BuilderTypeReflector> reflector =
-          let(() -> spy(new BuilderTypeReflector<>(TestModel.Builder.class)));
+          final Supplier<BuilderTypeReflector> reflector =
+            let(() -> {
+              return spy(new BuilderTypeReflector<>(
+                TestModel.BuilderWithModelAsGenericParam.class));
+            });
 
-        context("when the model type is not cached", () -> {
-          beforeEach(() -> {
-            // Force the model type not to be cached
-            when(cache.get().getIfPresent(testModelBuilderName)).thenReturn(null);
+          context("when the model type is not cached", () -> {
+            beforeEach(() -> {
+              // Force the model type not to be cached
+              when(cache.get().getIfPresent(testModelBuilderName)).thenReturn(null);
+            });
+
+            it("returns the model type that matches the builder", () -> {
+              assertThat(reflector.get().getModelClass()).isEqualTo(TestModel.class);
+            });
+
+            it("attempts to find the model type in the cache", () -> {
+              reflector.get().getModelClass();
+
+              verify(cache.get()).getIfPresent(testModelBuilderName);
+            });
+
+            it("writes the model type to the cache", () -> {
+              reflector.get().getModelClass();
+
+              verify(cache.get()).put(testModelBuilderName, TestModel.class);
+            });
           });
 
-          it("returns the model type that matches the builder", () -> {
-            assertThat(reflector.get().getModelClass()).isEqualTo(TestModel.class);
-          });
+          context("when the model type is cached", () -> {
+            beforeEach(() -> {
+              // Prime the cache
+              new BuilderTypeReflector<>(TestModel.BuilderWithModelAsGenericParam.class)
+                .getModelClass();
 
-          it("attempts to find the model type in the cache", () -> {
-            reflector.get().getModelClass();
+              // Ignore cache writes caused by priming
+              //noinspection unchecked
+              reset(cache.get());
+            });
 
-            verify(cache.get()).getIfPresent(testModelBuilderName);
-          });
+            it("returns the model type that matches the builder", () -> {
+              assertThat(reflector.get().getModelClass()).isEqualTo(TestModel.class);
+            });
 
-          it("writes the model type to the cache", () -> {
-            reflector.get().getModelClass();
+            it("does not use reflection to identify the model type", () -> {
+              reflector.get().getModelClass();
 
-            verify(cache.get()).put(testModelBuilderName, TestModel.class);
+              verifyPrivate(reflector.get(), never()).invoke("identifyModelClass");
+            });
+
+            it("does not write to the cache", () -> {
+              reflector.get().getModelClass();
+
+              verify(cache.get(), never()).put(anyString(), any());
+            });
           });
         });
 
-        context("when the model type is cached", () -> {
-          beforeEach(() -> {
-            // Prime the cache
-            new BuilderTypeReflector<>(TestModel.Builder.class).getModelClass();
+        context("when the builder specifies the model type via enclosing class", () -> {
+          final String testModelBuilderName =
+            "com.rosieapp.services.common.model.reflection.BuilderTypeReflectorTest.TestModel"
+            + ".BuilderWithModelAsEnclosingType";
 
-            // Ignore cache writes caused by priming
-            //noinspection unchecked
-            reset(cache.get());
+          @SuppressWarnings("unchecked")
+          final Supplier<BuilderTypeReflector> reflector =
+            let(() -> {
+              return spy(new BuilderTypeReflector<>(
+                TestModel.BuilderWithModelAsEnclosingType.class));
+            });
+
+          context("when the model type is not cached", () -> {
+            beforeEach(() -> {
+              // Force the model type not to be cached
+              when(cache.get().getIfPresent(testModelBuilderName)).thenReturn(null);
+            });
+
+            it("returns the model type that matches the builder", () -> {
+              assertThat(reflector.get().getModelClass()).isEqualTo(TestModel.class);
+            });
+
+            it("attempts to find the model type in the cache", () -> {
+              reflector.get().getModelClass();
+
+              verify(cache.get()).getIfPresent(testModelBuilderName);
+            });
+
+            it("writes the model type to the cache", () -> {
+              reflector.get().getModelClass();
+
+              verify(cache.get()).put(testModelBuilderName, TestModel.class);
+            });
           });
 
-          it("returns the model type that matches the builder", () -> {
-            assertThat(reflector.get().getModelClass()).isEqualTo(TestModel.class);
-          });
+          context("when the model type is cached", () -> {
+            beforeEach(() -> {
+              // Prime the cache
+              new BuilderTypeReflector<>(TestModel.BuilderWithModelAsGenericParam.class)
+                .getModelClass();
 
-          it("does not use reflection to identify the model type", () -> {
-            reflector.get().getModelClass();
+              // Ignore cache writes caused by priming
+              //noinspection unchecked
+              reset(cache.get());
+            });
 
-            verifyPrivate(reflector.get(), never()).invoke("identifyModelClass");
-          });
+            it("returns the model type that matches the builder", () -> {
+              assertThat(reflector.get().getModelClass()).isEqualTo(TestModel.class);
+            });
 
-          it("does not write to the cache", () -> {
-            reflector.get().getModelClass();
+            it("does not use reflection to identify the model type", () -> {
+              reflector.get().getModelClass();
 
-            verify(cache.get(), never()).put(anyString(), any());
+              verifyPrivate(reflector.get(), never()).invoke("identifyModelClass");
+            });
+
+            it("does not write to the cache", () -> {
+              reflector.get().getModelClass();
+
+              verify(cache.get(), never()).put(anyString(), any());
+            });
           });
         });
       });
@@ -186,8 +273,12 @@ public class BuilderTypeReflectorTest {
 
   private static class TestModel
   extends AbstractModel {
-    public static class Builder
-    extends AnnotationBasedModelBuilder<TestModel, Builder> {
+    public static class BuilderWithModelAsGenericParam
+    extends AnnotationBasedModelBuilder<TestModel, BuilderWithModelAsGenericParam> {
+    }
+
+    public static class BuilderWithModelAsEnclosingType
+    extends AnnotationBasedModelBuilder {
     }
   }
 
