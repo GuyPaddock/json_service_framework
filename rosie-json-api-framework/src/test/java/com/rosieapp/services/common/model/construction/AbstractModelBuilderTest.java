@@ -32,7 +32,7 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(Spectrum.class)
 @PrepareForTest({ StringIdentifier.class })
-public class AbstractModelBuilderTests {
+public class AbstractModelBuilderTest {
   {
     //noinspection Duplicates
     describe("constructors", () -> {

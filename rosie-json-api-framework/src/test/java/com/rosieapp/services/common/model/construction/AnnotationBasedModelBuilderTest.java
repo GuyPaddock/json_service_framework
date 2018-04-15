@@ -32,7 +32,7 @@ import org.junit.runner.RunWith;
   "ClassInitializerMayBeStatic",
   "Duplicates"
 })
-public class AnnotationBasedModelBuilderTests {
+public class AnnotationBasedModelBuilderTest {
   {
     describe("constructors", () -> {
       context("when no field dependency handler is provided", () -> {

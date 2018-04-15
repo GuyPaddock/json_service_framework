@@ -13,7 +13,7 @@ import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
 @RunWith(Spectrum.class)
-public class BuilderPopulatedFieldTests {
+public class BuilderPopulatedFieldTest {
   {
     describe("required", () -> {
       context("when not provided", () -> {

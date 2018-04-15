@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
 @RunWith(Spectrum.class)
-public class MapBasedModelBuilderTests {
+public class MapBasedModelBuilderTest {
   {
     //noinspection Duplicates
     describe("constructors", () -> {
