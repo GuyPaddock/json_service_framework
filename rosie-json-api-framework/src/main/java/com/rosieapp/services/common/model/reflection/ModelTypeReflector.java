@@ -3,14 +3,17 @@ package com.rosieapp.services.common.model.reflection;
 import com.google.common.cache.Cache;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.model.annotation.BuilderPopulatedField;
+import com.rosieapp.services.common.util.Classes;
 import com.rosieapp.util.CacheFactory;
 import com.rosieapp.util.stream.Collectors;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +58,9 @@ public class ModelTypeReflector<M> {
    *        The type of builder for which the reflector will provide information.
    */
   public ModelTypeReflector(final Class<? extends M> modelType) {
+    Objects.requireNonNull(modelType, "modelType cannot be null");
+    Classes.requireCanonicalName(modelType);
+
     this.modelType = modelType;
   }
 
@@ -77,7 +83,7 @@ public class ModelTypeReflector<M> {
     if (fields == null) {
       fields = this.identifyBuilderPopulatedFields();
 
-      MODEL_FIELDS_CACHE.put(this.modelType.getCanonicalName(), fields);
+      getModelFieldsCache().put(this.getUniqueModelClassName(), fields);
     }
 
     return fields;
@@ -87,8 +93,13 @@ public class ModelTypeReflector<M> {
    * Invokes the private constructor for the model via reflection.
    *
    * @return  A new instance of the model type this reflector wraps.
+   *
+   * @throws  IllegalArgumentException
+   *          If the model type does not have a no-arg, private, default
+   *          constructor.
    */
-  public M instantiateModel() {
+  public M instantiateModel()
+  throws IllegalArgumentException {
     final M model;
 
     try {
@@ -98,10 +109,37 @@ public class ModelTypeReflector<M> {
 
       model = constructor.newInstance();
     } catch (ReflectiveOperationException ex) {
-      throw new IllegalStateException("Could not instantiate an instance of the model.", ex);
+      throw new IllegalArgumentException(
+        MessageFormat.format(
+          "Could not instantiate an instance of the model type `{0}`",
+          this.getUniqueModelClassName()),
+        ex);
     }
 
     return model;
+  }
+
+  /**
+   * Gets the cache of model type names to model fields.
+   *
+   * @return  The cache, keyed by builder class name. Each value is the type of model that builder
+   *          builds.
+   */
+  private static Cache<String, Map<String, Field>> getModelFieldsCache() {
+    return MODEL_FIELDS_CACHE;
+  }
+
+  /**
+   * Gets a unique string that will uniquely identify the class of the model this reflector is
+   * wrapping.
+   *
+   * <p>The canonical name of the model class is used for this purpose. This is just a shortcut to
+   * having to call {@code this.modelType.getCanonicalName()} throughout this class.
+   *
+   * @return  The canonical name for the model type.
+   */
+  private String getUniqueModelClassName() {
+    return this.modelType.getCanonicalName();
   }
 
   /**
@@ -110,17 +148,15 @@ public class ModelTypeReflector<M> {
    * @return  Either the cached map of the target fields in the specified class.
    */
   private Map<String, Field> getCachedTargetFields() {
-    final Map<String, Field> fields;
-    final Class<? extends M> modelClass = this.modelType;
-
-    fields = MODEL_FIELDS_CACHE.getIfPresent(modelClass.getCanonicalName());
+    final String             modelName = this.getUniqueModelClassName();
+    final Map<String, Field> fields    = getModelFieldsCache().getIfPresent(modelName);
 
     if (LOGGER.isTraceEnabled()) {
       if (fields == null) {
-        LOGGER.trace("No cached fields for model type `{0}`.", modelClass.getCanonicalName());
+        LOGGER.trace("No cached fields for model type `{0}`.", modelName);
       } else {
         LOGGER.trace(
-          "Resolved fields for model type `{0}` using cache.", modelClass.getCanonicalName());
+          "Resolved fields for model type `{0}` using cache.", modelName);
       }
     }
 
