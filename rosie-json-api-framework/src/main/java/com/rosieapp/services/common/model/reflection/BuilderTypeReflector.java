@@ -6,6 +6,7 @@ import com.rosieapp.services.common.model.construction.AnnotationBasedModelBuild
 import com.rosieapp.util.CacheFactory;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -39,7 +40,7 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
    */
   private static final Cache<String, Class<? extends Model>> MODEL_TYPE_CACHE;
 
-  private final Class<B> builderType;
+  private Class<B> builderType;
 
   static {
     MODEL_TYPE_CACHE = CacheFactory.createSmallShortTermCache();
@@ -51,10 +52,60 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
    * <p>Initializes a new reflector that provides information pertaining to the given specified type
    * of builder.
    *
-   * @param builderType
-   *        The type of builder for which the reflector will provide information.
+   * <p>The builder must have a canonical name (i.e. it cannot be an anonymous inner class) and the
+   * declaration of the builder should follow the conventions described by {@link #getModelClass()}.
+   *
+   * @param   builderType
+   *          The type of builder for which the reflector will provide information. Cannot be
+   *          {@code null}.
+   *
+   * @throws  NullPointerException
+   *          If {@code builderType} is {@code null}.
+   * @throws  IllegalArgumentException
+   *          If the builder class lacks a canonical name. This is typically because the builder
+   *          class has been declared as an anonymous inner class.
    */
-  public BuilderTypeReflector(final Class<B> builderType) {
+  public BuilderTypeReflector(final Class<B> builderType)
+  throws IllegalArgumentException {
+    this.setBuilderType(builderType);
+  }
+
+  /**
+   * Gets the type of builder being reflected upon.
+   *
+   * @return  The builder class type.
+   */
+  private Class<B> getBuilderType() {
+    return this.builderType;
+  }
+
+  /**
+   * Validates and sets the builder type.
+   *
+   * @param   builderType
+   *          The builder type.
+   *
+   * @throws  NullPointerException
+   *          If {@code builderType} is {@code null}.
+   * @throws  IllegalArgumentException
+   *          If the builder class lacks a canonical name. This is typically because the builder
+   *          class has been declared as an anonymous inner class.
+   */
+  private void setBuilderType(final Class<B> builderType) {
+    final String canonicalBuilderName;
+
+    Objects.requireNonNull(builderType, "builderType cannot be null");
+
+    canonicalBuilderName = builderType.getCanonicalName();
+
+    if (canonicalBuilderName == null) {
+      throw new IllegalArgumentException(
+        MessageFormat.format(
+          "The provided builder class (`{0}`) does not have a canonical name. This typically "
+          + "indicates that the provided builder type has been declared as an anonymous inner "
+          + "class, which is not supported.", builderType.getName()));
+    }
+
     this.builderType = builderType;
   }
 
@@ -90,14 +141,14 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
    *
    * @return  The type of model that the builder creates.
    *
-   * @throws  IllegalStateException
+   * @throws  IllegalArgumentException
    *          If the model type cannot be determined. This is typically because the builder class
-   *          does not follow either of the conventions indicated above. (It can also happen when
-   *          a builder is being mocked out via PowerMock with CGLIB.)
+   *          declaration does not follow either of the conventions indicated above. (It can also
+   *          happen when a builder is being mocked out via PowerMock with CGLIB.)
    */
   @SuppressWarnings("unchecked")
   public Class<M> getModelClass()
-  throws IllegalStateException {
+  throws IllegalArgumentException {
     Class<M> modelClass;
 
     modelClass = this.getCachedModelType();
@@ -112,16 +163,31 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
   }
 
   /**
+   * Gets the cache of builder class names to model types.
+   *
+   * @return  The cache, keyed by builder class name. Each value is the type of model that builder
+   *          builds.
+   */
+  private static Cache<String, Class<? extends Model>> getModelTypeCache() {
+    return MODEL_TYPE_CACHE;
+  }
+
+  /**
    * Gets a unique string that will uniquely identify the class of the builder this reflector is
    * wrapping.
    *
    * <p>The canonical name of the builder class is used for this purpose. This is just a shortcut to
-   * having to call {@code this.builderType.getCanonicalName()} throughout this class.
+   * having to call {@code this.getBuilderType().getCanonicalName()} throughout this class.
    *
    * @return  The canonical name for the builder type.
+   *
+   * @throws  IllegalArgumentException
+   *          If the builder class lacks a canonical name. This is typically because the builder
+   *          class has been declared as an anonymous inner class.
    */
-  private String getUniqueBuilderClassName() {
-    return this.builderType.getCanonicalName();
+  private String getUniqueBuilderClassName()
+  throws IllegalArgumentException {
+    return this.getBuilderType().getCanonicalName();
   }
 
   /**
@@ -135,10 +201,10 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
    */
   @SuppressWarnings("unchecked")
   private Class<M> getCachedModelType() {
-    final String              builderClassName  = this.getUniqueBuilderClassName();
+    final String    builderClassName  = this.getUniqueBuilderClassName();
     final Class<M>  modelType;
 
-    modelType = (Class<M>)MODEL_TYPE_CACHE.getIfPresent(builderClassName);
+    modelType = (Class<M>)getModelTypeCache().getIfPresent(builderClassName);
 
     if (LOGGER.isTraceEnabled()) {
       if (modelType == null) {
@@ -164,7 +230,7 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
    *        produces.
    */
   private void storeModelInCache(final Class<M> modelClass) {
-    final String    builderClassName  = this.getUniqueBuilderClassName();
+    final String builderClassName = this.getUniqueBuilderClassName();
 
     if (LOGGER.isTraceEnabled()) {
       LOGGER.trace(
@@ -173,7 +239,7 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
         builderClassName);
     }
 
-    MODEL_TYPE_CACHE.put(builderClassName, modelClass);
+    getModelTypeCache().put(builderClassName, modelClass);
   }
 
   /**
@@ -182,11 +248,11 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
    *
    * @return  The type of model that this builder constructs.
    *
-   * @throws  IllegalStateException
+   * @throws  IllegalArgumentException
    *          If the model type cannot be determined by the way the builder was declared.
    */
   private Class<M> identifyModelClass()
-  throws IllegalStateException {
+  throws IllegalArgumentException {
     final Class<M>                 modelClass;
     final List<Supplier<Class<M>>> fetchStrategies;
 
@@ -201,7 +267,7 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
         .filter(Objects::nonNull)
         .findFirst()
         .orElseThrow(() ->
-          new IllegalStateException(
+          new IllegalArgumentException(
             String.format(
               "The builder is expected either to have a generic parameter that is a sub-class of "
               + "`%s`, or it is expected to be declared as an inner class of the model it builds.",
@@ -225,8 +291,8 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
    */
   @SuppressWarnings("unchecked")
   private Class<M> identifyModelTypeByGenericType() {
-    Class<M> modelType        = null;
-    final Type         currentClassType = this.builderType.getGenericSuperclass();
+    Class<M>    modelType        = null;
+    final Type  currentClassType = this.getBuilderType().getGenericSuperclass();
 
     if (currentClassType instanceof ParameterizedType) {
       final ParameterizedType parameterizedCurrentClass;
@@ -264,7 +330,7 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
   @SuppressWarnings("unchecked")
   private Class<M> identifyModelTypeByEnclosingClass() {
     final Class<M>  modelType;
-    final Class<?>  enclosingClass = this.builderType.getEnclosingClass();
+    final Class<?>  enclosingClass = this.getBuilderType().getEnclosingClass();
 
     if ((enclosingClass != null) && (Model.class.isAssignableFrom(enclosingClass))) {
       modelType = (Class<M>)enclosingClass;
