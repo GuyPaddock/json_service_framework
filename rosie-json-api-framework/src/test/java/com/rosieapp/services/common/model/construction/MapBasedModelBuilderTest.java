@@ -184,12 +184,12 @@ public class MapBasedModelBuilderTest {
     }
 
     @Override
-    public <F> void putFieldValue(String fieldName, F value) {
+    public <F> void putFieldValue(final String fieldName, final F value) {
       super.putFieldValue(fieldName, value);
     }
 
     @Override
-    public <F> F getFieldValue(String fieldName) {
+    public <F> F getFieldValue(final String fieldName) {
       return super.getFieldValue(fieldName);
     }
 

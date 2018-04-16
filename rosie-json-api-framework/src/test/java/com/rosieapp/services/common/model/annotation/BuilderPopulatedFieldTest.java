@@ -13,6 +13,10 @@ import java.util.function.Supplier;
 import org.junit.runner.RunWith;
 
 @RunWith(Spectrum.class)
+@SuppressWarnings({
+  "ClassInitializerMayBeStatic",
+  "CodeBlock2Expr"
+})
 public class BuilderPopulatedFieldTest {
   {
     describe("required", () -> {
@@ -56,16 +60,13 @@ public class BuilderPopulatedFieldTest {
     });
   }
 
+  @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
   private BuilderPopulatedField getAnnotationOnField(final String fieldName) {
-    BuilderPopulatedField result = null;
-
     try {
-      result = AnnotatedClass.class.getField(fieldName).getAnnotation(BuilderPopulatedField.class);
-    } catch (NoSuchFieldException e) {
-      e.printStackTrace();
+      return AnnotatedClass.class.getField(fieldName).getAnnotation(BuilderPopulatedField.class);
+    } catch (NoSuchFieldException ex) {
+      throw new RuntimeException(ex);
     }
-
-    return result;
   }
 
   private static class AnnotatedClass {

@@ -22,7 +22,7 @@ import org.junit.runner.RunWith;
 public class CollectorsTest {
   {
     describe(".toLinkedMap", () -> {
-      Supplier<List<String>> values =
+      final Supplier<List<String>> values =
         let(() -> Arrays.asList("whiskey", "tango", "foxtrot", "alpha"));
 
       it("returns a collector that maps input elements using a map that respects order", () -> {

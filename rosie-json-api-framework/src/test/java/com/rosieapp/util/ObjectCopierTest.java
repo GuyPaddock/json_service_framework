@@ -49,7 +49,8 @@ import org.powermock.reflect.Whitebox;
   "Convert2MethodRef",
   "CodeBlock2Expr",
   "ClassInitializerMayBeStatic",
-  "Duplicates"
+  "Duplicates",
+  "PMD.LooseCoupling"
 })
 public class ObjectCopierTest {
   {
@@ -445,26 +446,27 @@ public class ObjectCopierTest {
     });
   }
 
-  static class CollectionWithBadCopyConstructor
+  private static class CollectionWithBadCopyConstructor
   extends LinkedList<String> {
     public CollectionWithBadCopyConstructor() {
       super();
     }
 
     @SuppressWarnings("unused")
-    public CollectionWithBadCopyConstructor(CollectionWithBadCopyConstructor other) {
+    public CollectionWithBadCopyConstructor(final CollectionWithBadCopyConstructor other) {
+      super();
       throw new UnsupportedOperationException();
     }
   }
 
-  static class CloneableObjectWithoutCloneMethod
+  private static class CloneableObjectWithoutCloneMethod
   implements Cloneable {
   }
 
-  static class ObjectWithBadCloneMethod
+  private static class ObjectWithBadCloneMethod
   implements Cloneable {
     @Override
-    public Object clone()
+    public ObjectWithBadCloneMethod clone()
     throws CloneNotSupportedException {
       throw new CloneNotSupportedException();
     }

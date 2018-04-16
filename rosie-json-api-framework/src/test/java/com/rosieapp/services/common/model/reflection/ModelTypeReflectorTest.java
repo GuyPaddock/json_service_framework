@@ -275,6 +275,7 @@ public class ModelTypeReflectorTest {
   private static class ModelWithBadDefaultConstructor
   extends AbstractModel {
     private ModelWithBadDefaultConstructor() {
+      super();
       throw new UnsupportedOperationException("Mock, mock!");
     }
   }

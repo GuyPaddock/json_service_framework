@@ -196,7 +196,7 @@ public class AnnotationBasedModelBuilderTest {
         });
 
         context("when a builder has the wrong data type for a field it populates", () -> {
-          Supplier<Throwable> expectedCause = let(() -> {
+          final Supplier<Throwable> expectedCause = let(() -> {
             return new IllegalArgumentException(
               "Can not set java.lang.String field com.rosieapp.services.common.model.construction."
               + "AnnotationBasedModelBuilderTest$ModelWithMisconfiguredBuilder.stringField to "
@@ -304,7 +304,7 @@ public class AnnotationBasedModelBuilderTest {
         });
 
         context("when a builder has a bad field pre-processor", () -> {
-          Supplier<Throwable> expectedCause = let(() -> {
+          final Supplier<Throwable> expectedCause = let(() -> {
             return new IllegalArgumentException(
               "Invalid field pre-processor provided -- `com.rosieapp.services.common.model"
               + ".fieldhandling.FieldValuePreprocessor` cannot be instantiated.");
@@ -318,7 +318,7 @@ public class AnnotationBasedModelBuilderTest {
                 .build();
             })
             .withMessage(
-              "Could not populate the field `fieldThatHasBadPreprocessor` on model type "
+              "Could not populate the field `fieldWithBadPreprocessor` on model type "
               + "`com.rosieapp.services.common.model.construction.AnnotationBasedModelBuilderTest."
               + "ModelWithMisconfiguredBuilder`")
             .withCause(expectedCause.get());
@@ -737,7 +737,7 @@ public class AnnotationBasedModelBuilderTest {
   public static class ModelWithMisconfiguredBuilder
   extends AbstractModel {
     @BuilderPopulatedField(preprocessor = FieldValuePreprocessor.class)
-    private String fieldThatHasBadPreprocessor;
+    private String fieldWithBadPreprocessor;
 
     @BuilderPopulatedField(required = true)
     private String stringField;
@@ -768,7 +768,7 @@ public class AnnotationBasedModelBuilderTest {
 
       @SuppressWarnings("CheckStyle")
       public Builder withFieldThatHasBadPreprocessor(final String value) {
-        this.putFieldValue("fieldThatHasBadPreprocessor", value);
+        this.putFieldValue("fieldWithBadPreprocessor", value);
 
         return this;
       }

@@ -32,6 +32,10 @@ import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(Spectrum.class)
 @PrepareForTest({ StringIdentifier.class })
+@SuppressWarnings({
+  "ClassInitializerMayBeStatic",
+  "CodeBlock2Expr"
+})
 public class AbstractModelBuilderTest {
   {
     //noinspection Duplicates
@@ -104,8 +108,7 @@ public class AbstractModelBuilderTest {
 
           try {
             builder.withId((String)null);
-          }
-          catch (NullPointerException ex) {
+          } catch (NullPointerException ex) {
             // Silence exception
           }
 
@@ -137,8 +140,7 @@ public class AbstractModelBuilderTest {
 
           try {
             builder.withId("invalid");
-          }
-          catch (IllegalArgumentException ex) {
+          } catch (IllegalArgumentException ex) {
             // Silence exception
           }
 
@@ -186,8 +188,7 @@ public class AbstractModelBuilderTest {
 
           try {
             builder.withId((ModelIdentifier)null);
-          }
-          catch (NullPointerException ex) {
+          } catch (NullPointerException ex) {
             // Silence exception
           }
 
