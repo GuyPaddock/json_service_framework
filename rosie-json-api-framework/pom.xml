@@ -179,7 +179,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.7.5.201505241946</version>
+        <version>0.8.1</version>
         <executions>
           <execution>
             <id>prepare-agent</id>
@@ -201,19 +201,11 @@
               <goal>report</goal>
             </goals>
             <configuration>
-              <!-- Sets the path to the file which contains the execution data. -->
-
-              <dataFile>target/jacoco.exec</dataFile>
               <!-- Sets the output directory for the code coverage report. -->
               <outputDirectory>target/jacoco-ut</outputDirectory>
             </configuration>
           </execution>
         </executions>
-        <configuration>
-          <systemPropertyVariables>
-            <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
-          </systemPropertyVariables>
-        </configuration>
       </plugin>
       <!-- Create a fat jar with all the dependencies of the JSON framework, so that client
            applications do not have to include all of the JARs for our dependant libraries. -->
