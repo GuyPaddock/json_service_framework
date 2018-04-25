@@ -102,7 +102,7 @@
     <properties>
       <!-- Suppress this inspection for tests -->
       <property name="violationSuppressXPath"
-                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0 or count(Annotation//.[@Image='PowerMockRunnerDelegate']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -154,7 +154,7 @@
     <properties>
       <!-- Suppress this inspection for tests -->
       <property name="violationSuppressXPath"
-                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0 or count(Annotation//.[@Image='PowerMockRunnerDelegate']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -162,7 +162,7 @@
     <properties>
       <!-- Suppress this inspection for tests -->
       <property name="violationSuppressXPath"
-                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0 or count(Annotation//.[@Image='PowerMockRunnerDelegate']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -175,10 +175,6 @@
   <rule ref="category/java/design.xml/ExcessivePublicCount">
     <properties>
       <property name="minimum" value="15" />
-
-      <!-- Suppress this inspection for tests -->
-      <property name="violationSuppressXPath"
-                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0 or count(Annotation//.[@Image='PowerMockRunnerDelegate']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -189,7 +185,7 @@
 
       <!-- Suppress this inspection for tests -->
       <property name="violationSuppressXPath"
-                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0 or count(Annotation//.[@Image='PowerMockRunnerDelegate']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -203,7 +199,7 @@
     <properties>
       <!-- Suppress this inspection for tests -->
       <property name="violationSuppressXPath"
-                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0 or count(Annotation//.[@Image='PowerMockRunnerDelegate']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -236,7 +232,7 @@
 
       <!-- Suppress this inspection for tests -->
       <property name="violationSuppressXPath"
-                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0 or count(Annotation//.[@Image='PowerMockRunnerDelegate']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -284,7 +280,7 @@
     <properties>
       <!-- Suppress this inspection for tests -->
       <property name="violationSuppressXPath"
-                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0 or count(Annotation//.[@Image='PowerMockRunnerDelegate']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -295,7 +291,7 @@
 
       <!-- Suppress this inspection for tests -->
       <property name="violationSuppressXPath"
-                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0 or count(Annotation//.[@Image='PowerMockRunnerDelegate']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -309,7 +305,7 @@
     <properties>
       <!-- Suppress this inspection for tests -->
       <property name="violationSuppressXPath"
-                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0 or count(Annotation//.[@Image='PowerMockRunnerDelegate']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
@@ -317,7 +313,7 @@
     <properties>
       <!-- Suppress this inspection for tests -->
       <property name="violationSuppressXPath"
-                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0 or count(Annotation//.[@Image='PowerMockRunnerDelegate']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
+                value="//TypeDeclaration[count(Annotation//.[@Image='RunWith']/..//ClassOrInterfaceType[@Image='Spectrum']) > 0]" />
     </properties>
   </rule>
 
