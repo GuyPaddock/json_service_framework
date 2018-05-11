@@ -117,6 +117,7 @@
       <scope>test</scope>
     </dependency>
 
+
     <!-- TODO: AUTH-89 - Move to Rosie common POM -->
     <dependency>
       <groupId>org.assertj</groupId>
@@ -175,7 +176,37 @@
           <target>1.8</target>
         </configuration>
       </plugin>
-
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.1</version>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>post-unit-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <!-- Sets the output directory for the code coverage report. -->
+              <outputDirectory>target/jacoco-ut</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <!-- Create a fat jar with all the dependencies of the JSON framework, so that client
            applications do not have to include all of the JARs for our dependant libraries. -->
       <plugin>
