@@ -5,6 +5,7 @@
 package com.rosieapp.services.common.request;
 
 import com.github.jasminb.jsonapi.JSONAPIDocument;
+import com.rosieapp.services.common.exception.RequestFailedException;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.util.Requests;
 import java.io.IOException;
@@ -124,15 +125,18 @@ implements Iterable<M> {
    *          If the request to the remote server fails, or returns an empty response body.
    */
   private JSONAPIDocument<List<M>> requestPage(final int pageNumber)
-  throws IOException {
+  throws IOException, IllegalArgumentException, RequestFailedException {
     Response<JSONAPIDocument<List<M>>> response;
     JSONAPIDocument<List<M>>           responseBody;
+
+    if (pageNumber <= 0) {
+      throw new IllegalArgumentException("page number must be greater than 0");
+    }
 
     response = this.requestFunction.apply(pageNumber).execute();
 
     if (!response.isSuccessful()) {
-      // FIXME: Research and/or implement a better, more specific exception type (RJAJ-3)
-      throw new IOException(
+      throw new RequestFailedException(
         Requests.failureResponseToString(
           String.format("Failed to fetch page `%d` of results", pageNumber), response));
     }
@@ -140,9 +144,7 @@ implements Iterable<M> {
     responseBody = response.body();
 
     if (responseBody == null) {
-      // FIXME: Research and/or implement a better, more specific exception type (RJAJ-3)
-      // FIXME: Are we handling JSON API error responses at all? (RJAJ-3)
-      throw new IOException(
+      throw new RequestFailedException(
         String.format(
           "Unexpectedly received an empty response when fetching page `%d` of results.",
           pageNumber));
@@ -205,7 +207,7 @@ implements Iterable<M> {
     private void safelyRequestNextPage() {
       try {
         this.requestNextPage();
-      } catch (IOException ex) {
+      } catch (IOException | RequestFailedException ex) {
         LOGGER.error("Failed to request page `{0}` of results.", this.currentPageNumber, ex);
 
         // Don't try again
@@ -225,7 +227,7 @@ implements Iterable<M> {
      *          If the request for data fails for any reason.
      */
     private void requestNextPage()
-    throws IOException {
+    throws IOException, RequestFailedException {
 
       final int nextPageNumber = this.getAndIncrementNextPageNumber();
 

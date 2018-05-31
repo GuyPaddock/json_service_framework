@@ -1,7 +1,5 @@
 package com.rosieapp.services.common.request;
 
-import static com.greghaskins.spectrum.dsl.specification.Specification.afterEach;
-import static com.greghaskins.spectrum.dsl.specification.Specification.beforeAll;
 import static com.greghaskins.spectrum.dsl.specification.Specification.beforeEach;
 import static com.greghaskins.spectrum.dsl.specification.Specification.it;
 import static com.greghaskins.spectrum.dsl.specification.Specification.context;
@@ -9,6 +7,7 @@ import static com.greghaskins.spectrum.dsl.specification.Specification.describe;
 
 import com.github.jasminb.jsonapi.JSONAPIDocument;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import com.github.jasminb.jsonapi.annotations.Type;
 import com.greghaskins.spectrum.Spectrum;
@@ -26,6 +25,7 @@ import org.junit.runner.RunWith;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+
 
 @RunWith(Spectrum.class)
 public class PagedCollectionTest {
@@ -85,7 +85,7 @@ public class PagedCollectionTest {
           assertThat(server.getRequestCount()).isEqualTo(2);
         });
       });
-      context("When an empty response is returned prior to the page limit",() -> {
+      context("when an empty response is returned prior to the page limit",() -> {
         it("stops requesting additional pages",() -> {
           server.enqueue(new MockResponse().setBody("{ \"data\" : []}"));
           server.enqueue(new MockResponse().setBody(testModelJson));
@@ -115,7 +115,7 @@ public class PagedCollectionTest {
           assertThat(server.getRequestCount()).isEqualTo(2);
         });
       });
-      context("When page limit is unlimited",() -> {
+      context("when page limit is unlimited",() -> {
         it("continues requesting pages until an empty response is returned",() -> {
           server.enqueue(new MockResponse().setBody(testModelJson));
           server.enqueue(new MockResponse().setBody(testModelJson));
@@ -132,6 +132,36 @@ public class PagedCollectionTest {
           assertThat(server.getRequestCount()).isEqualTo(4);
 
         });
+      });
+      context("when a page number less than 1 is requested", () -> {
+        it("throws an IllegalArgumentException", () -> {
+          server.enqueue(new MockResponse().setBody("{ \"data\" : []}"));
+          assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> {
+
+            PagedCollection<TestModel> pagedCollection =
+                new PagedCollection<>(
+                    testService::getModels,
+                    0,
+                    PagedCollection.PAGE_LIMIT_UNLIMITED
+                );
+            pagedCollection.stream().allMatch((_test) -> true);
+          });
+        });
+      });
+    });
+    context("when an error response is returned", () -> {
+      it("stops requesting additional pages", () -> {
+
+        server.enqueue(new MockResponse().setResponseCode(418));
+        PagedCollection<TestModel> pagedCollection =
+            new PagedCollection<>(
+                testService::getModels,
+                1,
+                PagedCollection.PAGE_LIMIT_UNLIMITED
+            );
+        pagedCollection.stream().allMatch((_test) -> true);
+
+        assertThat(server.getRequestCount()).isEqualTo(1);
       });
     });
   }
