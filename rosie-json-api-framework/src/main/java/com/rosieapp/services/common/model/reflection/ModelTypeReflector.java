@@ -157,10 +157,10 @@ public class ModelTypeReflector<M> {
 
     if (LOGGER.isTraceEnabled()) {
       if (fields == null) {
-        LOGGER.trace("No cached fields for model type `{0}`.", modelName);
+        LOGGER.trace("No cached fields for model type `{}`.", modelName);
       } else {
         LOGGER.trace(
-          "Resolved fields for model type `{0}` using cache.", modelName);
+          "Resolved fields for model type `{}` using cache.", modelName);
       }
     }
 
