@@ -8,12 +8,12 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.rosieapp.services.framework</groupId>
-  <artifactId>json-api-framework-aggregator</artifactId>
+  <artifactId>json-api-framework-parent</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Rosie JSON API v1 Framework and Connectors for Java</name>
-  <description>Aggregator project for Rosie's JSON API v1-based framework and related connectors.</description>
+  <description>Parent project for Rosie's JSON API v1-based framework and related clients.</description>
 
   <url>https://github.com/RosieApp/rosie_java_json_framework</url>
 
@@ -27,6 +27,10 @@
     <connection>scm:git:git://github.com/RosieApp/rosie_java_json_framework.git</connection>
     <developerConnection>scm:git:git@github.com:RosieApp/rosie_java_json_framework.git</developerConnection>
   </scm>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
   <modules>
     <module>rosie-json-api-framework</module>
