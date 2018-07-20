@@ -10,7 +10,6 @@ import java.text.MessageFormat;
  * Generic exception thrown when a request to a service fails.
  */
 public class RequestFailedException extends Exception {
-
   private static final String EXCEPTION_MESSAGE = "Request made to {0} at `{1}` has failed.";
 
   /**
@@ -83,5 +82,4 @@ public class RequestFailedException extends Exception {
 
     return MessageFormat.format(message, serviceName, serviceUrl);
   }
-
 }

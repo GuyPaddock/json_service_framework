@@ -4,15 +4,13 @@
 
 package com.rosieapp.services.common.exception;
 
-
 /**
  * Exception thrown when the credentials supplied for authenticating with a service are incorrect.
  */
 public class InvalidServiceCredentialsException
 extends RequestFailedException {
-
   private static final String EXCEPTION_MESSAGE =
-      "The credentials provided for connecting to the {0} at `{1}` are incorrect.";
+    "The credentials provided for connecting to the {0} at `{1}` are incorrect.";
 
   /**
    * Constructor for {@code InvalidServiceCredentialsException}.
@@ -47,5 +45,4 @@ extends RequestFailedException {
                                             final Throwable cause) {
     super(generateMessage(EXCEPTION_MESSAGE, serviceName, serviceUrl), cause);
   }
-
 }

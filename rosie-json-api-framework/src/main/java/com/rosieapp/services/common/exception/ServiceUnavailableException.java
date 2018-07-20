@@ -4,15 +4,13 @@
 
 package com.rosieapp.services.common.exception;
 
-
 /**
  * Exception thrown when a web service is down or unable to respond successfully to requests.
  */
 public class ServiceUnavailableException
 extends RequestFailedException {
-
-  private static final String
-      EXCEPTION_MESSAGE = "The {0} at `{1}` is unhealthy and/or unavailable.";
+  private static final String EXCEPTION_MESSAGE =
+    "The {0} at `{1}` is unhealthy and/or unavailable.";
 
   /**
    * Constructor for {@code ServiceUnavailableException}.
@@ -46,5 +44,4 @@ extends RequestFailedException {
                                      final Throwable cause) {
     super(generateMessage(EXCEPTION_MESSAGE, serviceName, serviceUrl), cause);
   }
-
 }
