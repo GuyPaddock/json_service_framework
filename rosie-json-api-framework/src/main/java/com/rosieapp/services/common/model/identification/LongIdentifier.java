@@ -50,7 +50,7 @@ implements Comparable<LongIdentifier> {
     final Optional<ModelIdentifier> result;
     final long                      numberValue = NumberUtils.toLong(value, UNKNOWN_VALUE);
 
-    if (numberValue == UNKNOWN_VALUE) {
+    if (numberValue <= 0) {
       result = Optional.empty();
     } else {
       result = Optional.of(new LongIdentifier(numberValue));

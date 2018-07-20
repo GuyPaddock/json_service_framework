@@ -197,10 +197,10 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
     if (LOGGER.isTraceEnabled()) {
       if (modelType == null) {
         LOGGER.trace(
-          "No cached model type for builder type `{1}`.", builderClassName);
+          "No cached model type for builder type `{}`.", builderClassName);
       } else {
         LOGGER.trace(
-          "Resolved model type `{0}` for builder type `{1}` using cache.",
+          "Resolved model type `{}` for builder type `{}` using cache.",
           modelType.getCanonicalName(),
           builderClassName);
       }
@@ -222,7 +222,7 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
 
     if (LOGGER.isTraceEnabled()) {
       LOGGER.trace(
-        "Storing model type `{0}` in cache for builder type `{1}`.",
+        "Storing model type `{}` in cache for builder type `{}`.",
         modelClass.getCanonicalName(),
         builderClassName);
     }
@@ -297,7 +297,7 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
 
         if (LOGGER.isTraceEnabled()) {
           LOGGER.trace(
-            "Resolved model type `{0}` for builder type `{1}` using annotation on builder.",
+            "Resolved model type `{}` for builder type `{}` using annotation on builder.",
             modelType.getCanonicalName(),
             this.getUniqueBuilderClassName());
         }
@@ -325,7 +325,7 @@ public class BuilderTypeReflector<M extends Model, B extends AnnotationBasedMode
 
       if (LOGGER.isTraceEnabled()) {
         LOGGER.trace(
-          "Resolved model type `{0}` for builder type `{1}` using class that encloses builder.",
+          "Resolved model type `{}` for builder type `{}` using class that encloses builder.",
           modelType.getCanonicalName(),
           this.getUniqueBuilderClassName());
       }
