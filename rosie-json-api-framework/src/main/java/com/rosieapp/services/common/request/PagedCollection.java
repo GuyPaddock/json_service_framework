@@ -121,24 +121,38 @@ implements Iterable<M> {
    *
    * @throws  IllegalArgumentException
    *          If {@code pageNumber} is {@code <= 0}.
-   * @throws  IOException
+   * @throws  RequestFailedException
    *          If the request to the remote server fails, or returns an empty response body.
    */
   private JSONAPIDocument<List<M>> requestPage(final int pageNumber)
-  throws IOException, IllegalArgumentException, RequestFailedException {
-    Response<JSONAPIDocument<List<M>>> response;
-    JSONAPIDocument<List<M>>           responseBody;
+  throws IllegalArgumentException, RequestFailedException {
+    final Response<JSONAPIDocument<List<M>>> response;
+    final JSONAPIDocument<List<M>>           responseBody;
 
     if (pageNumber <= 0) {
       throw new IllegalArgumentException("page number must be greater than 0");
     }
 
-    response = this.requestFunction.apply(pageNumber).execute();
+    try {
+      response = this.requestFunction.apply(pageNumber).execute();
+    } catch (IOException ex) {
+      throw new RequestFailedException(
+        String.format("Failed to read page `%d` of results", pageNumber),
+        ex);
+    } catch (RuntimeException ex) { // Sadly, JSON-API converter throws this for bad input
+      throw new RequestFailedException(
+        String.format(
+          "Received an improperly-formatted response when fetching page `%d` of results.",
+          pageNumber),
+        ex);
+    }
 
     if (!response.isSuccessful()) {
       throw new RequestFailedException(
         Requests.failureResponseToString(
-          String.format("Failed to fetch page `%d` of results", pageNumber), response));
+          String.format(
+            "Server-side failure encountered when fetching page `%d` of results", pageNumber),
+          response));
     }
 
     responseBody = response.body();
@@ -146,8 +160,7 @@ implements Iterable<M> {
     if (responseBody == null) {
       throw new RequestFailedException(
         String.format(
-          "Unexpectedly received an empty response when fetching page `%d` of results.",
-          pageNumber));
+          "Received an empty response when fetching page `%d` of results.", pageNumber));
     }
 
     return responseBody;
@@ -207,7 +220,7 @@ implements Iterable<M> {
     private void safelyRequestNextPage() {
       try {
         this.requestNextPage();
-      } catch (IOException | RequestFailedException ex) {
+      } catch (RequestFailedException ex) {
         LOGGER.error("Failed to request page `{}` of results.", this.currentPageNumber, ex);
 
         // Don't try again
@@ -223,12 +236,11 @@ implements Iterable<M> {
      * or the page limit has been reached, then this iterator will be marked finished, such that
      * future calls to {@link #hasNext()} on this instance will return {@link false}.
      *
-     * @throws  IOException
+     * @throws  RequestFailedException
      *          If the request for data fails for any reason.
      */
     private void requestNextPage()
-    throws IOException, RequestFailedException {
-
+    throws RequestFailedException {
       final int nextPageNumber = this.getAndIncrementNextPageNumber();
 
       if (this.isAtPageLimit()) {
@@ -255,6 +267,7 @@ implements Iterable<M> {
      * @return  {@code true} if there is a page limit and it has been reached; or, {@code false} if
      *          there is either no page limit, or it has not yet been reached.
      */
+    @SuppressWarnings("UnnecessaryLocalVariable")
     private boolean isAtPageLimit() {
       final boolean atPageLimit;
 

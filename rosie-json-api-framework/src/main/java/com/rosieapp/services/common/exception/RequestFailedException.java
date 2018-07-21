@@ -62,7 +62,7 @@ public class RequestFailedException extends Exception {
    * @param cause
    *        The underlying exception that was wrapped by this exception.
    */
-  protected RequestFailedException(final String message, final Throwable cause) {
+  public RequestFailedException(final String message, final Throwable cause) {
     super(message, cause);
   }
 

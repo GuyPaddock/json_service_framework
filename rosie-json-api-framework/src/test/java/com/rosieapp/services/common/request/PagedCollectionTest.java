@@ -8,8 +8,13 @@ import static com.greghaskins.spectrum.dsl.specification.Specification.beforeEac
 import static com.greghaskins.spectrum.dsl.specification.Specification.context;
 import static com.greghaskins.spectrum.dsl.specification.Specification.describe;
 import static com.greghaskins.spectrum.dsl.specification.Specification.it;
+import static com.greghaskins.spectrum.dsl.specification.Specification.let;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 import com.github.jasminb.jsonapi.JSONAPIDocument;
 import com.github.jasminb.jsonapi.annotations.Type;
@@ -21,11 +26,13 @@ import com.rosieapp.services.common.model.identification.ModelIdentifier;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.runner.RunWith;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 
@@ -33,7 +40,8 @@ import retrofit2.http.Query;
 @SuppressWarnings({
   "ClassInitializerMayBeStatic",
   "CodeBlock2Expr",
-  "Convert2MethodRef"
+  "Convert2MethodRef",
+  "Duplicates"
 })
 public class PagedCollectionTest {
   MockWebServer server;
@@ -180,6 +188,34 @@ public class PagedCollectionTest {
       });
     });
 
+    context("when the request function throws an IOException", () -> {
+      final Supplier<Call<JSONAPIDocument<List<TestModel>>>> mockCall =
+        let(() -> {
+          @SuppressWarnings("unchecked") final Call<JSONAPIDocument<List<TestModel>>> mock =
+            mock(Call.class);
+
+          when(mock.execute()).thenThrow(new IOException("Terrible badness!"));
+
+          return mock;
+        });
+
+      it("stops requesting additional pages", () -> {
+        // CHECKSTYLE IGNORE Indentation FOR NEXT 6 LINES
+        PagedCollection<TestModel> pagedCollection =
+          new PagedCollection<>(
+            (page) -> mockCall.get(),
+            1,
+            PagedCollection.PAGE_LIMIT_UNLIMITED
+          );
+
+        //noinspection ResultOfMethodCallIgnored
+        pagedCollection.stream().allMatch((_test) -> true);
+
+        assertThat(this.server.getRequestCount()).isEqualTo(0);
+        verify(mockCall.get(), times(1)).execute();
+      });
+    });
+
     context("when an error response is returned", () -> {
       it("stops requesting additional pages", () -> {
         this.server.enqueue(new MockResponse().setResponseCode(418));
@@ -195,6 +231,56 @@ public class PagedCollectionTest {
         pagedCollection.stream().allMatch((_test) -> true);
 
         assertThat(this.server.getRequestCount()).isEqualTo(1);
+      });
+    });
+
+    context("when a malformed response is returned", () -> {
+      it("stops requesting additional pages", () -> {
+        this.server.enqueue(new MockResponse().setBody(""));
+
+        PagedCollection<TestModel> pagedCollection =
+          new PagedCollection<>(
+            this.testService::getModels,
+            1,
+            PagedCollection.PAGE_LIMIT_UNLIMITED
+          );
+
+        //noinspection ResultOfMethodCallIgnored
+        pagedCollection.stream().allMatch((_test) -> true);
+
+        assertThat(this.server.getRequestCount()).isEqualTo(1);
+      });
+    });
+
+    context("when a blank response is returned", () -> {
+      @SuppressWarnings("unchecked")
+      final Supplier<Response<JSONAPIDocument<List<TestModel>>>> badResponse =
+        let(() -> Response.success(null));
+
+      final Supplier<Call<JSONAPIDocument<List<TestModel>>>> mockCall =
+        let(() -> {
+          @SuppressWarnings("unchecked")
+          final Call<JSONAPIDocument<List<TestModel>>> mock = mock(Call.class);
+
+          when(mock.execute()).thenReturn(badResponse.get());
+
+          return mock;
+        });
+
+      it("stops requesting additional pages", () -> {
+        // CHECKSTYLE IGNORE Indentation FOR NEXT 6 LINES
+        PagedCollection<TestModel> pagedCollection =
+          new PagedCollection<>(
+            (page) -> mockCall.get(),
+            1,
+            PagedCollection.PAGE_LIMIT_UNLIMITED
+          );
+
+        //noinspection ResultOfMethodCallIgnored
+        pagedCollection.stream().allMatch((_test) -> true);
+
+        assertThat(this.server.getRequestCount()).isEqualTo(0);
+        verify(mockCall.get(), times(1)).execute();
       });
     });
   }
