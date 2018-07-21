@@ -124,6 +124,7 @@ implements Iterable<M> {
    * @throws  RequestFailedException
    *          If the request to the remote server fails, or returns an empty response body.
    */
+  @SuppressWarnings("PMD.AvoidCatchingGenericException")
   private JSONAPIDocument<List<M>> requestPage(final int pageNumber)
   throws IllegalArgumentException, RequestFailedException {
     final Response<JSONAPIDocument<List<M>>> response;
