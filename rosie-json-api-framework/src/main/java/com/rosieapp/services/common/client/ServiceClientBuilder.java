@@ -1,5 +1,17 @@
 /*
- * Copyright (c) 2018 Rosie Applications Inc. All rights reserved.
+ * Copyright (c) 2018 Rosie Applications Inc.
+ *
+ * This program is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, version 3 of the License.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package com.rosieapp.services.common.client;
@@ -8,16 +20,16 @@ import com.github.jasminb.jsonapi.ResourceConverter;
 import com.github.jasminb.jsonapi.retrofit.JSONAPIConverterFactory;
 import com.google.common.collect.Iterables;
 import com.rosieapp.services.common.annotation.JsonApiV1Noncompliant;
-import com.rosieapp.services.common.interception.AuthTokenInterceptor;
 import com.rosieapp.services.common.interception.NoncompliantJsonContentTypeInterceptor;
 import com.rosieapp.services.common.model.Model;
 import com.rosieapp.services.common.util.JsonUtils;
-import java.util.List;
-import java.util.Objects;
 import okhttp3.OkHttpClient;
 import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Abstract base class for a builder that provides a convenient way to
@@ -31,7 +43,6 @@ public abstract class ServiceClientBuilder<T> {
   private final Class<? extends T> serviceInterface;
 
   private   String             baseUrl;
-  private   String             authToken;
   private   Converter.Factory  converterFactory;
 
   /**
@@ -93,7 +104,7 @@ public abstract class ServiceClientBuilder<T> {
 
   /**
    * Sets the protocol, host, and optionally, the port, where the service is hosted (e.g.
-   * https://dev.rosieapp.com or http://local.rosieapp.com:8080).
+   * https://somewhere.rosieapp.com or http://local.rosieapp.com:8080).
    *
    * @param baseUrl The base URL to use for the next client instance this builder creates.
    * @return This object, for chaining builder calls.
@@ -105,27 +116,12 @@ public abstract class ServiceClientBuilder<T> {
   }
 
   /**
-   * Sets the pre-shared token that is used to authenticate with the Service.
-   *
-   * @param   authToken
-   *          The authentication token to use for the next client instance this builder
-   *          creates.
-   *
-   * @return  This object, for chaining builder calls.
-   */
-  public ServiceClientBuilder<T> withAuthToken(final String authToken) {
-    this.authToken = authToken;
-
-    return this;
-  }
-
-  /**
    * Creates a new service client, using the current values set on this builder.
    *
    * @return The new client instance.
    *
    * @throws NullPointerException
-   *         If the {@code baseUrl} or {@code authToken} have not been set on the builder before
+   *         If the {@code baseUrl} has not been set on the builder before
    *         calling this method.
    */
   public T build() throws NullPointerException {
@@ -137,7 +133,6 @@ public abstract class ServiceClientBuilder<T> {
     client =
       new OkHttpClient.Builder()
         .addInterceptor(new NoncompliantJsonContentTypeInterceptor())
-        .addInterceptor(new AuthTokenInterceptor(this.authToken))
         .build();
 
     retrofit =
@@ -158,7 +153,6 @@ public abstract class ServiceClientBuilder<T> {
   private void validateArguments()
   throws NullPointerException {
     Objects.requireNonNull(this.baseUrl, "baseUrl cannot be null");
-    Objects.requireNonNull(this.authToken, "authToken cannot be null");
   }
 
 

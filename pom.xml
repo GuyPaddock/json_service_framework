@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright 2017 Rosie Applications Inc. All rights reserved.
+  Copyright 2017-2018 Rosie Applications Inc.
+
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, version 3 of the License.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public License
+  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -12,20 +24,20 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Rosie JSON API v1 Framework and Connectors for Java</name>
-  <description>Parent project for Rosie's JSON API v1-based framework and related clients.</description>
+  <name>Rosie JSON-API Service Client Framework (OSS)</name>
+  <description>An open-source framework for making requests to JSON-API-compliant services and marshalling the result into models.</description>
 
-  <url>https://github.com/RosieApp/rosie_java_json_framework</url>
+  <url>https://github.com/RosieApp/json_service_framework</url>
 
   <issueManagement>
-    <system>JIRA</system>
-    <url>https://rosieapp.atlassian.net/projects/AUTH/issues</url>
+    <system>GitHub Issues</system>
+    <url>https://github.com/RosieApp/json_service_framework/issues</url>
   </issueManagement>
 
   <scm>
-    <url>https://github.com/RosieApp/rosie_java_json_framework</url>
-    <connection>scm:git:git://github.com/RosieApp/rosie_java_json_framework.git</connection>
-    <developerConnection>scm:git:git@github.com:RosieApp/rosie_java_json_framework.git</developerConnection>
+    <url>https://github.com/RosieApp/json_service_framework</url>
+    <connection>scm:git:git://github.com/RosieApp/json_service_framework.git</connection>
+    <developerConnection>scm:git:git@github.com:RosieApp/json_service_framework.git</developerConnection>
   </scm>
 
   <properties>
@@ -34,9 +46,5 @@
 
   <modules>
     <module>rosie-json-api-framework</module>
-    <module>rosie-ecom-client</module>
-    <module>rosie-loyalty-client</module>
-    <module>openicf-rosie-ecom-connector</module>
-    <module>openicf-rosie-loyalty-connector</module>
   </modules>
 </project>

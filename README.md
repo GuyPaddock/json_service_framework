@@ -1,27 +1,57 @@
-# Rosie JSON API v1 Framework and Connectors for Java
-This project contains both Rosie's Java-based framework for interacting with web services that 
-follow the JSON API v1 standard, as well as several projects that make use of the framework to
-provide access to existing Rosie services that follow the JSON API v1 specification.
-
-Here's a run-down of each project included within this repository:
-
-## Rosie JSON API v1 Framework for Java (`rosie-json-api-framework`)
+# Rosie JSON-API Service Client Framework (OSS)
 Our standard framework for connecting to JSON API v1-compliant services from Java.
 
-See `rosie-json-api-framework/README.md` for details.
+## Features
+This framework provides the following features:
+ - Reusable patterns and base classes for representing and interacting with service data models in 
+   an object-oriented way, without coupling client applications to how services represent their data
+   internally.
+ - A generic, flexible way to interact with models that are identified by either 
+   serially-incremented integer primary keys or UUIDs, without requiring any code changes on the
+   client side if the identifier changes on the service side in the future.
+ - A fluent "builder-style" API for building new service model instances, to isolate client
+   applications from the business rules and data structures required on the service side.
+ - A separate fluent "builder-style" API for creating filters that can be applied to a data set
+   returned by a service to select one or more models on the client side that match a specific or
+   approximate set of criteria. The interface performs the filtering internally in the framework,
+   freeing client-side logic from having to interrogate models, handle data types, or perform the
+   matching manually.
+ - Adapters for navigating through paged result sets using standard Java 8 streams and iterators,
+   without the client having to fetch and process each page of results manually.
 
-## Java Service Client for Rosie Loyalty (`rosie-loyalty-client`)
-A Java-based client for connecting to Rosie's Loyalty Service (using the JSON API framework).
+The framework bundles the following two libraries to provide a simple pattern for clients to 
+interact with JSON API services:
+ - [JSON API Converter](https://github.com/jasminb/jsonapi-converter) by Jasmin Begic, which
+   handles serializing and deserializing service models into and out of JSON-API-compliant message
+   format.
+ - [Retrofit](https://github.com/square/retrofit) by Square, which provides a type-safe way to
+   interact with web services using plain old Java interfaces that have been annotated with hints
+   about how to translate parameters and calls to appropriate service endpoints.
 
-See `rosie-loyalty-client/README.md` for details.
+These libraries are included automatically in the JAR produced by the framework via the Maven Shade
+plug-in, so that clients do not have to pull-in the libraries directly.
 
-## OpenICF Connector for Rosie Loyalty (`openicf-rosie-loyalty-connector`)
-An OpenICF connector that allows systems like OpenIDM to interact with the Rosie Loyalty service 
-over JSON-API-compliant REST.
+## How to Use
+See the inline Javadocs for the following core interfaces and classes within the framework for 
+more information:
+ - `com.rosieapp.services.common.model.Model`
+ - `com.rosieapp.services.common.model.identification.ModelIdentifier`
+ - `com.rosieapp.services.common.model.construction.ModelBuilder`
+ - `com.rosieapp.services.common.model.filtering.ModelFilter`
+ - `com.rosieapp.services.common.model.filtering.ModelFilterBuilder`
+ - `com.rosieapp.services.common.request.PagedCollection`
+ 
+ ## License
+ Copyright 2017-2018 Rosie Applications Inc.
 
-See `openicf-rosie-loyalty-connector/README.md` for details.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, version 3 of the License.
 
-## Java Service Client for Rosie ECOM (`rosie-ecom-client`)
-A Java-based client for connecting to Rosie's ECOM Service (using the JSON API framework).
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
 
-See `rosie-ecom-client/README.md` for details.
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program.  If not, see <https://www.gnu.org/licenses/>.

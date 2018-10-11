@@ -17,8 +17,8 @@
   <artifactId>rosie-json-api-framework</artifactId>
   <version>1.0.0-SNAPSHOT</version>
 
-  <name>Rosie JSON API v1 Framework for Java</name>
-  <description>A standard framework for connecting to Rosie's JSON API v1-compliant services from Java.</description>
+  <name>Rosie JSON API v1 for Java Core Framework</name>
+  <description>A standard framework for connecting to JSON API v1-compliant services from Java.</description>
 
   <repositories>
     <!-- Needed for snapshots of jsonapi-converter -->
@@ -29,12 +29,6 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
-    </repository>
-
-    <repository>
-      <id>rosie-artifactory-java</id>
-      <name>Rosie Artifactory for Java Libraries</name>
-      <url>s3://rosie-artifactory/lib/java</url>
     </repository>
   </repositories>
 
