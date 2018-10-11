@@ -25,7 +25,7 @@
   <packaging>pom</packaging>
 
   <name>Rosie JSON-API Service Client Framework (OSS)</name>
-  <description>An open-source framework for making requests to JSON-API-compliant services and marshalling the result into models.</description>
+  <description>An open-source framework for making requests to JSON-API-compliant services and marshaling the result into models.</description>
 
   <url>https://github.com/RosieApp/json_service_framework</url>
 
