@@ -31,6 +31,27 @@ interact with JSON API services:
 These libraries are included automatically in the JAR produced by the framework via the Maven Shade
 plug-in, so that clients do not have to pull-in the libraries directly.
 
+## Pre-Requisites
+In order to compile the tests in this framework, you will need to check-out, build, and install a 
+copy of [Rosie's v1.2.0 fork of the Spectrum test runner](https://github.com/RosieApp/spectrum/releases/tag/1.2.0-rosie1)
+into your local Maven repo. This is necessary until the maintainer of that project publishes a new 
+version that includes Rosie's enhancements that address 
+[issue #132](https://github.com/greghaskins/spectrum/pull/133).
+
+Simply run the following commands:
+```
+git clone https://github.com/RosieApp/spectrum -b rosie/master
+cd spectrum
+./gradlew publishToMavenLocal
+```
+
+If, after completing the steps above, you continue to receive errors from Maven that it still cannot 
+locate `spectrum-1.2.0-rosie1.jar`, this may be due to 
+[Maven caching the repository](https://stackoverflow.com/questions/12517129/maven-fails-to-find-local-artifact) 
+where it was last looking for the file. To fix this issue, you may need to purge the contents of the
+`~/.m2/repository/com/greghaskins/spectrum/1.2.0-rosie1` folder,
+recompile & re-install Spectrum using the Gradle command above, and try again.
+
 ## How to Use
 See the inline Javadocs for the following core interfaces and classes within the framework for 
 more information:
